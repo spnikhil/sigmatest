@@ -190,11 +190,8 @@
                     <span id="buyCooldownBadge" class="cooldown-badge"><i class="fas fa-calendar-alt"></i> 30-day lock: --</span>
                 </div>
                 
-                <!-- Approval Status Badge with better precision -->
-                <div id="approvalStatus" class="approval-warning" style="display: none;">
-                    <i class="fas fa-exclamation-triangle"></i>
-                    <span id="approvalText">USDT approval required</span>
-                </div>
+                <!-- Approval Status Badge -->
+                <div id="approvalStatus" style="display: none;"></div>
                 
                 <div class="tabs">
                     <div class="tab active" onclick="setMode('buy')" id="buyTab">
@@ -235,7 +232,7 @@
                     <i class="fas fa-lock"></i> CONNECT WALLET
                 </button>
                 
-                <div id="statusMessage"></div>
+                <div id="statusMessage" style="font-size:13px; text-align:center; margin-top:15px; min-height:20px;"></div>
                 
                 <div class="contract-box">
                     <div class="contract-info">
@@ -322,7 +319,7 @@
     <script>
         // ========== CONTRACT CONFIGURATION ==========
         const SIGMA_ADDRESS = "0x52fD2a4da50d34566224DC65Da4Ba6C29c07A3DC";
-        const USDT_ADDRESS = "0xc2132D05D31c914a87C6611C10748AEb04B58e8F";
+        const USDT_ADDRESS = "0xc2132D05D31c914a87C6611C10748AEb04B58e8F"; // USDT on Polygon
         const CREATOR_WALLET = "0xb579377DDe2C03b2b46B5b12453F4dbAddB06f2E";
         
         // ABI
@@ -335,9 +332,7 @@
             "function users(address) view returns (address upline, uint256 referralExpiry, uint256 totalReferralEarned, uint256 lastBuyTimestamp, bool isMigrated, bool hasBought, uint256 directCount)",
             "function transfer(address to, uint256 value) external returns (bool)",
             "function approve(address,uint256) external returns (bool)",
-            "function allowance(address,address) view returns (uint256)",
-            "event Bought(address indexed user, uint256 usdtAmount, uint256 sigmaAmount, uint256 rate, uint256 timestamp)",
-            "event Sold(address indexed user, uint256 sigmaAmount, uint256 usdtAmount, uint256 rate, uint256 timestamp)"
+            "function allowance(address,address) view returns (uint256)"
         ];
 
         // USDT ABI
@@ -355,8 +350,6 @@
         let buyRate = 0, sellRate = 0;
         let isConnected = false;
         let transferToken = 'SIG6';
-        let requiredApproval = 0n;
-        let currentAllowance = 0n;
         let lastBuyTimestamp = 0;
         let lastSellTimestamp = 0;
         let cooldownInterval;
@@ -586,8 +579,8 @@
                 // Update cooldown UI
                 updateCooldownUI();
                 
-                // Check allowance for current amount
-                await checkAllowance();
+                // Calculate for current amount
+                calculate();
                 
             } catch (error) {
                 console.error("Load error:", error);
@@ -631,117 +624,57 @@
             }
         }
 
-        // ========== CHECK ALLOWANCE (FIXED DECIMALS) ==========
-        async function checkAllowance() {
-            if (!isConnected || !userAddress || currentMode !== 'buy') return;
-            
-            // Check if creator wallet
-            if (userAddress === CREATOR_WALLET.toLowerCase()) {
-                document.getElementById('actionButton').disabled = true;
-                document.getElementById('actionButton').innerHTML = '<i class="fas fa-ban"></i> CREATOR WALLET';
-                document.getElementById('approvalStatus').style.display = 'none';
-                return;
-            }
-            
-            const amount = parseFloat(document.getElementById('amount').value);
-            if (isNaN(amount) || amount <= 0) {
-                document.getElementById('actionButton').disabled = true;
-                document.getElementById('actionButton').innerHTML = '<i class="fas fa-lock"></i> ENTER AMOUNT';
-                document.getElementById('approvalStatus').style.display = 'none';
-                return;
-            }
-            
-            try {
-                // Calculate required USDT with proper decimals
-                const sigmaWei = ethers.parseEther(amount.toString());  // 18 decimals
-                const rateWei = ethers.parseUnits(buyRate.toFixed(6), 6);  // 6 decimals
-                
-                // Calculate total USDT needed (SIG6 * rate)
-                const totalUsdtWei = (sigmaWei * rateWei) / 10n**18n;
-                const buyTax = totalUsdtWei / 100n; // 1% tax
-                requiredApproval = totalUsdtWei + buyTax;
-                
-                // Get current allowance
-                const allowance = await usdtContract.allowance(userAddress, SIGMA_ADDRESS);
-                currentAllowance = allowance;
-                
-                const requiredNum = parseFloat(ethers.formatUnits(requiredApproval, 6));
-                const allowanceNum = parseFloat(ethers.formatUnits(allowance, 6));
-                
-                // Log for debugging
-                console.log("=== Allowance Check ===");
-                console.log("SIG6 Amount:", amount);
-                console.log("Buy Rate:", buyRate);
-                console.log("Required USDT:", requiredNum.toFixed(6));
-                console.log("Current Allowance:", allowanceNum.toFixed(6));
-                console.log("Difference:", (requiredNum - allowanceNum).toFixed(6));
-                
-                const approvalDiv = document.getElementById('approvalStatus');
-                const approvalText = document.getElementById('approvalText');
-                const actionBtn = document.getElementById('actionButton');
-                
-                // Check if allowance is sufficient (with small epsilon for floating point)
-                if (allowanceNum < requiredNum - 0.000001) {
-                    // NOT APPROVED - Show warning with exact numbers
-                    approvalDiv.style.display = 'flex';
-                    approvalDiv.className = 'approval-warning';
-                    approvalText.innerHTML = `⚠️ Need approval: ${requiredNum.toFixed(6)} USDT (Current: ${allowanceNum.toFixed(6)})`;
-                    
-                    actionBtn.disabled = false;
-                    actionBtn.innerHTML = '<i class="fas fa-check-circle"></i> APPROVE USDT';
-                } else {
-                    // APPROVED - Show success
-                    approvalDiv.style.display = 'flex';
-                    approvalDiv.className = 'approval-warning success';
-                    approvalText.innerHTML = `✅ Approved: ${allowanceNum.toFixed(6)} USDT`;
-                    
-                    actionBtn.disabled = false;
-                    actionBtn.innerHTML = '<i class="fas fa-shopping-cart"></i> BUY SIGMA';
-                }
-                
-            } catch (error) {
-                console.error("Allowance check error:", error);
-            }
-        }
-
         // ========== CALCULATE ==========
         function calculate() {
             if (!isConnected) return;
             
             const amount = parseFloat(document.getElementById('amount').value);
             if (isNaN(amount) || amount <= 0) {
-                document.getElementById('calculationBox').innerHTML = `
-                    <div class="row" id="calcTotalRow">
-                        <span id="calcLabel">Total USDT to Pay:</span>
-                        <span id="calcValue" style="color:var(--primary); font-weight:800">0.00 USDT</span>
-                    </div>
-                    <div class="row">
-                        <span>≈ INR:</span>
-                        <span id="calcInr" style="color:#ffaa00">0.00 INR</span>
-                    </div>
-                    <div class="row" id="uplineRow">
-                        <span style="color:#888">Upline:</span>
-                        <span id="uplineAddress" style="font-size:12px">None</span>
-                    </div>
-                `;
+                document.getElementById('calcValue').textContent = '0.00 USDT';
+                document.getElementById('calcInr').textContent = '0.00 INR';
+                document.getElementById('actionButton').disabled = true;
+                if (currentMode === 'buy') {
+                    document.getElementById('actionButton').innerHTML = '<i class="fas fa-lock"></i> ENTER AMOUNT';
+                } else {
+                    document.getElementById('actionButton').innerHTML = '<i class="fas fa-lock"></i> ENTER AMOUNT';
+                }
                 return;
             }
             
             if (currentMode === 'buy') {
-                const totalUsdt = amount * buyRate * 1.01; // +1% tax
+                // Calculate USDT needed including 1% tax
+                const totalUsdt = amount * buyRate;
+                const totalWithTax = totalUsdt * 1.01; // +1% tax
+                
                 document.getElementById('calcLabel').textContent = 'Total USDT to Pay:';
-                document.getElementById('calcValue').textContent = totalUsdt.toFixed(6) + ' USDT';
-                document.getElementById('calcInr').textContent = '₹' + (totalUsdt * INR_RATE).toFixed(2);
+                document.getElementById('calcValue').textContent = totalWithTax.toFixed(6) + ' USDT';
+                document.getElementById('calcInr').textContent = '₹' + (totalWithTax * INR_RATE).toFixed(2);
+                
+                // Check if creator wallet
+                if (userAddress === CREATOR_WALLET.toLowerCase()) {
+                    document.getElementById('actionButton').disabled = true;
+                    document.getElementById('actionButton').innerHTML = '<i class="fas fa-ban"></i> CREATOR WALLET';
+                    document.getElementById('approvalStatus').style.display = 'none';
+                    return;
+                }
                 
                 // Check allowance
-                checkAllowance();
+                checkAllowance(amount, totalWithTax);
             } else {
                 const totalUsdt = amount * sellRate;
                 document.getElementById('calcLabel').textContent = 'Total USDT to Receive:';
                 document.getElementById('calcValue').textContent = totalUsdt.toFixed(6) + ' USDT';
                 document.getElementById('calcInr').textContent = '₹' + (totalUsdt * INR_RATE).toFixed(2);
                 
-                // For sell mode, check cooldown
+                // Check if creator wallet
+                if (userAddress === CREATOR_WALLET.toLowerCase()) {
+                    document.getElementById('actionButton').disabled = true;
+                    document.getElementById('actionButton').innerHTML = '<i class="fas fa-ban"></i> CREATOR WALLET';
+                    document.getElementById('approvalStatus').style.display = 'none';
+                    return;
+                }
+                
+                // Check cooldown
                 const now = Math.floor(Date.now() / 1000);
                 const sellDiff = now - lastSellTimestamp;
                 if (sellDiff < 180) {
@@ -755,49 +688,67 @@
             }
         }
 
+        // ========== CHECK ALLOWANCE ==========
+        async function checkAllowance(sigmaAmount, usdtAmount) {
+            if (!isConnected || !userAddress) return;
+            
+            try {
+                // Convert USDT amount to wei (USDT has 6 decimals)
+                const usdtWei = ethers.parseUnits(usdtAmount.toFixed(6), 6);
+                
+                // Get current allowance
+                const allowance = await usdtContract.allowance(userAddress, SIGMA_ADDRESS);
+                const allowanceNum = parseFloat(ethers.formatUnits(allowance, 6));
+                
+                console.log("Allowance Check:", {
+                    sigmaAmount,
+                    usdtAmount,
+                    usdtWei: usdtWei.toString(),
+                    allowanceNum
+                });
+                
+                const approvalDiv = document.getElementById('approvalStatus');
+                const actionBtn = document.getElementById('actionButton');
+                
+                if (allowanceNum < usdtAmount - 0.000001) {
+                    // Not approved
+                    approvalDiv.style.display = 'flex';
+                    approvalDiv.className = 'approval-warning';
+                    approvalDiv.innerHTML = `
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <span>Need approval: ${usdtAmount.toFixed(6)} USDT (Current: ${allowanceNum.toFixed(6)})</span>
+                    `;
+                    
+                    actionBtn.disabled = false;
+                    actionBtn.innerHTML = '<i class="fas fa-check-circle"></i> APPROVE USDT';
+                } else {
+                    // Approved
+                    approvalDiv.style.display = 'flex';
+                    approvalDiv.className = 'approval-warning success';
+                    approvalDiv.innerHTML = `
+                        <i class="fas fa-check-circle"></i>
+                        <span>✅ Approved: ${allowanceNum.toFixed(6)} USDT</span>
+                    `;
+                    
+                    actionBtn.disabled = false;
+                    actionBtn.innerHTML = '<i class="fas fa-shopping-cart"></i> BUY SIGMA';
+                }
+            } catch (error) {
+                console.error("Allowance check error:", error);
+            }
+        }
+
         // ========== SET MODE ==========
         function setMode(mode) {
             currentMode = mode;
             document.getElementById('buyTab').className = mode === 'buy' ? 'tab active' : 'tab';
             document.getElementById('sellTab').className = mode === 'sell' ? 'tab active' : 'tab';
             
-            if (mode === 'buy') {
-                if (isConnected) {
-                    // Check if creator wallet
-                    if (userAddress === CREATOR_WALLET.toLowerCase()) {
-                        document.getElementById('actionButton').disabled = true;
-                        document.getElementById('actionButton').innerHTML = '<i class="fas fa-ban"></i> CREATOR WALLET';
-                        document.getElementById('approvalStatus').style.display = 'none';
-                    } else {
-                        checkAllowance();
-                    }
-                } else {
-                    document.getElementById('actionButton').innerHTML = '<i class="fas fa-lock"></i> CONNECT WALLET';
-                }
-            } else {
-                // Check if creator wallet
-                if (userAddress === CREATOR_WALLET.toLowerCase()) {
-                    document.getElementById('actionButton').disabled = true;
-                    document.getElementById('actionButton').innerHTML = '<i class="fas fa-ban"></i> CREATOR WALLET';
-                } else {
-                    // Check cooldown for sell mode
-                    const now = Math.floor(Date.now() / 1000);
-                    const sellDiff = now - lastSellTimestamp;
-                    if (sellDiff < 180) {
-                        document.getElementById('actionButton').disabled = true;
-                        document.getElementById('actionButton').innerHTML = '<i class="fas fa-hourglass-half"></i> COOLDOWN ACTIVE';
-                    } else {
-                        document.getElementById('actionButton').disabled = false;
-                        document.getElementById('actionButton').innerHTML = '<i class="fas fa-coins"></i> SELL SIGMA';
-                    }
-                }
-                document.getElementById('approvalStatus').style.display = 'none';
-            }
-            
+            document.getElementById('amount').value = '';
             calculate();
         }
 
-        // ========== EXECUTE ACTION (FIXED) ==========
+        // ========== EXECUTE ACTION ==========
         async function executeAction() {
             if (!isConnected) {
                 connectWallet();
@@ -822,67 +773,57 @@
             
             try {
                 if (currentMode === 'buy') {
-                    const allowanceNum = parseFloat(ethers.formatUnits(currentAllowance, 6));
-                    const requiredNum = parseFloat(ethers.formatUnits(requiredApproval, 6));
+                    // Calculate USDT amount including 1% tax
+                    const totalUsdt = amount * buyRate;
+                    const usdtWithTax = totalUsdt * 1.01;
+                    const usdtWei = ethers.parseUnits(usdtWithTax.toFixed(6), 6);
                     
-                    if (allowanceNum < requiredNum - 0.000001) {
-                        // MANUAL APPROVE USDT with exact amount
-                        msg.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Please confirm in MetaMask...';
+                    // Check current allowance
+                    const allowance = await usdtContract.allowance(userAddress, SIGMA_ADDRESS);
+                    const allowanceNum = parseFloat(ethers.formatUnits(allowance, 6));
+                    
+                    if (allowanceNum < usdtWithTax - 0.000001) {
+                        // Need to approve
+                        msg.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Approving USDT...';
                         btn.disabled = true;
                         
-                        console.log("Approving USDT:", requiredApproval.toString());
-                        console.log("USDT amount:", ethers.formatUnits(requiredApproval, 6));
+                        console.log("Approving USDT:", usdtWei.toString());
+                        const approveTx = await usdtContract.approve(SIGMA_ADDRESS, usdtWei);
                         
-                        const tx = await usdtContract.approve(SIGMA_ADDRESS, requiredApproval);
-                        
-                        msg.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Waiting for confirmation...';
-                        await tx.wait();
+                        msg.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Waiting for approval...';
+                        await approveTx.wait();
                         
                         msg.innerHTML = '<i class="fas fa-check-circle" style="color:var(--success)"></i> USDT Approved!';
                         
-                        // Update allowance
-                        currentAllowance = requiredApproval;
-                        await checkAllowance();
-                        
-                    } else {
-                        // BUY SIGMA
-                        msg.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Please confirm in MetaMask...';
-                        btn.disabled = true;
-                        
-                        const upline = localStorage.getItem('sigma_referrer') || CREATOR_WALLET;
-                        
-                        // Calculate USDT amount including tax
-                        const sigmaWei = ethers.parseEther(amount.toString());
-                        const rateWei = ethers.parseUnits(buyRate.toFixed(6), 6);
-                        const totalUsdtWei = (sigmaWei * rateWei) / 10n**18n;
-                        const buyTax = totalUsdtWei / 100n; // 1% tax
-                        const usdtAmountWithTax = totalUsdtWei + buyTax;
-                        
-                        console.log("Buying SIGMA with USDT:", ethers.formatUnits(usdtAmountWithTax, 6), "Upline:", upline);
-                        
-                        // Call buy with USDT amount
-                        const tx = await sigmaContract.buy(usdtAmountWithTax, upline);
-                        
-                        msg.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Waiting for confirmation...';
-                        const receipt = await tx.wait();
-                        
-                        // Find Bought event
-                        const boughtEvent = receipt.logs.find(log => 
-                            log.topics[0] === ethers.id("Bought(address,uint256,uint256,uint256,uint256)")
-                        );
-                        if (boughtEvent) {
-                            lastBuyTimestamp = Math.floor(Date.now() / 1000);
-                        }
-                        
-                        msg.innerHTML = '<i class="fas fa-check-circle" style="color:var(--success)"></i> Purchase Successful!';
-                        
-                        // Refresh data
+                        // Update UI
                         setTimeout(() => {
-                            loadData();
-                            document.getElementById('amount').value = '';
                             calculate();
-                        }, 2000);
+                        }, 1000);
+                        return;
                     }
+                    
+                    // Buy SIGMA
+                    msg.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Buying SIGMA...';
+                    btn.disabled = true;
+                    
+                    const upline = localStorage.getItem('sigma_referrer') || CREATOR_WALLET;
+                    
+                    console.log("Buying SIGMA with USDT:", usdtWei.toString(), "Upline:", upline);
+                    
+                    const tx = await sigmaContract.buy(usdtWei, upline);
+                    
+                    msg.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Waiting for confirmation...';
+                    const receipt = await tx.wait();
+                    
+                    msg.innerHTML = '<i class="fas fa-check-circle" style="color:var(--success)"></i> Purchase Successful!';
+                    
+                    // Refresh data
+                    setTimeout(async () => {
+                        await loadData();
+                        document.getElementById('amount').value = '';
+                        calculate();
+                    }, 2000);
+                    
                 } else {
                     // SELL SIGMA
                     // Check 3-minute cooldown
@@ -892,30 +833,24 @@
                         return;
                     }
                     
-                    msg.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Please confirm in MetaMask...';
+                    msg.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Selling SIGMA...';
                     btn.disabled = true;
                     
                     const sigmaWei = ethers.parseEther(amount.toString());
-                    console.log("Selling SIGMA:", ethers.formatEther(sigmaWei));
+                    console.log("Selling SIGMA:", sigmaWei.toString());
                     
                     const tx = await sigmaContract.sell(sigmaWei);
                     
                     msg.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Waiting for confirmation...';
                     const receipt = await tx.wait();
                     
-                    // Find Sold event
-                    const soldEvent = receipt.logs.find(log => 
-                        log.topics[0] === ethers.id("Sold(address,uint256,uint256,uint256,uint256)")
-                    );
-                    if (soldEvent) {
-                        lastSellTimestamp = Math.floor(Date.now() / 1000);
-                        localStorage.setItem(`lastSell_${userAddress}`, lastSellTimestamp.toString());
-                    }
+                    lastSellTimestamp = Math.floor(Date.now() / 1000);
+                    localStorage.setItem(`lastSell_${userAddress}`, lastSellTimestamp.toString());
                     
                     msg.innerHTML = '<i class="fas fa-check-circle" style="color:var(--success)"></i> Sale Successful!';
                     
-                    setTimeout(() => {
-                        loadData();
+                    setTimeout(async () => {
+                        await loadData();
                         document.getElementById('amount').value = '';
                         calculate();
                     }, 2000);
@@ -929,13 +864,13 @@
                         errorMsg = "❌ Insufficient USDT balance";
                     } else if (errorMsg.includes("Ownable")) {
                         errorMsg = "❌ Creator wallet cannot buy";
-                    } else if (errorMsg.includes("allowance")) {
-                        errorMsg = "❌ Approval issue. Please approve again with exact amount.";
+                    } else if (errorMsg.includes("Cooldown")) {
+                        errorMsg = "❌ 3-Minute cooldown active";
                     } else {
-                        errorMsg = "❌ Transaction failed. Check console for details.";
+                        errorMsg = "❌ Transaction failed. Check console.";
                     }
                 } else if (errorMsg.includes("user rejected")) {
-                    errorMsg = "❌ Transaction rejected in MetaMask";
+                    errorMsg = "❌ Transaction rejected";
                 }
                 
                 msg.innerHTML = '<i class="fas fa-exclamation-triangle" style="color:var(--danger)"></i> ' + errorMsg;
@@ -953,6 +888,7 @@
             if (currentMode === 'buy') {
                 const usdtBal = await usdtContract.balanceOf(userAddress);
                 const usdtNum = parseFloat(ethers.formatUnits(usdtBal, 6));
+                // Calculate max SIG6 considering 1% tax
                 const maxSigma = usdtNum / (buyRate * 1.01);
                 document.getElementById('amount').value = maxSigma.toFixed(6);
             } else {
