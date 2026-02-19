@@ -155,7 +155,7 @@
 
     <script>
         // ===== UPDATED CONTRACT CONFIGURATION =====
-        const SIGMA_CONTRACT_ADDRESS = "0x52fD2a4da50d34566224DC65Da4Ba6C29c07A3DC";
+        const SIGMA_CONTRACT_ADDRESS = "0x6024c57518bb116ac199EAD176486354635BFC46";
         const USDT_ADDRESS = "0xc2132D05D31c914a87C6611C10748AEb04B58e8F"; // USDT on Polygon
         
         let provider, userAddress, sigmaContract;
@@ -172,6 +172,7 @@
             "function sell(uint256 _sigmaAmount) external",
             "function currentRate() view returns (uint256)",
             "function getSellRate() view returns (uint256)",
+            "function users(address) view returns (address upline, uint256 referralExpiry, uint256 totalReferralEarned, uint256 lastBuyTimestamp, uint256 directCount, bool isMigrated, bool hasBought)",
             "event Bought(address indexed user, uint256 usdtAmount, uint256 sigmaAmount, uint256 rate, uint256 timestamp)",
             "event Sold(address indexed user, uint256 sigmaAmount, uint256 usdtAmount, uint256 rate, uint256 timestamp)"
         ];
@@ -189,14 +190,32 @@
             if (!window.ethereum) { alert("Install MetaMask"); return; }
             try {
                 provider = new ethers.BrowserProvider(window.ethereum);
+                
+                // Check network
+                const network = await provider.getNetwork();
+                if (network.chainId !== 137n) {
+                    alert("Please switch to Polygon Mainnet");
+                    try {
+                        await window.ethereum.request({
+                            method: 'wallet_switchEthereumChain',
+                            params: [{ chainId: '0x89' }],
+                        });
+                    } catch (switchError) {
+                        console.log("Network switch error:", switchError);
+                    }
+                }
+                
                 const accounts = await provider.send("eth_requestAccounts", []);
-                userAddress = accounts[0];
+                userAddress = accounts[0].toLowerCase();
                 sigmaContract = new ethers.Contract(SIGMA_CONTRACT_ADDRESS, sigmaABI, provider);
                 
                 document.getElementById('btn-text').textContent = userAddress.slice(0,6)+'...'+userAddress.slice(-4);
                 document.getElementById('connectBtn').classList.add('connected');
                 await loadData();
-            } catch (e) { alert("Connection error: "+e.message); }
+            } catch (e) { 
+                console.error(e);
+                alert("Connection error: "+e.message); 
+            }
         }
 
         async function loadData() {
@@ -245,26 +264,41 @@
                     });
                 }
                 
+                // Sort by timestamp (newest first)
                 buyTransactions.sort((a,b) => b.timestamp - a.timestamp);
                 sellTransactions.sort((a,b) => b.timestamp - a.timestamp);
                 
+                console.log(`Found ${buyTransactions.length} buys, ${sellTransactions.length} sells`);
+                
                 updateStats();
                 updateTables();
-            } catch (e) { console.error(e); alert("Error loading data: "+e.message); }
+            } catch (e) { 
+                console.error(e); 
+                alert("Error loading data: "+e.message); 
+            }
         }
 
         function findAvgBuyRateBefore(sellTimestamp) {
             const buysBefore = buyTransactions.filter(b => b.timestamp < sellTimestamp);
             if (buysBefore.length === 0) return currentBuyRate;
             let totalSigma = 0, totalValue = 0;
-            buysBefore.forEach(b => { totalSigma += b.amount; totalValue += b.amount * b.rate; });
-            return totalValue / totalSigma;
+            buysBefore.forEach(b => { 
+                totalSigma += b.amount; 
+                totalValue += b.amount * b.rate; 
+            });
+            return totalSigma > 0 ? totalValue / totalSigma : currentBuyRate;
         }
 
         function updateStats() {
             let totalBought = 0, totalBoughtVal = 0, totalSold = 0, totalSoldVal = 0;
-            buyTransactions.forEach(t => { totalBought += t.amount; totalBoughtVal += t.amount * t.rate; });
-            sellTransactions.forEach(t => { totalSold += t.amount; totalSoldVal += t.amount * t.rate; });
+            buyTransactions.forEach(t => { 
+                totalBought += t.amount; 
+                totalBoughtVal += t.amount * t.rate; 
+            });
+            sellTransactions.forEach(t => { 
+                totalSold += t.amount; 
+                totalSoldVal += t.amount * t.rate; 
+            });
             
             const holdings = totalBought - totalSold;
             const holdingsVal = holdings * currentBuyRate;
@@ -275,38 +309,62 @@
             document.getElementById('total-bought').innerText = totalBought.toFixed(2)+' SIG6';
             document.getElementById('total-bought-value').innerText = '$'+totalBoughtVal.toFixed(2);
             document.getElementById('total-bought-value').className = 'stat-change positive';
+            
             document.getElementById('total-sold').innerText = totalSold.toFixed(2)+' SIG6';
             document.getElementById('total-sold-value').innerText = '$'+totalSoldVal.toFixed(2);
             document.getElementById('total-sold-value').className = `stat-change ${totalSoldVal>0?'negative':'positive'}`;
+            
             document.getElementById('current-holdings').innerText = holdings.toFixed(2)+' SIG6';
             document.getElementById('holdings-value').innerText = '$'+holdingsVal.toFixed(2);
             document.getElementById('holdings-value').className = `stat-change ${holdingsVal>0?'positive':''}`;
+            
             document.getElementById('net-pnl').innerText = '$'+netPL.toFixed(2);
             document.getElementById('net-pnl').style.color = netPL>=0 ? 'var(--profit)' : 'var(--loss)';
+            
             document.getElementById('pnl-percentage').innerText = (netPL>=0?'+':'')+plPerc.toFixed(2)+'%';
             document.getElementById('pnl-percentage').className = `stat-change ${plPerc>=0?'positive':'negative'}`;
         }
 
         function updateTables() {
             let activeHtml = '';
-            if (buyTransactions.length===0) activeHtml = '<tr><td colspan="8" class="empty-state"><i class="fas fa-chart-bar"></i><br>No active positions</td></tr>';
-            else {
+            if (buyTransactions.length===0) {
+                activeHtml = '<tr><td colspan="8" class="empty-state"><i class="fas fa-chart-bar"></i><br>No buy transactions found</td></tr>';
+            } else {
                 buyTransactions.forEach((t,i) => {
                     const diff = currentBuyRate - t.rate;
                     const diffPerc = (diff/t.rate)*100;
-                    activeHtml += `<tr><td>${i+1}</td><td><div style="font-weight:600">${t.date.toLocaleDateString()}</div><div style="font-size:12px; color:#888">${t.date.toLocaleTimeString()}</div></td><td style="color:var(--primary); font-weight:700">${t.amount.toFixed(2)} SIG6</td><td>$${t.rate.toFixed(4)}</td><td>$${currentBuyRate.toFixed(4)}</td><td><span class="${diff>=0?'pnl-positive':'pnl-negative'}" style="padding:4px 8px; border-radius:6px;"><i class="fas fa-${diff>=0?'arrow-up':'arrow-down'}"></i> $${Math.abs(diff).toFixed(4)}</span></td><td><span class="${diffPerc>=0?'badge-profit':'badge-loss'}">${diffPerc>=0?'+':''}${diffPerc.toFixed(2)}%</span></td><td><span class="badge badge-active">ACTIVE</span></td></tr>`;
+                    activeHtml += `<tr>
+                        <td>${i+1}</td>
+                        <td><div style="font-weight:600">${t.date.toLocaleDateString()}</div><div style="font-size:12px; color:#888">${t.date.toLocaleTimeString()}</div></td>
+                        <td style="color:var(--primary); font-weight:700">${t.amount.toFixed(2)} SIG6</td>
+                        <td>$${t.rate.toFixed(4)}</td>
+                        <td>$${currentBuyRate.toFixed(4)}</td>
+                        <td><span class="${diff>=0?'pnl-positive':'pnl-negative'}" style="padding:4px 8px; border-radius:6px;"><i class="fas fa-${diff>=0?'arrow-up':'arrow-down'}"></i> $${Math.abs(diff).toFixed(4)}</span></td>
+                        <td><span class="${diffPerc>=0?'badge-profit':'badge-loss'}">${diffPerc>=0?'+':''}${diffPerc.toFixed(2)}%</span></td>
+                        <td><span class="badge badge-active">ACTIVE</span></td>
+                    </tr>`;
                 });
             }
             document.getElementById('active-body').innerHTML = activeHtml;
             
             let closedHtml = '';
-            if (sellTransactions.length===0) closedHtml = '<tr><td colspan="8" class="empty-state"><i class="fas fa-history"></i><br>No closed positions</td></tr>';
-            else {
+            if (sellTransactions.length===0) {
+                closedHtml = '<tr><td colspan="8" class="empty-state"><i class="fas fa-history"></i><br>No sell transactions found</td></tr>';
+            } else {
                 sellTransactions.forEach((t,i) => {
                     const buyRate = findAvgBuyRateBefore(t.timestamp);
                     const plAmount = t.amount * (t.rate - buyRate);
-                    const plPerc = ((t.rate - buyRate)/buyRate)*100;
-                    closedHtml += `<tr><td>${i+1}</td><td><div style="font-weight:600">${t.date.toLocaleDateString()}</div><div style="font-size:12px; color:#888">${t.date.toLocaleTimeString()}</div></td><td style="color:${plAmount>=0?'var(--profit)':'var(--loss)'}; font-weight:700">${t.amount.toFixed(2)} SIG6</td><td>$${buyRate.toFixed(4)}</td><td>$${t.rate.toFixed(4)}</td><td><span class="${plAmount>=0?'pnl-positive':'pnl-negative'}" style="padding:4px 8px; border-radius:6px;"><i class="fas fa-${plAmount>=0?'arrow-up':'arrow-down'}"></i> $${Math.abs(plAmount).toFixed(2)}</span></td><td><span class="${plPerc>=0?'badge-profit':'badge-loss'}">${plPerc>=0?'+':''}${plPerc.toFixed(2)}%</span></td><td><span class="badge badge-closed">CLOSED</span></td></tr>`;
+                    const plPerc = buyRate > 0 ? ((t.rate - buyRate)/buyRate)*100 : 0;
+                    closedHtml += `<tr>
+                        <td>${i+1}</td>
+                        <td><div style="font-weight:600">${t.date.toLocaleDateString()}</div><div style="font-size:12px; color:#888">${t.date.toLocaleTimeString()}</div></td>
+                        <td style="color:${plAmount>=0?'var(--profit)':'var(--loss)'}; font-weight:700">${t.amount.toFixed(2)} SIG6</td>
+                        <td>$${buyRate.toFixed(4)}</td>
+                        <td>$${t.rate.toFixed(4)}</td>
+                        <td><span class="${plAmount>=0?'pnl-positive':'pnl-negative'}" style="padding:4px 8px; border-radius:6px;"><i class="fas fa-${plAmount>=0?'arrow-up':'arrow-down'}"></i> $${Math.abs(plAmount).toFixed(2)}</span></td>
+                        <td><span class="${plPerc>=0?'badge-profit':'badge-loss'}">${plPerc>=0?'+':''}${plPerc.toFixed(2)}%</span></td>
+                        <td><span class="badge badge-closed">CLOSED</span></td>
+                    </tr>`;
                 });
             }
             document.getElementById('closed-body').innerHTML = closedHtml;
@@ -348,7 +406,9 @@
 
         window.onload = function() {
             createParticles();
-            if (window.ethereum && window.ethereum.selectedAddress) connectWallet();
+            if (window.ethereum && window.ethereum.selectedAddress) {
+                connectWallet();
+            }
         };
     </script>
 </body>
