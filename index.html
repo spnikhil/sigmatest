@@ -303,7 +303,7 @@
                 <div class="contract-box">
                     <div class="contract-info">
                         <div class="contract-label"><i class="fas fa-file-contract"></i> CONTRACT (NEW)</div>
-                        <div class="contract-address">0x437aD92455210c835Fbcee741037861379B97bc2</div>
+                        <div class="contract-address">0x6024c57518bb116ac199EAD176486354635BFC46</div>
                     </div>
                     <button class="copy-btn" onclick="copyContract()"><i class="fas fa-copy"></i> COPY</button>
                 </div>
@@ -383,20 +383,22 @@
     </div>
 
     <script>
-        // ========== CONTRACT CONFIGURATION ==========
-        const SIGMA_ADDRESS = "0x437aD92455210c835Fbcee741037861379B97bc2";
+        // ========== CONTRACT CONFIGURATION (UPDATED) ==========
+        const SIGMA_ADDRESS = "0x6024c57518bb116ac199EAD176486354635BFC46"; // NEW CONTRACT
         const USDT_ADDRESS = "0xc2132D05D31c914a87C6611C10748AEb04B58e8F";
         const CREATOR_WALLET = "0xb579377DDe2C03b2b46B5b12453F4dbAddB06f2E";
         
-        // ABI
+        // ABI from the new contract
         const SIGMA_ABI = [
             "function balanceOf(address) view returns (uint256)",
             "function buy(uint256 _usdtAmount, address _upline) external",
             "function sell(uint256 _sigmaAmount) external",
             "function currentRate() view returns (uint256)",
             "function getSellRate() view returns (uint256)",
-            "function users(address) view returns (address upline, uint256 referralExpiry, uint256 totalReferralEarned, uint256 lastBuyTimestamp, bool isMigrated, bool hasBought, uint256 directCount)",
-            "function transfer(address to, uint256 value) external returns (bool)"
+            "function users(address) view returns (address upline, uint256 referralExpiry, uint256 totalReferralEarned, uint256 lastBuyTimestamp, uint256 directCount, bool isMigrated, bool hasBought)",
+            "function transfer(address to, uint256 value) external returns (bool)",
+            "function INCREMENT() view returns (uint256)",
+            "function BASE_RATE() view returns (uint256)"
         ];
 
         const USDT_ABI = [
@@ -930,7 +932,7 @@
                     document.getElementById('step2Status').innerHTML = 'Completed';
                     
                     setTimeout(async () => {
-                        await loadData();
+                        await loadData(); // This will fetch new rate
                         document.getElementById('amount').value = '';
                         document.getElementById('approvalSteps').style.display = 'none';
                         calculate();
@@ -964,7 +966,7 @@
                     msg.innerHTML = '<i class="fas fa-check-circle" style="color:var(--success)"></i> Sale Successful!';
                     
                     setTimeout(async () => {
-                        await loadData();
+                        await loadData(); // This will fetch new rate
                         document.getElementById('amount').value = '';
                         calculate();
                     }, 2000);
