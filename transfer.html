@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SIGMA SIX | Transfer Report</title>
+    <title>SIGMA SIX | P2P Transfer Report</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.umd.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -67,7 +67,6 @@
         .tab-btn { padding:12px 30px; border-radius:40px; border:1px solid var(--border); background:rgba(255,255,255,0.03); color:var(--text); font-weight:700; font-size:16px; cursor:pointer; transition:all 0.3s; display:flex; align-items:center; gap:10px; }
         .tab-btn i { font-size:18px; }
         .tab-btn.active { background:linear-gradient(90deg, var(--primary), var(--secondary)); color:#000; border-color:transparent; }
-        .tab-btn.receive.active { background:linear-gradient(90deg, #00d4ff, var(--secondary)); }
         
         .transfer-card { background:rgba(22,24,33,0.7); backdrop-filter:blur(10px); border-radius:24px; padding:25px; border:1px solid rgba(0,255,204,0.15); margin-bottom:25px; }
         .card-header { display:flex; align-items:center; gap:15px; margin-bottom:25px; }
@@ -82,7 +81,7 @@
         td { padding:14px 15px; border-bottom:1px solid rgba(45,47,62,0.3); font-size:14px; }
         tr:hover td { background:rgba(255,255,255,0.03); }
         
-        .wallet-addr { font-family:'Courier New',monospace; background:rgba(0,0,0,0.3); padding:4px 8px; border-radius:6px; font-size:12px; display:inline-block; }
+        .wallet-addr { font-family:'Courier New',monospace; background:rgba(0,0,0,0.3); padding:6px 10px; border-radius:8px; font-size:12px; display:inline-block; border:1px solid rgba(255,255,255,0.1); }
         .badge { padding:6px 12px; border-radius:20px; font-size:12px; font-weight:700; display:inline-block; }
         .badge-send { background:rgba(255,170,0,0.1); color:var(--send); border:1px solid rgba(255,170,0,0.3); }
         .badge-receive { background:rgba(0,212,255,0.1); color:var(--receive); border:1px solid rgba(0,212,255,0.3); }
@@ -122,18 +121,18 @@
         </div>
         
         <div class="header">
-            <h1>TRANSFER REPORT</h1>
-            <p>Complete history of all SIGMA transfers – Sent & Received</p>
+            <h1>P2P TRANSFER REPORT</h1>
+            <p>User to User SIGMA Transfers Only • No Buy/Sell Transactions</p>
         </div>
         
         <div class="stats-container">
             <div class="stat-card">
-                <div class="stat-title"><i class="fas fa-paper-plane"></i> Total Sent</div>
+                <div class="stat-title"><i class="fas fa-paper-plane"></i> Total Sent (P2P)</div>
                 <div class="stat-value" id="totalSent">0 SIG6</div>
                 <div class="stat-sub" id="totalSentUsdt">$0.00</div>
             </div>
             <div class="stat-card">
-                <div class="stat-title"><i class="fas fa-inbox"></i> Total Received</div>
+                <div class="stat-title"><i class="fas fa-inbox"></i> Total Received (P2P)</div>
                 <div class="stat-value" id="totalReceived">0 SIG6</div>
                 <div class="stat-sub" id="totalReceivedUsdt">$0.00</div>
             </div>
@@ -143,15 +142,15 @@
                 <div class="stat-sub" id="receivedPNLPerc">0.00%</div>
             </div>
             <div class="stat-card">
-                <div class="stat-title"><i class="fas fa-clock"></i> Last Transfer</div>
+                <div class="stat-title"><i class="fas fa-clock"></i> Last P2P Transfer</div>
                 <div class="stat-value" id="lastTransfer">--</div>
                 <div class="stat-sub">Date & time</div>
             </div>
         </div>
         
         <div class="tab-container">
-            <button class="tab-btn active" onclick="showTab('receive')"><i class="fas fa-inbox"></i> RECEIVED</button>
-            <button class="tab-btn" onclick="showTab('send')"><i class="fas fa-paper-plane"></i> SENT</button>
+            <button class="tab-btn active" onclick="showTab('receive')"><i class="fas fa-inbox"></i> RECEIVED (P2P)</button>
+            <button class="tab-btn" onclick="showTab('send')"><i class="fas fa-paper-plane"></i> SENT (P2P)</button>
         </div>
         
         <!-- RECEIVE CARD -->
@@ -159,8 +158,8 @@
             <div class="card-header">
                 <div class="card-icon"><i class="fas fa-inbox"></i></div>
                 <div>
-                    <div class="card-title">RECEIVED TRANSFERS</div>
-                    <div class="card-subtitle">SIGMA received from others – current value & P&L</div>
+                    <div class="card-title">RECEIVED P2P TRANSFERS</div>
+                    <div class="card-subtitle">SIGMA received from other users – current value & P&L</div>
                 </div>
             </div>
             <div class="table-responsive">
@@ -171,14 +170,16 @@
                             <th>Date & Time</th>
                             <th>Sender Address</th>
                             <th>Sigma Quantity</th>
+                            <th>Rate at Transfer</th>
                             <th>Current Rate</th>
-                            <th>Current Value</th>
+                            <th>Difference</th>
+                            <th>P&L %</th>
                             <th>Status</th>
-                            <th>Transaction</th>
+                            <th>TX</th>
                         </tr>
                     </thead>
                     <tbody id="receiveTableBody">
-                        <tr><td colspan="8" class="loading"><i class="fas fa-spinner fa-spin"></i><br>Connect wallet to load</td></tr>
+                        <tr><td colspan="10" class="loading"><i class="fas fa-spinner fa-spin"></i><br>Connect wallet to load P2P transfers...</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -189,8 +190,8 @@
             <div class="card-header">
                 <div class="card-icon"><i class="fas fa-paper-plane"></i></div>
                 <div>
-                    <div class="card-title">SENT TRANSFERS</div>
-                    <div class="card-subtitle">SIGMA sent to others – record of outgoing transfers</div>
+                    <div class="card-title">SENT P2P TRANSFERS</div>
+                    <div class="card-subtitle">SIGMA sent to other users – record of outgoing transfers</div>
                 </div>
             </div>
             <div class="table-responsive">
@@ -201,13 +202,14 @@
                             <th>Date & Time</th>
                             <th>Receiver Address</th>
                             <th>Sigma Quantity</th>
-                            <th>Current Rate</th>
+                            <th>Rate at Transfer</th>
+                            <th>Value at Transfer</th>
                             <th>Current Value</th>
-                            <th>Transaction</th>
+                            <th>TX</th>
                         </tr>
                     </thead>
                     <tbody id="sendTableBody">
-                        <tr><td colspan="7" class="loading"><i class="fas fa-spinner fa-spin"></i><br>Connect wallet to load</td></tr>
+                        <tr><td colspan="8" class="loading"><i class="fas fa-spinner fa-spin"></i><br>Connect wallet to load P2P transfers...</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -215,26 +217,18 @@
     </div>
 
     <script>
-        // ===== UPDATED CONTRACT CONFIGURATION =====
+        // ===== CONTRACT CONFIGURATION =====
         const SIGMA_ADDR = "0x6024c57518bb116ac199EAD176486354635BFC46";
         const CREATOR_WALLET = "0xb579377DDe2C03b2b46B5b12453F4dbAddB06f2E";
         
-        // Complete ABI with all events from the contract
+        // ABI - Only need P2PTransfer event and currentRate
         const SIGMA_ABI = [
-            // View Functions
-            "function balanceOf(address) view returns (uint256)",
-            "function transfer(address to, uint256 amount) external returns (bool)",
             "function currentRate() view returns (uint256)",
-            "function getSellRate() view returns (uint256)",
-            "function users(address) view returns (address upline, uint256 referralExpiry, uint256 totalReferralEarned, uint256 lastBuyTimestamp, uint256 directCount, bool isMigrated, bool hasBought)",
-            
-            // Events
-            "event Transfer(address indexed from, address indexed to, uint256 value)",
             "event P2PTransfer(address indexed from, address indexed to, uint256 amount, uint256 timestamp, uint256 currentRate)"
         ];
 
         let provider, signer, userAddress, sigmaContract;
-        let currentRate = 0.0105; // fallback
+        let currentRate = 0.0105;
         let sentTransfers = [];
         let receivedTransfers = [];
 
@@ -298,71 +292,63 @@
                     console.warn("Using fallback rate", e); 
                 }
 
-                // Fetch Transfer events
-                const filterSent = sigmaContract.filters.Transfer(userAddress, null);
-                const filterReceived = sigmaContract.filters.Transfer(null, userAddress);
+                // Fetch ONLY P2PTransfer events
+                console.log("🔍 Fetching P2PTransfer events...");
+                const p2pFilter = sigmaContract.filters.P2PTransfer();
+                const p2pEvents = await sigmaContract.queryFilter(p2pFilter, 0, 'latest');
                 
-                const currentBlock = await provider.getBlockNumber();
-                const fromBlock = Math.max(currentBlock - 2000000, 0); // scan ~2M blocks back
+                console.log(`✅ Found ${p2pEvents.length} P2PTransfer events`);
                 
-                console.log("Fetching Transfer events from block", fromBlock, "to", currentBlock);
+                // Clear arrays
+                sentTransfers = [];
+                receivedTransfers = [];
                 
-                const [sentEvents, receivedEvents] = await Promise.all([
-                    sigmaContract.queryFilter(filterSent, fromBlock, currentBlock),
-                    sigmaContract.queryFilter(filterReceived, fromBlock, currentBlock)
-                ]);
-                
-                console.log(`Found ${sentEvents.length} sent, ${receivedEvents.length} received`);
-                
-                // Process sent transfers
-                sentTransfers = await Promise.all(sentEvents.map(async (e) => {
-                    try {
-                        const block = await e.getBlock();
-                        return {
-                            to: e.args.to.toLowerCase(),
-                            amount: parseFloat(ethers.formatEther(e.args.value)),
-                            timestamp: block.timestamp,
-                            date: new Date(block.timestamp * 1000),
-                            hash: e.transactionHash,
-                            value: e.args.value.toString()
-                        };
-                    } catch (err) {
-                        console.error("Error processing sent event:", err);
-                        return null;
+                // Process P2P events - separate sent and received
+                p2pEvents.forEach(e => {
+                    const from = e.args.from.toLowerCase();
+                    const to = e.args.to.toLowerCase();
+                    const amount = parseFloat(ethers.formatEther(e.args.amount));
+                    const timestamp = Number(e.args.timestamp);
+                    const rateAtTransfer = parseFloat(ethers.formatUnits(e.args.currentRate, 6));
+                    const date = new Date(timestamp * 1000);
+                    const txHash = e.transactionHash;
+                    
+                    // Create transfer object
+                    const transfer = {
+                        from,
+                        to,
+                        amount,
+                        timestamp,
+                        date,
+                        hash: txHash,
+                        rateAtTransfer,
+                        valueAtTransfer: amount * rateAtTransfer
+                    };
+                    
+                    // Add to appropriate array based on user address
+                    if (to === userAddress) {
+                        // Received by current user
+                        receivedTransfers.push(transfer);
                     }
-                }));
-                sentTransfers = sentTransfers.filter(t => t !== null);
-                
-                // Process received transfers
-                receivedTransfers = await Promise.all(receivedEvents.map(async (e) => {
-                    try {
-                        const block = await e.getBlock();
-                        return {
-                            from: e.args.from.toLowerCase(),
-                            amount: parseFloat(ethers.formatEther(e.args.value)),
-                            timestamp: block.timestamp,
-                            date: new Date(block.timestamp * 1000),
-                            hash: e.transactionHash,
-                            value: e.args.value.toString()
-                        };
-                    } catch (err) {
-                        console.error("Error processing received event:", err);
-                        return null;
+                    
+                    if (from === userAddress) {
+                        // Sent by current user
+                        sentTransfers.push(transfer);
                     }
-                }));
-                receivedTransfers = receivedTransfers.filter(t => t !== null);
+                });
                 
                 // Sort newest first
                 sentTransfers.sort((a,b) => b.timestamp - a.timestamp);
                 receivedTransfers.sort((a,b) => b.timestamp - a.timestamp);
                 
+                console.log(`📤 Sent: ${sentTransfers.length}, 📥 Received: ${receivedTransfers.length}`);
+                
                 updateStats();
                 renderTables();
             } catch (e) {
                 console.error("Error loading transfers:", e);
-                // Show error in tables
-                document.getElementById('receiveTableBody').innerHTML = '<tr><td colspan="8" class="empty-state"><i class="fas fa-exclamation-triangle"></i><br>Error loading data: ' + e.message + '</td></tr>';
-                document.getElementById('sendTableBody').innerHTML = '<tr><td colspan="7" class="empty-state"><i class="fas fa-exclamation-triangle"></i><br>Error loading data</td></tr>';
+                document.getElementById('receiveTableBody').innerHTML = '<tr><td colspan="10" class="empty-state"><i class="fas fa-exclamation-triangle"></i><br>Error: ' + e.message + '</td></tr>';
+                document.getElementById('sendTableBody').innerHTML = '<tr><td colspan="8" class="empty-state"><i class="fas fa-exclamation-triangle"></i><br>Error loading data</td></tr>';
             }
         }
 
@@ -370,23 +356,25 @@
             const totalSent = sentTransfers.reduce((s,t) => s + t.amount, 0);
             const totalReceived = receivedTransfers.reduce((s,t) => s + t.amount, 0);
             
-            const totalSentUsdt = totalSent * currentRate;
-            const totalReceivedUsdt = totalReceived * currentRate;
-            
-            // P&L on received (since you received for free, all is profit)
-            const plAmount = totalReceivedUsdt;
-            const plPerc = totalReceived > 0 ? 100 : 0;
+            // Calculate P&L on received
+            let totalReceivedValue = 0, totalCurrentValue = 0;
+            receivedTransfers.forEach(r => {
+                totalReceivedValue += r.amount * r.rateAtTransfer;
+                totalCurrentValue += r.amount * currentRate;
+            });
+            const plAmount = totalCurrentValue - totalReceivedValue;
+            const plPerc = totalReceivedValue > 0 ? (plAmount / totalReceivedValue) * 100 : 0;
             
             document.getElementById('totalSent').innerText = totalSent.toFixed(2) + ' SIG6';
-            document.getElementById('totalSentUsdt').innerText = '$' + totalSentUsdt.toFixed(2);
+            document.getElementById('totalSentUsdt').innerText = '$' + (totalSent * currentRate).toFixed(2);
             
             document.getElementById('totalReceived').innerText = totalReceived.toFixed(2) + ' SIG6';
-            document.getElementById('totalReceivedUsdt').innerText = '$' + totalReceivedUsdt.toFixed(2);
+            document.getElementById('totalReceivedUsdt').innerText = '$' + totalReceivedValue.toFixed(2);
             
-            document.getElementById('receivedPNL').innerText = '+' + plAmount.toFixed(2);
-            document.getElementById('receivedPNL').style.color = 'var(--profit)';
-            document.getElementById('receivedPNLPerc').innerText = '+100.00%';
-            document.getElementById('receivedPNLPerc').style.color = 'var(--profit)';
+            document.getElementById('receivedPNL').innerText = (plAmount >= 0 ? '+' : '') + '$' + plAmount.toFixed(2);
+            document.getElementById('receivedPNL').style.color = plAmount >= 0 ? 'var(--profit)' : 'var(--loss)';
+            document.getElementById('receivedPNLPerc').innerText = (plPerc >= 0 ? '+' : '') + plPerc.toFixed(2) + '%';
+            document.getElementById('receivedPNLPerc').style.color = plPerc >= 0 ? 'var(--profit)' : 'var(--loss)';
             
             const allTransfers = [...sentTransfers, ...receivedTransfers];
             if (allTransfers.length > 0) {
@@ -401,18 +389,22 @@
             // Receive table
             let receiveHtml = '';
             if (receivedTransfers.length === 0) {
-                receiveHtml = '<tr><td colspan="8" class="empty-state"><i class="fas fa-inbox"></i><br>No received transfers found</td></tr>';
+                receiveHtml = '<tr><td colspan="10" class="empty-state"><i class="fas fa-inbox"></i><br>No P2P transfers received</td></tr>';
             } else {
                 receivedTransfers.forEach((t, i) => {
-                    const currentValue = t.amount * currentRate;
+                    const diff = currentRate - t.rateAtTransfer;
+                    const diffPerc = (diff / t.rateAtTransfer) * 100;
+                    
                     receiveHtml += `<tr>
                         <td>${i+1}</td>
                         <td><div style="font-weight:600">${t.date.toLocaleDateString()}</div><div style="font-size:12px; color:#888">${t.date.toLocaleTimeString()}</div></td>
-                        <td><span class="wallet-addr">${t.from.slice(0,8)}...${t.from.slice(-6)}</span></td>
+                        <td><span class="wallet-addr" title="${t.from}">${t.from.slice(0,8)}...${t.from.slice(-6)}</span></td>
                         <td style="color:var(--receive); font-weight:700">${t.amount.toFixed(2)} SIG6</td>
+                        <td>$${t.rateAtTransfer.toFixed(4)}</td>
                         <td>$${currentRate.toFixed(4)}</td>
-                        <td>$${currentValue.toFixed(2)}</td>
-                        <td><span class="badge badge-receive">RECEIVED</span></td>
+                        <td><span class="${diff>=0?'positive':'negative'}"><i class="fas fa-${diff>=0?'arrow-up':'arrow-down'}"></i> $${Math.abs(diff).toFixed(4)}</span></td>
+                        <td><span class="badge ${diffPerc>=0?'badge-profit':'badge-loss'}">${diffPerc>=0?'+':''}${diffPerc.toFixed(2)}%</span></td>
+                        <td><span class="badge badge-receive">P2P RECEIVED</span></td>
                         <td><a href="https://polygonscan.com/tx/${t.hash}" target="_blank" style="color:var(--primary)"><i class="fas fa-external-link-alt"></i></a></td>
                     </tr>`;
                 });
@@ -422,16 +414,18 @@
             // Send table
             let sendHtml = '';
             if (sentTransfers.length === 0) {
-                sendHtml = '<tr><td colspan="7" class="empty-state"><i class="fas fa-paper-plane"></i><br>No sent transfers found</td></tr>';
+                sendHtml = '<tr><td colspan="8" class="empty-state"><i class="fas fa-paper-plane"></i><br>No P2P transfers sent</td></tr>';
             } else {
                 sentTransfers.forEach((t, i) => {
                     const currentValue = t.amount * currentRate;
+                    
                     sendHtml += `<tr>
                         <td>${i+1}</td>
                         <td><div style="font-weight:600">${t.date.toLocaleDateString()}</div><div style="font-size:12px; color:#888">${t.date.toLocaleTimeString()}</div></td>
-                        <td><span class="wallet-addr">${t.to.slice(0,8)}...${t.to.slice(-6)}</span></td>
+                        <td><span class="wallet-addr" title="${t.to}">${t.to.slice(0,8)}...${t.to.slice(-6)}</span></td>
                         <td style="color:var(--send); font-weight:700">${t.amount.toFixed(2)} SIG6</td>
-                        <td>$${currentRate.toFixed(4)}</td>
+                        <td>$${t.rateAtTransfer.toFixed(4)}</td>
+                        <td>$${t.valueAtTransfer.toFixed(2)}</td>
                         <td>$${currentValue.toFixed(2)}</td>
                         <td><a href="https://polygonscan.com/tx/${t.hash}" target="_blank" style="color:var(--primary)"><i class="fas fa-external-link-alt"></i></a></td>
                     </tr>`;
