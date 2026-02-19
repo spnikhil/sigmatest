@@ -525,9 +525,9 @@
     
     <div class="container">
         <div class="nav-container">
-            <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i> Back</a>
+            <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
             <button class="nav-btn" onclick="loadTeamData()"><i class="fas fa-sync-alt"></i> Refresh</button>
-            <button class="nav-btn" onclick="exportData()"><i class="fas fa-download"></i> Export</button>
+            <button class="nav-btn" onclick="exportData()"><i class="fas fa-download"></i> Export CSV</button>
         </div>
         
         <div class="header">
@@ -553,8 +553,8 @@
             </div>
             <div class="stat-card">
                 <div class="stat-title"><i class="fas fa-chart-line"></i> Current Rates</div>
-                <div class="stat-value" id="buy-rate">0.0316 USDT</div>
-                <div class="stat-sub" id="sell-rate">Sell: 0.0300 USDT</div>
+                <div class="stat-value" id="buy-rate">0.0105 USDT</div>
+                <div class="stat-sub" id="sell-rate">Sell: 0.0100 USDT</div>
             </div>
         </div>
         
@@ -577,11 +577,11 @@
                     </select>
                 </div>
                 <div class="filter-group">
-                    <div class="filter-label"><i class="fas fa-search"></i> Search</div>
-                    <input type="text" id="search-address" class="filter-input" placeholder="Wallet address...">
+                    <div class="filter-label"><i class="fas fa-search"></i> Search Address</div>
+                    <input type="text" id="search-address" class="filter-input" placeholder="0x... or partial address">
                 </div>
                 <div class="filter-group">
-                    <div class="filter-label"><i class="fas fa-filter"></i> Balance</div>
+                    <div class="filter-label"><i class="fas fa-filter"></i> Balance Status</div>
                     <select id="balance-filter" class="filter-select">
                         <option value="all">All Balances</option>
                         <option value="positive">Positive Balance Only</option>
@@ -590,8 +590,8 @@
                 </div>
             </div>
             <div class="filter-buttons">
-                <button class="filter-btn btn-primary" onclick="applyFilters()"><i class="fas fa-filter"></i> Apply</button>
-                <button class="filter-btn btn-secondary" onclick="resetFilters()"><i class="fas fa-redo"></i> Reset</button>
+                <button class="filter-btn btn-primary" onclick="applyFilters()"><i class="fas fa-filter"></i> Apply Filters</button>
+                <button class="filter-btn btn-secondary" onclick="resetFilters()"><i class="fas fa-redo-alt"></i> Reset Filters</button>
             </div>
         </div>
         
@@ -634,28 +634,61 @@
     </div>
 
     <script>
-        // ===== CONTRACT CONFIGURATION =====
-        const SIGMA_ADDR = "0x52fD2a4da50d34566224DC65Da4Ba6C29c07A3DC";
+        // ===== UPDATED CONTRACT CONFIGURATION =====
+        const SIGMA_ADDR = "0x6024c57518bb116ac199EAD176486354635BFC46";
         const CREATOR_WALLET = "0xb579377DDe2C03b2b46B5b12453F4dbAddB06f2E";
         
-        // COMPLETE ABI
+        // COMPLETE ABI INCLUDING ALL EVENTS
         const SIGMA_ABI = [
+            // View Functions
             "function balanceOf(address) view returns (uint256)",
-            "function upline(address) view returns (address)",
             "function currentRate() view returns (uint256)",
             "function getSellRate() view returns (uint256)",
-            "function users(address) view returns (address upline, uint256 referralExpiry, uint256 totalReferralEarned, uint256 lastBuyTimestamp, bool isMigrated, bool hasBought, uint256 directCount)",
-            "event MemberJoined(address indexed user, address indexed referrer, uint256 timestamp)",
-            "event Transfer(address indexed from, address indexed to, uint256 value)"
+            "function users(address) view returns (address upline, uint256 referralExpiry, uint256 totalReferralEarned, uint256 lastBuyTimestamp, uint256 directCount, bool isMigrated, bool hasBought)",
+            "function BASE_RATE() view returns (uint256)",
+            "function INCREMENT() view returns (uint256)",
+            "function MIN_USDT_FOR_REF() view returns (uint256)",
+            "function levelRewards(uint256) view returns (uint256)",
+            "function owner() view returns (address)",
+            "function creatorWallet() view returns (address)",
+            "function usdt() view returns (address)",
+            "function totalSupply() view returns (uint256)",
+            "function decimals() view returns (uint8)",
+            "function name() view returns (string)",
+            "function symbol() view returns (string)",
+            
+            // Write Functions
+            "function buy(uint256 _usdtAmount, address _upline) external",
+            "function sell(uint256 _sigmaAmount) external",
+            "function p2pTransfer(address _to, uint256 _amount) external",
+            "function transfer(address to, uint256 value) external returns (bool)",
+            "function transferFrom(address from, address to, uint256 value) external returns (bool)",
+            "function approve(address spender, uint256 value) external returns (bool)",
+            
+            // Admin Functions
+            "function migrateUsers(address[] calldata _users, uint256[] calldata _balances, address[] calldata _uplines) external",
+            "function creatorWithdrawTreasury() external",
+            "function emergencyWithdraw() external",
+            
+            // Events - IMPORTANT: These are needed for filters
+            "event Transfer(address indexed from, address indexed to, uint256 value)",
+            "event Approval(address indexed owner, address indexed spender, uint256 value)",
+            "event Bought(address indexed user, uint256 usdtAmount, uint256 sigmaAmount, uint256 rate, uint256 timestamp)",
+            "event Sold(address indexed user, uint256 sigmaAmount, uint256 usdtAmount, uint256 rate, uint256 timestamp)",
+            "event ReferralPaid(address indexed from, address indexed to, uint256 amount, uint256 level, uint256 timestamp)",
+            "event IncomeLapsed(address indexed user, uint256 amount, string reason, uint256 timestamp)",
+            "event P2PTransfer(address indexed from, address indexed to, uint256 amount, uint256 timestamp, uint256 currentRate)",
+            "event OwnershipTransferred(address indexed previousOwner, address indexed newOwner)"
         ];
 
         let provider, userAddress, sigmaContract;
         let teamMembers = [];
         let filteredMembers = [];
-        let buyRate = 0.0316;
-        let sellRate = 0.0300;
+        let buyRate = 0.0105;
+        let sellRate = 0.0100;
         let currentSort = { field: 'level', order: 'asc' };
         let isLoading = false;
+        let allAddresses = [];
 
         window.onload = async () => {
             if (window.ethereum) {
@@ -676,6 +709,20 @@
             
             try {
                 provider = new ethers.BrowserProvider(window.ethereum);
+                
+                const network = await provider.getNetwork();
+                if (network.chainId !== 137n) {
+                    alert("Please switch to Polygon Mainnet");
+                    try {
+                        await window.ethereum.request({
+                            method: 'wallet_switchEthereumChain',
+                            params: [{ chainId: '0x89' }],
+                        });
+                    } catch (switchError) {
+                        console.log("Network switch error:", switchError);
+                    }
+                }
+                
                 const accounts = await provider.send("eth_requestAccounts", []);
                 userAddress = accounts[0].toLowerCase();
                 
@@ -701,7 +748,7 @@
             }
         }
 
-        // Cache for user data to avoid repeated calls
+        // Cache for user data
         const userCache = new Map();
         
         async function getUserData(addr) {
@@ -718,77 +765,26 @@
                 let upline = "0x0000000000000000000000000000000000000000";
                 let directCount = 0;
                 let lastBuyTimestamp = 0;
+                let referralExpiry = 0;
+                let isMigrated = false;
                 
                 if (userStruct) {
                     upline = userStruct.upline?.toLowerCase() || "0x0000000000000000000000000000000000000000";
                     directCount = Number(userStruct.directCount);
                     lastBuyTimestamp = Number(userStruct.lastBuyTimestamp);
+                    referralExpiry = Number(userStruct.referralExpiry);
+                    isMigrated = userStruct.isMigrated;
                 }
                 
-                const data = { balance, upline, directCount, lastBuyTimestamp };
+                const data = { balance, upline, directCount, lastBuyTimestamp, referralExpiry, isMigrated };
                 userCache.set(addr, data);
                 return data;
             } catch {
-                const data = { balance: 0, upline: "0x0000000000000000000000000000000000000000", directCount: 0, lastBuyTimestamp: 0 };
+                const data = { balance: 0, upline: "0x0000000000000000000000000000000000000000", directCount: 0, lastBuyTimestamp: 0, referralExpiry: 0, isMigrated: false };
                 userCache.set(addr, data);
                 return data;
             }
         }
-
-        // Recursive function to get all downline members
-        async function getDownlineMembers(address, currentLevel = 1, maxLevel = 10) {
-            if (currentLevel > maxLevel) return [];
-            
-            const members = [];
-            
-            try {
-                // Get user data for this address to find its directCount
-                const userData = await getUserData(address);
-                const directCount = userData.directCount;
-                
-                if (directCount === 0) return [];
-                
-                console.log(`🔍 Getting downline for ${address.slice(0,8)}... at level ${currentLevel}, directCount: ${directCount}`);
-                
-                // We need to find all addresses that have this address as upline
-                // Since we can't query by upline directly, we need to check all addresses we know
-                // But for performance, we'll rely on the MemberJoined events and Transfer events we collected
-                
-                // This will be populated from the events
-                const potentialDownline = Array.from(allAddresses || []);
-                
-                for (const potentialAddr of potentialDownline) {
-                    if (potentialAddr === address || potentialAddr === CREATOR_WALLET.toLowerCase()) continue;
-                    
-                    try {
-                        const potentialUserData = await getUserData(potentialAddr);
-                        if (potentialUserData.upline === address) {
-                            // Found a direct downline
-                            console.log(`✅ Found downline: ${potentialAddr.slice(0,8)}... at level ${currentLevel + 1}`);
-                            
-                            members.push({
-                                address: potentialAddr,
-                                level: currentLevel + 1,
-                                ...potentialUserData
-                            });
-                            
-                            // Recursively get their downline
-                            const subMembers = await getDownlineMembers(potentialAddr, currentLevel + 1, maxLevel);
-                            members.push(...subMembers);
-                        }
-                    } catch (e) {
-                        // Ignore errors
-                    }
-                }
-            } catch (e) {
-                console.error(`Error getting downline for ${address}:`, e);
-            }
-            
-            return members;
-        }
-
-        let allAddresses = new Set();
-        let joinDates = new Map();
 
         async function loadTeamData() {
             if (!userAddress || isLoading) return;
@@ -811,95 +807,114 @@
                     
                     document.getElementById('buy-rate').textContent = buyRate.toFixed(4) + ' USDT';
                     document.getElementById('sell-rate').textContent = `Sell: ${sellRate.toFixed(4)} USDT`;
-                } catch (e) {}
+                } catch (e) {
+                    console.log("Rate fetch error:", e);
+                }
 
-                // Get ALL MemberJoined events
-                console.log("🔍 Fetching MemberJoined events...");
-                const memberFilter = sigmaContract.filters.MemberJoined();
-                const memberEvents = await sigmaContract.queryFilter(memberFilter, 0, 'latest');
-                
-                // Get ALL Transfer events
+                // Get ALL Transfer events (now it will work because we added the event)
                 console.log("🔍 Fetching Transfer events...");
                 const transferFilter = sigmaContract.filters.Transfer();
                 const transferEvents = await sigmaContract.queryFilter(transferFilter, 0, 'latest');
                 
+                // Get ALL Bought events
+                console.log("🔍 Fetching Bought events...");
+                const boughtFilter = sigmaContract.filters.Bought();
+                const boughtEvents = await sigmaContract.queryFilter(boughtFilter, 0, 'latest');
+                
                 // Collect all unique addresses
-                allAddresses = new Set();
-                joinDates = new Map();
+                const addressSet = new Set();
+                const joinDates = new Map();
                 
                 // Add creator
-                allAddresses.add(CREATOR_WALLET.toLowerCase());
-                
-                // Process MemberJoined
-                memberEvents.forEach(e => {
-                    const user = e.args.user.toLowerCase();
-                    const referrer = e.args.referrer.toLowerCase();
-                    allAddresses.add(user);
-                    allAddresses.add(referrer);
-                    joinDates.set(user, Number(e.args.timestamp));
-                });
+                addressSet.add(CREATOR_WALLET.toLowerCase());
+                addressSet.add(userAddress.toLowerCase());
                 
                 // Process Transfer events
                 transferEvents.forEach(e => {
                     const from = e.args.from.toLowerCase();
                     const to = e.args.to.toLowerCase();
-                    if (from !== "0x0000000000000000000000000000000000000000") allAddresses.add(from);
-                    if (to !== "0x0000000000000000000000000000000000000000") allAddresses.add(to);
+                    if (from !== "0x0000000000000000000000000000000000000000") addressSet.add(from);
+                    if (to !== "0x0000000000000000000000000000000000000000") addressSet.add(to);
                 });
                 
-                console.log(`🔍 Found ${allAddresses.size} unique addresses`);
+                // Process Bought events for join dates
+                boughtEvents.forEach(e => {
+                    const user = e.args.user.toLowerCase();
+                    const timestamp = Number(e.args.timestamp);
+                    addressSet.add(user);
+                    
+                    if (!joinDates.has(user) || joinDates.get(user) > timestamp) {
+                        joinDates.set(user, timestamp);
+                    }
+                });
+                
+                allAddresses = Array.from(addressSet);
+                console.log(`🔍 Found ${allAddresses.length} unique addresses`);
                 
                 // Clear cache
                 userCache.clear();
                 
-                // First, get all Level 1 members (directly under creator)
-                console.log("🔍 Getting Level 1 members...");
-                const creatorAddr = CREATOR_WALLET.toLowerCase();
+                // Get all users data in batches
+                console.log("🔍 Fetching all users data...");
+                const allUsersData = [];
+                const batchSize = 50;
                 
-                const level1Members = [];
-                
-                for (const addr of allAddresses) {
-                    if (addr === creatorAddr) continue;
+                for (let i = 0; i < allAddresses.length; i += batchSize) {
+                    const batch = allAddresses.slice(i, i + batchSize);
+                    const promises = batch.map(async (addr) => {
+                        const data = await getUserData(addr);
+                        return { address: addr, ...data };
+                    });
                     
-                    try {
-                        const userData = await getUserData(addr);
-                        if (userData.upline === creatorAddr) {
-                            level1Members.push({
-                                address: addr,
-                                level: 1,
-                                ...userData
-                            });
-                        }
-                    } catch (e) {
-                        // Ignore
+                    const results = await Promise.all(promises);
+                    allUsersData.push(...results);
+                    
+                    if (i + batchSize < allAddresses.length) {
+                        await new Promise(resolve => setTimeout(resolve, 100));
                     }
                 }
                 
-                console.log(`✅ Found ${level1Members.length} Level 1 members`);
+                // Build team structure starting from creator
+                console.log("🔍 Building team structure...");
                 
-                // Now recursively get all downline members
-                teamMembers = [...level1Members];
-                
-                for (const member of level1Members) {
-                    console.log(`🔍 Getting downline for Level 1 member ${member.address.slice(0,8)}...`);
-                    const downline = await getDownlineMembers(member.address, 1, 10);
-                    teamMembers.push(...downline);
+                // Function to get downline for an address
+                function getDownline(addr, currentLevel, maxLevel) {
+                    if (currentLevel > maxLevel) return [];
+                    
+                    const members = [];
+                    const directDownline = allUsersData.filter(u => u.upline === addr);
+                    
+                    for (const member of directDownline) {
+                        members.push({
+                            ...member,
+                            level: currentLevel
+                        });
+                        
+                        // Recursively get their downline
+                        const subMembers = getDownline(member.address, currentLevel + 1, maxLevel);
+                        members.push(...subMembers);
+                    }
+                    
+                    return members;
                 }
                 
-                // Remove duplicates (just in case)
+                // Get all team members starting from creator (level 0)
+                const allTeamMembers = getDownline(CREATOR_WALLET.toLowerCase(), 1, 10);
+                
+                // Remove duplicates and sort
                 const uniqueMembers = new Map();
-                teamMembers.forEach(m => uniqueMembers.set(m.address, m));
+                allTeamMembers.forEach(m => uniqueMembers.set(m.address, m));
                 teamMembers = Array.from(uniqueMembers.values());
                 
-                console.log(`✅ Total team members: ${teamMembers.length}`);
+                console.log(`✅ Found ${teamMembers.length} team members`);
                 
-                // Add join dates from events
+                // Add join dates and derived fields
                 teamMembers = teamMembers.map(m => ({
                     ...m,
                     joinTimestamp: joinDates.get(m.address) || m.lastBuyTimestamp || 0,
                     joinDate: (joinDates.get(m.address) || m.lastBuyTimestamp) ? 
                         new Date((joinDates.get(m.address) || m.lastBuyTimestamp) * 1000) : null,
-                    isActive: m.balance >= (10 / sellRate),
+                    isActive: m.referralExpiry > Math.floor(Date.now() / 1000),
                     usdtValue: m.balance * sellRate
                 }));
                 
@@ -981,12 +996,12 @@
                 
                 let dateDisplay = '—';
                 if (member.joinTimestamp > 0) {
-                    dateDisplay = member.joinDate.toLocaleDateString('en-IN', {
+                    dateDisplay = new Date(member.joinTimestamp * 1000).toLocaleDateString('en-IN', {
                         day: '2-digit', month: 'short', year: 'numeric'
                     });
                 }
                 
-                // Address display - ONLY SHOW CROWN FOR 5+ DIRECTS
+                // Address display with crown for 5+ directs
                 let badgeHtml = '';
                 if (member.directCount >= 5) {
                     badgeHtml = `<span class="member-badge" title="Senior Team Leader (${member.directCount} directs)"><i class="fas fa-crown" style="color: gold;"></i> ${member.directCount}</span>`;
@@ -1013,7 +1028,7 @@
                             ${addressDisplay}
                             <div style="font-size:11px; margin-top:3px">
                                 <i class="fas fa-copy" onclick="copyAddress('${member.address}')" style="cursor:pointer; margin-right:8px" title="Copy"></i>
-                                <i class="fas fa-external-link-alt" onclick="viewOnExplorer('${member.address}')" style="cursor:pointer" title="View"></i>
+                                <i class="fas fa-external-link-alt" onclick="viewOnExplorer('${member.address}')" style="cursor:pointer" title="View on Polygonscan"></i>
                             </div>
                         </td>
                         <td><span class="level-badge level-${member.level}">Level ${member.level}</span></td>
@@ -1032,7 +1047,7 @@
                         </td>
                         <td>
                             <button class="action-btn" style="padding:6px 12px" onclick="viewMember('${member.address}')">
-                                <i class="fas fa-eye"></i>
+                                <i class="fas fa-eye"></i> View
                             </button>
                         </td>
                     </tr>
@@ -1098,7 +1113,7 @@
 
         function copyAddress(addr) { 
             navigator.clipboard.writeText(addr); 
-            alert("Address copied!");
+            alert("Address copied to clipboard!");
         }
 
         function viewOnExplorer(addr) { 
@@ -1108,17 +1123,17 @@
         function viewMember(addr) { 
             const m = teamMembers.find(m => m.address === addr);
             if(m) {
-                alert(`Member: ${addr}\nLevel: ${m.level}\nBalance: ${m.balance.toFixed(2)} SIG6\nValue: $${m.usdtValue.toFixed(2)} USDT\nDirect Referrals: ${m.directCount}`);
+                alert(`Member: ${addr}\nLevel: ${m.level}\nBalance: ${m.balance.toFixed(2)} SIG6\nValue: $${m.usdtValue.toFixed(2)} USDT\nDirect Referrals: ${m.directCount}\nActive: ${m.isActive ? 'Yes' : 'No'}`);
             }
         }
 
         function exportData() {
             if (!teamMembers.length) return;
             
-            let csv = "Level,Address,Balance (SIG6),USDT Value,Status,Join Date,Upline,Direct Count\n";
+            let csv = "Level,Address,Balance (SIG6),USDT Value,Status,Join Date,Upline,Direct Count,Active\n";
             teamMembers.forEach(m => {
                 const joinDate = m.joinTimestamp > 0 ? new Date(m.joinTimestamp*1000).toLocaleString() : '';
-                csv += `${m.level},${m.address},${m.balance.toFixed(2)},${m.usdtValue.toFixed(2)},${m.isActive ? 'Active' : 'Inactive'},${joinDate},${m.upline},${m.directCount}\n`;
+                csv += `${m.level},${m.address},${m.balance.toFixed(2)},${m.usdtValue.toFixed(2)},${m.isActive ? 'Active' : 'Inactive'},${joinDate},${m.upline},${m.directCount},${m.isActive}\n`;
             });
             
             const blob = new Blob([csv], { type: 'text/csv' });
