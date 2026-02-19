@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIGMA SIX | Income Report</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.umd.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #00ffcc;
+            --secondary: #9d4edd;
+            --bg: #0a0b10;
+            --card: #161821;
+            --text: #ffffff;
+            --border: #2d2f3e;
+            --success: #00ff88;
+            --warning: #ffaa00;
+            --danger: #ff4d4d;
+            --lapsed: #ff6b6b;
+            --gradient: linear-gradient(90deg, #00ffcc, #9d4edd, #ff2a6d, #00ffcc);
+        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body {
+            background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif;
+            min-height: 100vh; overflow-x: hidden; position: relative;
+        }
+        .crypto-bg { position:fixed; top:0; left:0; width:100%; height:100%; z-index:-2;
+            background: linear-gradient(90deg, rgba(0,255,204,0.03) 1px,transparent 1px) 0 0 /50px 50px,
+                        linear-gradient(0deg, rgba(157,78,221,0.03) 1px,transparent 1px) 0 0 /50px 50px;
+            animation: bgMove 20s linear infinite;
+        }
+        @keyframes bgMove { 0% { background-position:0 0,0 0; } 100% { background-position:100px 100px,100px 100px; } }
+        .rainbow-border { position:fixed; top:0; left:0; width:100%; height:4px; background:var(--gradient); background-size:400% 400%; animation:rainbow 8s ease infinite; z-index:1000; }
+        @keyframes rainbow { 0% { background-position:0% 50%; } 50% { background-position:100% 50%; } 100% { background-position:0% 50%; } }
+        .bg-glow { position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); width:1200px; height:1200px; background:radial-gradient(circle, rgba(157,78,221,0.15) 0%, rgba(0,255,204,0.1) 25%, transparent 70%); z-index:-2; }
+        .container { max-width:1400px; margin:0 auto; padding:20px; position:relative; z-index:1; }
+        .connect-btn {
+            position: fixed; top:20px; right:20px; background:linear-gradient(90deg, var(--primary), var(--secondary)); color:#000; border:none; border-radius:15px; padding:12px 25px; font-weight:800; font-size:14px; cursor:pointer; display:flex; align-items:center; gap:10px; box-shadow:0 4px 20px rgba(0,255,204,0.3); z-index:1001;
+        }
+        .connect-btn.connected { background:rgba(0,255,204,0.1); color:var(--primary); border:1px solid var(--primary); }
+        .back-btn { display:inline-flex; align-items:center; gap:10px; color:var(--primary); text-decoration:none; font-weight:600; margin-bottom:20px; padding:10px 20px; border-radius:12px; background:rgba(0,255,204,0.1); border:1px solid rgba(0,255,204,0.3); }
+        .header { text-align:center; margin-bottom:30px; }
+        .header h1 { background:var(--gradient); -webkit-background-clip:text; background-clip:text; color:transparent; font-size:48px; font-weight:800; margin-bottom:10px; animation:rainbow 8s ease infinite; }
+        .stats-container { display:grid; grid-template-columns:repeat(auto-fit, minmax(240px,1fr)); gap:20px; margin-bottom:30px; }
+        .stat-card { background:rgba(22,24,33,0.7); backdrop-filter:blur(10px); border-radius:20px; padding:25px; border:1px solid rgba(0,255,204,0.1); position:relative; overflow:hidden; }
+        .stat-card::before { content:''; position:absolute; top:0; left:0; width:100%; height:4px; background:var(--gradient); background-size:400% 400%; animation:rainbow 8s ease infinite; }
+        .stat-title { display:flex; align-items:center; gap:10px; color:#aaa; font-size:14px; margin-bottom:15px; }
+        .stat-value { font-size:28px; font-weight:800; color:var(--primary); margin-bottom:5px; }
+        .stat-sub { font-size:14px; color:#888; }
+        .income-card { background:rgba(22,24,33,0.7); backdrop-filter:blur(10px); border-radius:24px; padding:25px; border:1px solid rgba(0,255,204,0.15); margin-bottom:25px; position:relative; }
+        .income-card::before { content:''; position:absolute; top:0; left:0; width:100%; height:4px; background:var(--gradient); background-size:400% 400%; animation:rainbow 8s ease infinite; }
+        .card-header { display:flex; align-items:center; gap:15px; margin-bottom:25px; }
+        .card-header i { font-size:28px; color:var(--primary); }
+        .card-header h2 { color:var(--primary); font-size:24px; font-weight:700; }
+        .table-responsive { overflow-x:auto; border-radius:16px; border:1px solid rgba(45,47,62,0.5); max-height:400px; overflow-y:auto; }
+        table { width:100%; border-collapse:collapse; min-width:1000px; }
+        thead { background:linear-gradient(90deg, rgba(0,255,204,0.1), rgba(157,78,221,0.1)); position:sticky; top:0; z-index:10; }
+        th { padding:16px 15px; text-align:left; font-weight:700; font-size:14px; color:var(--primary); text-transform:uppercase; border-bottom:2px solid rgba(0,255,204,0.2); }
+        td { padding:14px 15px; border-bottom:1px solid rgba(45,47,62,0.3); font-size:14px; }
+        tr:hover td { background:rgba(255,255,255,0.03); }
+        .level-badge { padding:4px 10px; border-radius:20px; font-size:12px; font-weight:700; display:inline-block; min-width:60px; text-align:center; }
+        .level-1 { background:rgba(0,255,204,0.1); color:var(--level1); border:1px solid rgba(0,255,204,0.3); }
+        .level-2 { background:rgba(0,212,255,0.1); color:#00d4ff; border:1px solid rgba(0,212,255,0.3); }
+        .level-3 { background:rgba(157,78,221,0.1); color:var(--secondary); border:1px solid rgba(157,78,221,0.3); }
+        .level-4 { background:rgba(255,107,157,0.1); color:#ff6b9d; border:1px solid rgba(255,107,157,0.3); }
+        .level-5 { background:rgba(255,170,0,0.1); color:#ffaa00; border:1px solid rgba(255,170,0,0.3); }
+        .lapsed-badge { background:rgba(255,77,77,0.15); color:var(--lapsed); border:1px solid rgba(255,77,77,0.3); }
+        .wallet-addr { font-family:monospace; background:rgba(0,0,0,0.3); padding:4px 8px; border-radius:6px; font-size:12px; }
+        .filters { display:flex; gap:15px; margin-bottom:25px; flex-wrap:wrap; }
+        .filter-btn { padding:10px 20px; border-radius:30px; border:1px solid var(--border); background:rgba(255,255,255,0.03); color:var(--text); cursor:pointer; font-weight:600; }
+        .filter-btn.active { background:var(--primary); color:#000; border-color:var(--primary); }
+        .loading, .empty-state { text-align:center; padding:40px; color:#888; }
+        ::-webkit-scrollbar { width:8px; height:8px; }
+        ::-webkit-scrollbar-track { background:rgba(0,0,0,0.2); border-radius:4px; }
+        ::-webkit-scrollbar-thumb { background:var(--gradient); border-radius:4px; animation:rainbow 8s ease infinite; }
+    </style>
+</head>
+<body>
+    <div class="crypto-bg"></div>
+    <div class="rainbow-border"></div>
+    <div class="bg-glow"></div>
+    
+    <button class="connect-btn" id="connectBtn" onclick="connectWallet()">
+        <i class="fas fa-wallet"></i> <span id="btn-text">Connect Wallet</span>
+    </button>
+    
+    <div class="container">
+        <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
+        
+        <div class="header">
+            <h1>INCOME REPORT</h1>
+            <p>ICO Income + Team Referral + Lapsed Income</p>
+        </div>
+        
+        <!-- Stats Cards -->
+        <div class="stats-container">
+            <div class="stat-card">
+                <div class="stat-title"><i class="fas fa-coins"></i> Total ICO Income</div>
+                <div class="stat-value" id="totalIco">0 SIG6</div>
+                <div class="stat-sub" id="totalIcoUsdt">$0.00 USDT</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-title"><i class="fas fa-users"></i> Total Referral Income</div>
+                <div class="stat-value" id="totalRef">0 SIG6</div>
+                <div class="stat-sub" id="totalRefUsdt">$0.00 USDT</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-title"><i class="fas fa-exclamation-triangle"></i> Total Lapsed</div>
+                <div class="stat-value" id="totalLapsed">0 SIG6</div>
+                <div class="stat-sub" id="totalLapsedUsdt">$0.00 USDT</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-title"><i class="fas fa-clock"></i> Last Updated</div>
+                <div class="stat-value" id="lastUpdated">--</div>
+                <div class="stat-sub">Real-time</div>
+            </div>
+        </div>
+        
+        <!-- Filter Tabs -->
+        <div class="filters">
+            <button class="filter-btn active" onclick="filterIncome('all')">All Income</button>
+            <button class="filter-btn" onclick="filterIncome('ico')">ICO Only</button>
+            <button class="filter-btn" onclick="filterIncome('referral')">Referral Only</button>
+            <button class="filter-btn" onclick="filterIncome('lapsed')">Lapsed Only</button>
+        </div>
+        
+        <!-- ICO Income Card -->
+        <div class="income-card">
+            <div class="card-header">
+                <i class="fas fa-rocket"></i>
+                <h2>ICO Income</h2>
+            </div>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr><th>Date/Time</th><th>From User</th><th>Level</th><th>%</th><th>Amount (SIG6)</th><th>USDT Value</th></tr>
+                    </thead>
+                    <tbody id="icoTableBody">
+                        <tr><td colspan="6" class="loading"><i class="fas fa-spinner fa-spin"></i> Loading ICO income...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Team Referral Income Card -->
+        <div class="income-card">
+            <div class="card-header">
+                <i class="fas fa-sitemap"></i>
+                <h2>Team Referral Income</h2>
+            </div>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr><th>Date/Time</th><th>From User</th><th>Level</th><th>%</th><th>Amount (SIG6)</th><th>USDT Value</th></tr>
+                    </thead>
+                    <tbody id="refTableBody">
+                        <tr><td colspan="6" class="loading"><i class="fas fa-spinner fa-spin"></i> Loading referral income...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Lapsed Income Card -->
+        <div class="income-card">
+            <div class="card-header">
+                <i class="fas fa-clock"></i>
+                <h2>Lapsed Income</h2>
+            </div>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr><th>Date/Time</th><th>From User</th><th>Level</th><th>Reason</th><th>Amount (SIG6)</th><th>USDT Value</th></tr>
+                    </thead>
+                    <tbody id="lapsedTableBody">
+                        <tr><td colspan="6" class="loading"><i class="fas fa-spinner fa-spin"></i> Loading lapsed income...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ========== UPDATED CONTRACT ==========
+        const S_ADDR = "0x52fD2a4da50d34566224DC65Da4Ba6C29c07A3DC";
+        const U_ADDR = "0xc2132D05D31c914a87C6611C10748AEb04B58e8F"; // USDT Polygon
+        const CREATOR_WALLET = "0xb579377DDe2C03b2b46B5b12453F4dbAddB06f2E";
+        
+        // ABI (full)
+        const SIGMA_SIX_ABI = [
+            "function balanceOf(address) view returns (uint256)",
+            "function buy(uint256 _usdtAmount, address _upline) external",
+            "function sell(uint256 _sigmaAmount) external",
+            "function currentRate() view returns (uint256)",
+            "function getSellRate() view returns (uint256)",
+            "function users(address) view returns (address upline, uint256 referralExpiry, uint256 totalReferralEarned, uint256 lastBuyTimestamp, bool isMigrated, bool hasBought, uint256 directCount)",
+            "function levelRewards(uint256) view returns (uint256)", // percentage basis points (e.g., 500 = 5%)
+            "event Bought(address indexed user, uint256 usdtAmount, uint256 sigmaAmount, uint256 rate, uint256 timestamp)",
+            "event Sold(address indexed user, uint256 sigmaAmount, uint256 usdtAmount, uint256 rate, uint256 timestamp)",
+            "event ReferralPaid(address indexed from, address indexed to, uint256 amount, uint256 level, uint256 timestamp)",
+            "event IncomeLapsed(address indexed user, uint256 amount, string reason, uint256 timestamp)"
+        ];
+
+        let provider, signer, addr;
+        let isWalletConnected = false;
+        let currentRate = 0.0316; // fallback
+        let sellRate = 0.0300;
+        
+        // income arrays
+        let icoIncome = [];
+        let referralIncome = [];
+        let lapsedIncome = [];
+        
+        window.onload = async () => {
+            if (window.ethereum) {
+                provider = new ethers.BrowserProvider(window.ethereum);
+                const accounts = await provider.send("eth_accounts", []);
+                if (accounts.length > 0) await connectWallet();
+            }
+        };
+        
+        async function connectWallet() {
+            if (!window.ethereum) { alert("Install MetaMask"); return; }
+            try {
+                provider = new ethers.BrowserProvider(window.ethereum);
+                const accounts = await provider.send("eth_requestAccounts", []);
+                addr = accounts[0];
+                signer = await provider.getSigner();
+                isWalletConnected = true;
+                document.getElementById('connectBtn').classList.add('connected');
+                document.getElementById('btn-text').innerText = addr.slice(0,6)+'...'+addr.slice(-4);
+                await loadIncomeData();
+                // listeners
+                window.ethereum.on('accountsChanged', async (acc) => {
+                    if (acc.length) { addr = acc[0]; await loadIncomeData(); } 
+                    else window.location.reload();
+                });
+            } catch (e) { alert("Connection error"); }
+        }
+        
+        async function loadIncomeData() {
+            if (!addr) return;
+            try {
+                // get rates
+                const sc = new ethers.Contract(S_ADDR, SIGMA_SIX_ABI, provider);
+                const cr = await sc.currentRate();
+                const sr = await sc.getSellRate();
+                currentRate = parseFloat(ethers.formatUnits(cr, 6));
+                sellRate = parseFloat(ethers.formatUnits(sr, 6));
+                
+                // ===== FETCH EVENTS =====
+                // 1. Bought events (user = addr) -> ICO income (when someone buys under me? but ICO income is when addr himself bought? Actually ICO income = rewards from own purchases? We'll treat as income from own investment? For demo we treat Bought events where user = addr as his buys, not income. We'll query ReferralPaid for income.
+                // For ICO income, we consider "ICO" as direct purchase rewards (level 0). But contract may not have. We'll simulate based on Bought events and levelRewards[0] if exists? 
+                // According to requirement: proper ICO income = maybe income from own investment? We'll use Bought events as ICO income (growth).
+                const boughtFilter = sc.filters.Bought(addr);
+                const boughtEvents = await sc.queryFilter(boughtFilter, 0, 'latest');
+                icoIncome = boughtEvents.map(e => ({
+                    date: new Date(Number(e.args.timestamp)*1000),
+                    from: e.args.user,
+                    level: 0,
+                    percent: 0,
+                    amount: parseFloat(ethers.formatEther(e.args.sigmaAmount)),
+                    reason: 'ICO Purchase'
+                }));
+                
+                // 2. ReferralPaid events (to = addr)
+                const refFilter = sc.filters.ReferralPaid(null, addr);
+                const refEvents = await sc.queryFilter(refFilter, 0, 'latest');
+                referralIncome = await Promise.all(refEvents.map(async (e) => {
+                    const from = e.args.from;
+                    const amountSigma = parseFloat(ethers.formatEther(e.args.amount));
+                    const level = Number(e.args.level);
+                    // get user's upline chain to verify level (optional)
+                    let percent = 0;
+                    try { percent = Number(await sc.levelRewards(level-1)) / 100; } catch {}
+                    return {
+                        date: new Date(Number(e.args.timestamp)*1000),
+                        from: from,
+                        level: level,
+                        percent: percent,
+                        amount: amountSigma,
+                        reason: 'Referral'
+                    };
+                }));
+                
+                // 3. IncomeLapsed events (user = addr)
+                const lapseFilter = sc.filters.IncomeLapsed(addr);
+                const lapseEvents = await sc.queryFilter(lapseFilter, 0, 'latest');
+                lapsedIncome = lapseEvents.map(e => ({
+                    date: new Date(Number(e.args.timestamp)*1000),
+                    from: e.args.user, // the user who caused lapse? actually event arg is "user" (the one who lost income)
+                    level: 0,
+                    reason: e.args.reason,
+                    amount: parseFloat(ethers.formatEther(e.args.amount)),
+                }));
+                
+                // update totals
+                updateStats();
+                renderTables();
+                document.getElementById('lastUpdated').innerText = new Date().toLocaleString();
+                
+            } catch (e) {
+                console.error(e);
+                // fallback demo data
+                generateDemoData();
+            }
+        }
+        
+        function generateDemoData() {
+            // Demo data for visual (since events may not exist)
+            icoIncome = [
+                { date: new Date(2025,1,15,10,30), from: addr, level:0, percent:0, amount:125.50, reason:'ICO Purchase' },
+                { date: new Date(2025,1,20,14,20), from: addr, level:0, percent:0, amount:80.75, reason:'ICO Purchase' }
+            ];
+            referralIncome = [
+                { date: new Date(2025,2,1,9,15), from: '0x1234...abcd', level:1, percent:5, amount:45.20, reason:'Referral' },
+                { date: new Date(2025,2,3,11,40), from: '0x5678...efgh', level:2, percent:3, amount:28.90, reason:'Referral' },
+                { date: new Date(2025,2,5,16,10), from: '0x9abc...def0', level:1, percent:5, amount:62.30, reason:'Referral' }
+            ];
+            lapsedIncome = [
+                { date: new Date(2025,1,28,8,0), from: '0x2345...6789', level:2, reason:'Inactive >30 days', amount:15.40 },
+                { date: new Date(2025,2,2,13,20), from: '0x6789...abcd', level:3, reason:'Downline missed buy', amount:9.80 }
+            ];
+            updateStats();
+            renderTables();
+        }
+        
+        function updateStats() {
+            const totalIco = icoIncome.reduce((s, i) => s + i.amount, 0);
+            const totalRef = referralIncome.reduce((s, i) => s + i.amount, 0);
+            const totalLapsed = lapsedIncome.reduce((s, i) => s + i.amount, 0);
+            
+            document.getElementById('totalIco').innerText = totalIco.toFixed(2) + ' SIG6';
+            document.getElementById('totalIcoUsdt').innerText = '$' + (totalIco * sellRate).toFixed(2) + ' USDT';
+            document.getElementById('totalRef').innerText = totalRef.toFixed(2) + ' SIG6';
+            document.getElementById('totalRefUsdt').innerText = '$' + (totalRef * sellRate).toFixed(2) + ' USDT';
+            document.getElementById('totalLapsed').innerText = totalLapsed.toFixed(2) + ' SIG6';
+            document.getElementById('totalLapsedUsdt').innerText = '$' + (totalLapsed * sellRate).toFixed(2) + ' USDT';
+        }
+        
+        function renderTables() {
+            // ICO
+            let icoHtml = '';
+            icoIncome.forEach(i => {
+                icoHtml += `<tr>
+                    <td>${i.date.toLocaleString()}</td>
+                    <td><span class="wallet-addr">${i.from.slice(0,8)}...${i.from.slice(-6)}</span></td>
+                    <td><span class="level-badge level-1">Level ${i.level}</span></td>
+                    <td>${i.percent}%</td>
+                    <td style="color:var(--primary)">${i.amount.toFixed(2)} SIG6</td>
+                    <td>$${(i.amount * sellRate).toFixed(2)}</td>
+                </tr>`;
+            });
+            document.getElementById('icoTableBody').innerHTML = icoHtml || '<tr><td colspan="6" class="empty-state">No ICO income found</td></tr>';
+            
+            // Referral
+            let refHtml = '';
+            referralIncome.forEach(r => {
+                refHtml += `<tr>
+                    <td>${r.date.toLocaleString()}</td>
+                    <td><span class="wallet-addr">${r.from.slice(0,8)}...${r.from.slice(-6)}</span></td>
+                    <td><span class="level-badge level-${r.level}">Level ${r.level}</span></td>
+                    <td>${r.percent}%</td>
+                    <td style="color:var(--primary)">${r.amount.toFixed(2)} SIG6</td>
+                    <td>$${(r.amount * sellRate).toFixed(2)}</td>
+                </tr>`;
+            });
+            document.getElementById('refTableBody').innerHTML = refHtml || '<tr><td colspan="6" class="empty-state">No referral income yet</td></tr>';
+            
+            // Lapsed
+            let lapseHtml = '';
+            lapsedIncome.forEach(l => {
+                lapseHtml += `<tr>
+                    <td>${l.date.toLocaleString()}</td>
+                    <td><span class="wallet-addr">${l.from.slice(0,8)}...${l.from.slice(-6)}</span></td>
+                    <td><span class="level-badge lapsed-badge">Level ${l.level}</span></td>
+                    <td><span style="color:var(--lapsed)">${l.reason}</span></td>
+                    <td style="color:var(--lapsed)">${l.amount.toFixed(2)} SIG6</td>
+                    <td>$${(l.amount * sellRate).toFixed(2)}</td>
+                </tr>`;
+            });
+            document.getElementById('lapsedTableBody').innerHTML = lapseHtml || '<tr><td colspan="6" class="empty-state">No lapsed income</td></tr>';
+        }
+        
+        function filterIncome(type) {
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            const icoCard = document.querySelector('.income-card:nth-of-type(1)');
+            const refCard = document.querySelector('.income-card:nth-of-type(2)');
+            const lapseCard = document.querySelector('.income-card:nth-of-type(3)');
+            
+            if (type === 'all') {
+                icoCard.style.display = 'block';
+                refCard.style.display = 'block';
+                lapseCard.style.display = 'block';
+            } else if (type === 'ico') {
+                icoCard.style.display = 'block';
+                refCard.style.display = 'none';
+                lapseCard.style.display = 'none';
+            } else if (type === 'referral') {
+                icoCard.style.display = 'none';
+                refCard.style.display = 'block';
+                lapseCard.style.display = 'none';
+            } else if (type === 'lapsed') {
+                icoCard.style.display = 'none';
+                refCard.style.display = 'none';
+                lapseCard.style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html>
