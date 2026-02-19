@@ -345,6 +345,16 @@
                 } catch (e) {
                     console.log("Rate fetch error:", e);
                 }
+
+                // Get user data to check migration status
+                const userData = await sigmaContract.users(userAddress).catch(() => null);
+                const isMigrated = userData ? userData.isMigrated : false;
+                
+                console.log("User data:", { 
+                    address: userAddress,
+                    isMigrated,
+                    hasBought: userData ? userData.hasBought : false 
+                });
                 
                 // ===== FETCH BOUGHT EVENTS (for ICO Bonus) =====
                 console.log("🔍 Fetching Bought events...");
@@ -353,36 +363,37 @@
                 
                 icoIncome = [];
                 
-                // Sort events by timestamp (oldest first) to find first buy
+                // Sort events by timestamp (oldest first)
                 const sortedEvents = boughtEvents.sort((a, b) => 
                     Number(a.args.timestamp) - Number(b.args.timestamp)
                 );
                 
-                // Track if we've already added ICO bonus
-                let hasAddedICO = false;
+                console.log(`Found ${sortedEvents.length} Bought events`);
                 
-                for (const event of sortedEvents) {
+                // ✅ FIX: ICO bonus sirf first buy ke liye aur sirf agar migrated nahi hai
+                for (let i = 0; i < sortedEvents.length; i++) {
+                    const event = sortedEvents[i];
                     const timestamp = Number(event.args.timestamp);
                     const sigmaAmount = parseFloat(ethers.formatEther(event.args.sigmaAmount));
                     const usdtAmount = parseFloat(ethers.formatUnits(event.args.usdtAmount, 6));
                     const rateAtBuy = parseFloat(ethers.formatUnits(event.args.rate, 6));
                     
-                    // Calculate base amount WITHOUT bonus using the rate at time of buy
+                    // Calculate base amount WITHOUT bonus using rate at time of buy
                     // Formula from contract: tokensToMint = (usdtAmount * 99 * 1e18) / (100 * rate)
                     const baseAmount = (usdtAmount * 99) / (100 * rateAtBuy);
                     const bonusAmount = sigmaAmount - baseAmount;
                     
-                    console.log(`Buy at ${new Date(timestamp*1000).toLocaleString()}:`, {
+                    console.log(`Buy #${i+1} at ${new Date(timestamp*1000).toLocaleString()}:`, {
                         usdtAmount,
                         sigmaAmount,
                         rateAtBuy,
                         baseAmount,
                         bonusAmount,
-                        hasBonus: bonusAmount > 0.01
+                        isEligible: (i === 0 && bonusAmount > 0.01 && !isMigrated)
                     });
                     
-                    // Only add ICO bonus ONCE for the first buy that has bonus
-                    if (bonusAmount > 0.01 && !hasAddedICO) {
+                    // ✅ ICO bonus SIRF PEHLI BUY KE LIYE
+                    if (i === 0 && bonusAmount > 0.01 && !isMigrated) {
                         icoIncome.push({
                             date: new Date(timestamp * 1000),
                             txHash: event.transactionHash,
@@ -391,8 +402,6 @@
                             usdtValue: bonusAmount * sellRate,
                             rateAtBuy: rateAtBuy
                         });
-                        
-                        hasAddedICO = true;
                         console.log("✅ Added ICO bonus for first buy");
                     }
                 }
@@ -479,7 +488,7 @@
             document.getElementById('totalLapsed').innerText = totalLapsed.toFixed(2) + ' SIG6';
             document.getElementById('totalLapsedUsdt').innerText = '$' + (totalLapsed * sellRate).toFixed(2) + ' USDT';
             
-            document.getElementById('icoCount').innerText = icoIncome.length + ' transactions';
+            document.getElementById('icoCount').innerText = icoIncome.length + ' transaction';
             document.getElementById('refCount').innerText = referralIncome.length + ' transactions';
             document.getElementById('lapsedCount').innerText = lapsedIncome.length + ' transactions';
         }
