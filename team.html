@@ -51,21 +51,12 @@
             border-radius: 20px;
             padding: 25px;
             border: 1px solid #2d2f3a;
-            transition: all 0.3s;
-        }
-
-        .stat-card:hover {
-            border-color: #00ffcc;
-            box-shadow: 0 0 20px rgba(0, 255, 204, 0.1);
         }
 
         .stat-title {
             color: #888;
             font-size: 14px;
             margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
         }
 
         .stat-value {
@@ -74,18 +65,11 @@
             color: #00ffcc;
         }
 
-        .stat-sub {
-            color: #666;
-            font-size: 13px;
-            margin-top: 5px;
-        }
-
         .filters-section {
             background: #1a1c24;
             border-radius: 20px;
             padding: 20px;
             margin: 30px 0;
-            border: 1px solid #2d2f3a;
         }
 
         .filter-row {
@@ -104,10 +88,6 @@
         .filter-group label {
             color: #888;
             font-size: 13px;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 5px;
         }
 
         .filter-input, .filter-select {
@@ -116,13 +96,6 @@
             border-radius: 10px;
             padding: 12px 15px;
             color: #fff;
-            font-size: 14px;
-        }
-
-        .filter-buttons {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
         }
 
         .btn {
@@ -131,10 +104,7 @@
             border: none;
             font-weight: 600;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.3s;
+            margin-right: 10px;
         }
 
         .btn-primary {
@@ -147,61 +117,19 @@
             color: #fff;
         }
 
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 255, 204, 0.2);
-        }
-
         .table-container {
             background: #1a1c24;
             border-radius: 20px;
             padding: 20px;
-            border: 1px solid #2d2f3a;
-        }
-
-        .table-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-
-        .table-title {
-            font-size: 20px;
-            font-weight: 700;
-            color: #00ffcc;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .results-count {
-            background: rgba(0, 255, 204, 0.1);
-            color: #00ffcc;
-            padding: 8px 15px;
-            border-radius: 20px;
-            font-size: 14px;
-            border: 1px solid rgba(0, 255, 204, 0.3);
-        }
-
-        .table-responsive {
-            overflow-x: auto;
-            border-radius: 10px;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            min-width: 1000px;
         }
 
         th {
-            background: #0a0b0e;
             color: #00ffcc;
-            font-weight: 600;
-            font-size: 13px;
             padding: 15px;
             text-align: left;
             border-bottom: 2px solid #2d2f3a;
@@ -210,11 +138,6 @@
         td {
             padding: 15px;
             border-bottom: 1px solid #2d2f3a;
-            font-size: 14px;
-        }
-
-        tr:hover td {
-            background: rgba(255, 255, 255, 0.02);
         }
 
         .wallet-address {
@@ -222,31 +145,15 @@
             background: #0a0b0e;
             padding: 6px 12px;
             border-radius: 8px;
-            border: 1px solid #2d2f3a;
-            display: inline-block;
-            font-size: 13px;
         }
 
         .level-badge {
             padding: 4px 12px;
             border-radius: 20px;
             font-size: 12px;
-            font-weight: 600;
-            display: inline-block;
-        }
-
-        .level-1 { background: rgba(0, 255, 204, 0.1); color: #00ffcc; border: 1px solid #00ffcc; }
-        .level-2 { background: rgba(157, 78, 221, 0.1); color: #9d4edd; border: 1px solid #9d4edd; }
-        .level-3 { background: rgba(255, 42, 109, 0.1); color: #ff2a6d; border: 1px solid #ff2a6d; }
-
-        .status-active {
+            background: rgba(0, 255, 204, 0.1);
             color: #00ffcc;
-            font-weight: 600;
-        }
-
-        .status-inactive {
-            color: #ff2a6d;
-            font-weight: 600;
+            border: 1px solid #00ffcc;
         }
 
         .connect-btn {
@@ -263,17 +170,11 @@
             z-index: 1000;
         }
 
-        .loading {
+        .loading, .error {
             text-align: center;
             padding: 50px;
-            color: #00ffcc;
         }
-
-        .error {
-            text-align: center;
-            padding: 50px;
-            color: #ff2a6d;
-        }
+        .error { color: #ff4d4d; }
     </style>
 </head>
 <body>
@@ -284,30 +185,25 @@
     <div class="container">
         <div class="header">
             <h1>COMPLETE DOWNLINE</h1>
-            <p style="color: #888; margin-top: 10px;">Your Team Members • Live Balances</p>
         </div>
 
         <!-- Stats Cards -->
-        <div class="stats-grid" id="statsContainer">
+        <div class="stats-grid">
             <div class="stat-card">
-                <div class="stat-title"><i class="fas fa-users"></i> Total Team Members</div>
+                <div class="stat-title">Total Team Members</div>
                 <div class="stat-value" id="totalMembers">0</div>
-                <div class="stat-sub" id="teamBreakdown">Active: 0 | Zero: 0</div>
             </div>
             <div class="stat-card">
-                <div class="stat-title"><i class="fas fa-sitemap"></i> Direct Referrals</div>
+                <div class="stat-title">Direct Referrals</div>
                 <div class="stat-value" id="directReferrals">0</div>
-                <div class="stat-sub">Level 1 Members</div>
             </div>
             <div class="stat-card">
-                <div class="stat-title"><i class="fas fa-coins"></i> Team Holdings</div>
+                <div class="stat-title">Team Holdings</div>
                 <div class="stat-value" id="teamHoldings">0 SIG6</div>
-                <div class="stat-sub" id="teamHoldingsUSDT">$0.00 USDT</div>
             </div>
             <div class="stat-card">
-                <div class="stat-title"><i class="fas fa-chart-line"></i> Current Rates</div>
-                <div class="stat-value" id="buyRate">0.2328 USDT</div>
-                <div class="stat-sub" id="sellRate">Sell: 0.2212 USDT</div>
+                <div class="stat-title">Current Rate</div>
+                <div class="stat-value" id="currentRate">0.2328 USDT</div>
             </div>
         </div>
 
@@ -315,95 +211,806 @@
         <div class="filters-section">
             <div class="filter-row">
                 <div class="filter-group">
-                    <label><i class="fas fa-layer-group"></i> Level</label>
+                    <label>Level</label>
                     <select id="levelFilter" class="filter-select">
                         <option value="all">All Levels</option>
                     </select>
                 </div>
                 <div class="filter-group">
-                    <label><i class="fas fa-search"></i> Search Address</label>
+                    <label>Search Address</label>
                     <input type="text" id="searchFilter" class="filter-input" placeholder="0x...">
                 </div>
-                <div class="filter-group">
-                    <label><i class="fas fa-filter"></i> Balance</label>
-                    <select id="balanceFilter" class="filter-select">
-                        <option value="all">All Balances</option>
-                        <option value="positive">Positive Balance</option>
-                        <option value="zero">Zero Balance</option>
-                    </select>
-                </div>
             </div>
-            <div class="filter-buttons">
-                <button class="btn btn-primary" onclick="applyFilters()">
-                    <i class="fas fa-filter"></i> Apply Filters
-                </button>
-                <button class="btn btn-secondary" onclick="resetFilters()">
-                    <i class="fas fa-redo-alt"></i> Reset
-                </button>
-                <button class="btn btn-secondary" onclick="refreshData()">
-                    <i class="fas fa-sync-alt"></i> Refresh
-                </button>
+            <div>
+                <button class="btn btn-primary" onclick="applyFilters()">Apply Filters</button>
+                <button class="btn btn-secondary" onclick="resetFilters()">Reset</button>
+                <button class="btn btn-secondary" onclick="refreshData()">Refresh</button>
             </div>
         </div>
 
         <!-- Team Table -->
         <div class="table-container">
-            <div class="table-header">
-                <div class="table-title">
-                    <i class="fas fa-network-wired"></i> Your Team Network
-                </div>
-                <div class="results-count" id="resultsCount" style="display: none;">
-                    <span id="resultsText">0 members</span>
-                </div>
-            </div>
-            <div class="table-responsive">
-                <table id="teamTable">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Wallet Address</th>
-                            <th>Level</th>
-                            <th>SIG6 Balance</th>
-                            <th>USDT Value</th>
-                            <th>Join Date</th>
-                            <th>Upline</th>
-                            <th>Directs</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tableBody">
-                        <tr><td colspan="9" class="loading">Connect wallet to view your team</td></tr>
-                    </tbody>
-                </table>
-            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Wallet Address</th>
+                        <th>Level</th>
+                        <th>SIG6 Balance</th>
+                        <th>USDT Value</th>
+                        <th>Join Date</th>
+                        <th>Upline</th>
+                        <th>Directs</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    <tr><td colspan="8" class="loading">Connect wallet to view your team</td></tr>
+                </tbody>
+            </table>
         </div>
     </div>
 
     <script>
-        // Contract Addresses
+        // Contract Address
         const SIGMA_ADDR = "0x5bC7581A6f7dA420e931d17bD5CaF699C033f7Fd";
         
-        // State Variables
+        // FULL ABI from your contract
+        const SIGMA_ABI = [
+            {
+                "inputs": [
+                    {
+                        "internalType": "address",
+                        "name": "_usdt",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "address",
+                        "name": "_creator",
+                        "type": "address"
+                    }
+                ],
+                "stateMutability": "nonpayable",
+                "type": "constructor"
+            },
+            {
+                "inputs": [],
+                "name": "emergencyWithdraw",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "_usdtAmount",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "address",
+                        "name": "_upline",
+                        "type": "address"
+                    }
+                ],
+                "name": "buy",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "address[]",
+                        "name": "_users",
+                        "type": "address[]"
+                    },
+                    {
+                        "internalType": "uint256[]",
+                        "name": "_balances",
+                        "type": "uint256[]"
+                    },
+                    {
+                        "internalType": "address[]",
+                        "name": "_uplines",
+                        "type": "address[]"
+                    }
+                ],
+                "name": "migrateUsers",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "address",
+                        "name": "_to",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "_amount",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "p2pTransfer",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "inputs": [],
+                "name": "renounceOwnership",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "_sigmaAmount",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "sell",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "address",
+                        "name": "newOwner",
+                        "type": "address"
+                    }
+                ],
+                "name": "transferOwnership",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "address",
+                        "name": "spender",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "value",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "approve",
+                "outputs": [
+                    {
+                        "internalType": "bool",
+                        "name": "",
+                        "type": "bool"
+                    }
+                ],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "address",
+                        "name": "to",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "value",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "transfer",
+                "outputs": [
+                    {
+                        "internalType": "bool",
+                        "name": "",
+                        "type": "bool"
+                    }
+                ],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "address",
+                        "name": "from",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "address",
+                        "name": "to",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "value",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "transferFrom",
+                "outputs": [
+                    {
+                        "internalType": "bool",
+                        "name": "",
+                        "type": "bool"
+                    }
+                ],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "address",
+                        "name": "_upline",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "_level",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "_isEligible",
+                "outputs": [
+                    {
+                        "internalType": "bool",
+                        "name": "",
+                        "type": "bool"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "address",
+                        "name": "owner",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "address",
+                        "name": "spender",
+                        "type": "address"
+                    }
+                ],
+                "name": "allowance",
+                "outputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "",
+                        "type": "uint256"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "address",
+                        "name": "account",
+                        "type": "address"
+                    }
+                ],
+                "name": "balanceOf",
+                "outputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "",
+                        "type": "uint256"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [],
+                "name": "BASE_RATE",
+                "outputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "",
+                        "type": "uint256"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [],
+                "name": "creatorWallet",
+                "outputs": [
+                    {
+                        "internalType": "address",
+                        "name": "",
+                        "type": "address"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [],
+                "name": "currentRate",
+                "outputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "",
+                        "type": "uint256"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [],
+                "name": "decimals",
+                "outputs": [
+                    {
+                        "internalType": "uint8",
+                        "name": "",
+                        "type": "uint8"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [],
+                "name": "getSellRate",
+                "outputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "",
+                        "type": "uint256"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [],
+                "name": "INCREMENT",
+                "outputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "",
+                        "type": "uint256"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "levelRewards",
+                "outputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "",
+                        "type": "uint256"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [],
+                "name": "MIN_USDT_FOR_REF",
+                "outputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "",
+                        "type": "uint256"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [],
+                "name": "name",
+                "outputs": [
+                    {
+                        "internalType": "string",
+                        "name": "",
+                        "type": "string"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [],
+                "name": "owner",
+                "outputs": [
+                    {
+                        "internalType": "address",
+                        "name": "",
+                        "type": "address"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [],
+                "name": "symbol",
+                "outputs": [
+                    {
+                        "internalType": "string",
+                        "name": "",
+                        "type": "string"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [],
+                "name": "totalSupply",
+                "outputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "",
+                        "type": "uint256"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [],
+                "name": "usdt",
+                "outputs": [
+                    {
+                        "internalType": "contract IERC20",
+                        "name": "",
+                        "type": "address"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "address",
+                        "name": "",
+                        "type": "address"
+                    }
+                ],
+                "name": "users",
+                "outputs": [
+                    {
+                        "internalType": "address",
+                        "name": "upline",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "referralExpiry",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "totalReferralEarned",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "lastBuyTimestamp",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "directCount",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "bool",
+                        "name": "isMigrated",
+                        "type": "bool"
+                    },
+                    {
+                        "internalType": "bool",
+                        "name": "hasBought",
+                        "type": "bool"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "anonymous": false,
+                "inputs": [
+                    {
+                        "indexed": true,
+                        "internalType": "address",
+                        "name": "owner",
+                        "type": "address"
+                    },
+                    {
+                        "indexed": true,
+                        "internalType": "address",
+                        "name": "spender",
+                        "type": "address"
+                    },
+                    {
+                        "indexed": false,
+                        "internalType": "uint256",
+                        "name": "value",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "Approval",
+                "type": "event"
+            },
+            {
+                "anonymous": false,
+                "inputs": [
+                    {
+                        "indexed": true,
+                        "internalType": "address",
+                        "name": "user",
+                        "type": "address"
+                    },
+                    {
+                        "indexed": false,
+                        "internalType": "uint256",
+                        "name": "usdtAmount",
+                        "type": "uint256"
+                    },
+                    {
+                        "indexed": false,
+                        "internalType": "uint256",
+                        "name": "sigmaAmount",
+                        "type": "uint256"
+                    },
+                    {
+                        "indexed": false,
+                        "internalType": "uint256",
+                        "name": "rate",
+                        "type": "uint256"
+                    },
+                    {
+                        "indexed": false,
+                        "internalType": "uint256",
+                        "name": "timestamp",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "Bought",
+                "type": "event"
+            },
+            {
+                "anonymous": false,
+                "inputs": [
+                    {
+                        "indexed": true,
+                        "internalType": "address",
+                        "name": "from",
+                        "type": "address"
+                    },
+                    {
+                        "indexed": true,
+                        "internalType": "address",
+                        "name": "to",
+                        "type": "address"
+                    },
+                    {
+                        "indexed": false,
+                        "internalType": "uint256",
+                        "name": "amount",
+                        "type": "uint256"
+                    },
+                    {
+                        "indexed": false,
+                        "internalType": "uint256",
+                        "name": "level",
+                        "type": "uint256"
+                    },
+                    {
+                        "indexed": false,
+                        "internalType": "string",
+                        "name": "reason",
+                        "type": "string"
+                    },
+                    {
+                        "indexed": false,
+                        "internalType": "uint256",
+                        "name": "timestamp",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "IncomeLapsed",
+                "type": "event"
+            },
+            {
+                "anonymous": false,
+                "inputs": [
+                    {
+                        "indexed": true,
+                        "internalType": "address",
+                        "name": "previousOwner",
+                        "type": "address"
+                    },
+                    {
+                        "indexed": true,
+                        "internalType": "address",
+                        "name": "newOwner",
+                        "type": "address"
+                    }
+                ],
+                "name": "OwnershipTransferred",
+                "type": "event"
+            },
+            {
+                "anonymous": false,
+                "inputs": [
+                    {
+                        "indexed": true,
+                        "internalType": "address",
+                        "name": "from",
+                        "type": "address"
+                    },
+                    {
+                        "indexed": true,
+                        "internalType": "address",
+                        "name": "to",
+                        "type": "address"
+                    },
+                    {
+                        "indexed": false,
+                        "internalType": "uint256",
+                        "name": "amount",
+                        "type": "uint256"
+                    },
+                    {
+                        "indexed": false,
+                        "internalType": "uint256",
+                        "name": "timestamp",
+                        "type": "uint256"
+                    },
+                    {
+                        "indexed": false,
+                        "internalType": "uint256",
+                        "name": "currentRate",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "P2PTransfer",
+                "type": "event"
+            },
+            {
+                "anonymous": false,
+                "inputs": [
+                    {
+                        "indexed": true,
+                        "internalType": "address",
+                        "name": "from",
+                        "type": "address"
+                    },
+                    {
+                        "indexed": true,
+                        "internalType": "address",
+                        "name": "to",
+                        "type": "address"
+                    },
+                    {
+                        "indexed": false,
+                        "internalType": "uint256",
+                        "name": "amount",
+                        "type": "uint256"
+                    },
+                    {
+                        "indexed": false,
+                        "internalType": "uint256",
+                        "name": "level",
+                        "type": "uint256"
+                    },
+                    {
+                        "indexed": false,
+                        "internalType": "uint256",
+                        "name": "timestamp",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "ReferralPaid",
+                "type": "event"
+            },
+            {
+                "anonymous": false,
+                "inputs": [
+                    {
+                        "indexed": true,
+                        "internalType": "address",
+                        "name": "user",
+                        "type": "address"
+                    },
+                    {
+                        "indexed": false,
+                        "internalType": "uint256",
+                        "name": "sigmaAmount",
+                        "type": "uint256"
+                    },
+                    {
+                        "indexed": false,
+                        "internalType": "uint256",
+                        "name": "usdtAmount",
+                        "type": "uint256"
+                    },
+                    {
+                        "indexed": false,
+                        "internalType": "uint256",
+                        "name": "rate",
+                        "type": "uint256"
+                    },
+                    {
+                        "indexed": false,
+                        "internalType": "uint256",
+                        "name": "timestamp",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "Sold",
+                "type": "event"
+            },
+            {
+                "anonymous": false,
+                "inputs": [
+                    {
+                        "indexed": true,
+                        "internalType": "address",
+                        "name": "from",
+                        "type": "address"
+                    },
+                    {
+                        "indexed": true,
+                        "internalType": "address",
+                        "name": "to",
+                        "type": "address"
+                    },
+                    {
+                        "indexed": false,
+                        "internalType": "uint256",
+                        "name": "value",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "Transfer",
+                "type": "event"
+            }
+        ];
+
+        // State
         let provider, signer, userAddress, contract;
         let teamMembers = [];
-        let filteredMembers = [];
-        let userMap = new Map(); // Address -> User Data
-        let buyRate = 0.2328;
-        let sellRate = 0.2212;
-        let isLoading = false;
-
-        // Initialize
-        window.onload = async () => {
-            if (window.ethereum) {
-                provider = new ethers.BrowserProvider(window.ethereum);
-                const accounts = await provider.send("eth_accounts", []);
-                if (accounts.length > 0) await connectWallet();
-            }
-        };
+        let allUsers = new Map();
 
         // Connect Wallet
         async function connectWallet() {
             try {
+                document.getElementById('tableBody').innerHTML = '<tr><td colspan="8" class="loading"><i class="fas fa-spinner fa-spin"></i> Connecting...</td></tr>';
+                
                 if (!window.ethereum) {
                     alert("Please install MetaMask!");
                     return;
@@ -411,168 +1018,116 @@
 
                 provider = new ethers.BrowserProvider(window.ethereum);
                 
-                // Check network
-                const network = await provider.getNetwork();
-                if (network.chainId !== 137n) {
-                    alert("Please switch to Polygon Mainnet");
-                    return;
-                }
-
+                // Request accounts
+                await provider.send("eth_requestAccounts", []);
+                
+                // Get signer
                 signer = await provider.getSigner();
                 userAddress = await signer.getAddress();
                 userAddress = userAddress.toLowerCase();
                 
-                contract = new ethers.Contract(SIGMA_ADDR, [
-                    "function balanceOf(address) view returns (uint256)",
-                    "function users(address) view returns (address upline, uint256 referralExpiry, uint256 totalReferralEarned, uint256 lastBuyTimestamp, uint256 directCount, bool isMigrated, bool hasBought)",
-                    "function currentRate() view returns (uint256)",
-                    "function getSellRate() view returns (uint256)"
-                ], provider);
-
+                // Create contract instance with signer
+                contract = new ethers.Contract(SIGMA_ADDR, SIGMA_ABI, signer);
+                
                 document.getElementById('btn-text').textContent = 
                     userAddress.slice(0,6) + '...' + userAddress.slice(-4);
                 
                 await loadTeamData();
                 
             } catch (error) {
-                console.error(error);
-                alert("Connection failed");
+                console.error("Connection error:", error);
+                document.getElementById('tableBody').innerHTML = 
+                    '<tr><td colspan="8" class="error">Connection failed: ' + error.message + '</td></tr>';
             }
         }
 
-        // MAIN FUNCTION: Load Team Data
+        // Load Team Data
         async function loadTeamData() {
-            if (!userAddress || !contract) {
-                alert("Please connect wallet first");
-                return;
-            }
-
             try {
-                isLoading = true;
                 document.getElementById('tableBody').innerHTML = 
-                    '<tr><td colspan="9" class="loading"><i class="fas fa-spinner fa-spin"></i><br>Loading team data from Polygon...</td></tr>';
+                    '<tr><td colspan="8" class="loading"><i class="fas fa-spinner fa-spin"></i> Loading team data...</td></tr>';
+                
+                if (!contract) {
+                    throw new Error("Contract not initialized");
+                }
 
                 // Clear previous data
-                userMap.clear();
                 teamMembers = [];
+                allUsers.clear();
 
-                // 1. Get current rates
-                await loadRates();
-
-                // 2. Get ALL users from blockchain (who have upline)
-                await loadAllUsers();
-
-                // 3. Build team tree starting from current user
-                await buildTeamTree();
-
-                // 4. Update UI
-                updateStats();
-                updateTable();
-
-            } catch (error) {
-                console.error("Error:", error);
-                document.getElementById('tableBody').innerHTML = 
-                    '<tr><td colspan="9" class="error"><i class="fas fa-exclamation-triangle"></i><br>Error loading data</td></tr>';
-            } finally {
-                isLoading = false;
-            }
-        }
-
-        // Load current rates
-        async function loadRates() {
-            try {
+                // Get current rate
                 const rate = await contract.currentRate();
-                const sRate = await contract.getSellRate();
-                buyRate = parseFloat(ethers.formatUnits(rate, 6));
-                sellRate = parseFloat(ethers.formatUnits(sRate, 6));
-                
-                document.getElementById('buyRate').textContent = buyRate.toFixed(4) + ' USDT';
-                document.getElementById('sellRate').textContent = `Sell: ${sellRate.toFixed(4)} USDT`;
-            } catch (e) {
-                console.warn("Rate fetch failed");
-            }
-        }
+                const sellRate = await contract.getSellRate();
+                document.getElementById('currentRate').textContent = 
+                    parseFloat(ethers.formatUnits(rate, 6)).toFixed(4) + ' USDT';
 
-        // Load ALL users from blockchain (only those with upline)
-        async function loadAllUsers() {
-            console.log("🔍 Scanning blockchain for users...");
-            
-            // Get latest block
-            const latestBlock = await provider.getBlockNumber();
-            
-            // We need to find all addresses that have ever interacted
-            // Using events is more efficient than scanning all addresses
-            
-            // Get Transfer events (to find all addresses)
-            const transferFilter = contract.filters.Transfer();
-            const transferEvents = await contract.queryFilter(transferFilter, 0, latestBlock);
-            
-            console.log(`📊 Found ${transferEvents.length} transfer events`);
-            
-            // Collect unique addresses
-            const addressSet = new Set();
-            
-            transferEvents.forEach(event => {
-                const from = event.args[0].toLowerCase();
-                const to = event.args[1].toLowerCase();
-                if (from !== "0x0000000000000000000000000000000000000000") addressSet.add(from);
-                if (to !== "0x0000000000000000000000000000000000000000") addressSet.add(to);
-            });
-            
-            const addresses = Array.from(addressSet);
-            console.log(`📊 Found ${addresses.length} unique addresses`);
-            
-            // Load data for each address in batches
-            const batchSize = 50;
-            let loadedCount = 0;
-            
-            for (let i = 0; i < addresses.length; i += batchSize) {
-                const batch = addresses.slice(i, i + batchSize);
+                // Get all Transfer events (last 50000 blocks for performance)
+                const latestBlock = await provider.getBlockNumber();
+                const fromBlock = Math.max(0, latestBlock - 50000);
                 
-                const promises = batch.map(async (addr) => {
+                console.log("Fetching Transfer events...");
+                const filter = contract.filters.Transfer();
+                const events = await contract.queryFilter(filter, fromBlock, latestBlock);
+                
+                console.log(`Found ${events.length} Transfer events`);
+
+                // Collect unique addresses
+                const addresses = new Set();
+                events.forEach(event => {
+                    addresses.add(event.args[0].toLowerCase()); // from
+                    addresses.add(event.args[1].toLowerCase()); // to
+                });
+
+                console.log(`Found ${addresses.size} unique addresses`);
+
+                // Load user data for each address
+                let loaded = 0;
+                for (const addr of addresses) {
                     try {
-                        // Get user data from contract
                         const userData = await contract.users(addr);
                         
-                        // Only store if user has an upline (means they're in referral system)
+                        // Only store if user has upline (part of referral system)
                         if (userData && userData.upline !== "0x0000000000000000000000000000000000000000") {
                             
-                            // Get current balance
-                            const balanceBN = await contract.balanceOf(addr);
-                            const balance = parseFloat(ethers.formatEther(balanceBN));
+                            const balance = await contract.balanceOf(addr);
                             
-                            userMap.set(addr, {
+                            allUsers.set(addr, {
                                 address: addr,
                                 upline: userData.upline.toLowerCase(),
-                                balance: balance,
+                                balance: parseFloat(ethers.formatEther(balance)),
                                 directCount: Number(userData.directCount),
                                 lastBuy: Number(userData.lastBuyTimestamp),
                                 hasBought: userData.hasBought
                             });
-                            
-                            loadedCount++;
+                            loaded++;
                         }
                     } catch (e) {
                         // Skip if error
                     }
-                });
-                
-                await Promise.all(promises);
-                
-                // Update progress
-                if (i % 500 === 0) {
-                    console.log(`Progress: ${i}/${addresses.length} addresses processed`);
+                    
+                    // Update progress occasionally
+                    if (++loaded % 50 === 0) {
+                        document.getElementById('tableBody').innerHTML = 
+                            `<tr><td colspan="8" class="loading">Loading... ${loaded}/${addresses.size}</td></tr>`;
+                    }
                 }
+
+                console.log(`Loaded ${allUsers.size} users with upline`);
+
+                // Build team tree
+                await buildTeamTree();
+
+            } catch (error) {
+                console.error("Data loading error:", error);
+                document.getElementById('tableBody').innerHTML = 
+                    '<tr><td colspan="8" class="error">Error: ' + error.message + '</td></tr>';
             }
-            
-            console.log(`✅ Loaded ${loadedCount} users with upline relationships`);
         }
 
-        // Build team tree starting from current user
+        // Build team tree
         async function buildTeamTree() {
-            console.log("🌳 Building team tree for:", userAddress);
+            console.log("Building team tree for:", userAddress);
             
-            // Queue for BFS traversal: [address, level]
             const queue = [{ addr: userAddress, level: 0 }];
             const visited = new Set();
             visited.add(userAddress);
@@ -580,154 +1135,88 @@
             while (queue.length > 0) {
                 const { addr: currentAddr, level: currentLevel } = queue.shift();
                 
-                // Skip if beyond level 10
                 if (currentLevel >= 10) continue;
                 
-                // Find all users whose upline is currentAddr
-                const downline = [];
-                userMap.forEach((user, addr) => {
+                // Find downline
+                allUsers.forEach((user, addr) => {
                     if (user.upline === currentAddr && !visited.has(addr)) {
-                        downline.push({ addr, ...user });
+                        visited.add(addr);
+                        
+                        const memberLevel = currentLevel + 1;
+                        teamMembers.push({
+                            address: addr,
+                            level: memberLevel,
+                            balance: user.balance,
+                            usdtValue: user.balance * 0.22, // Approx USDT value
+                            upline: user.upline,
+                            directCount: user.directCount,
+                            lastBuy: user.lastBuy,
+                            isActive: user.balance > 0
+                        });
+                        
+                        queue.push({ addr: addr, level: memberLevel });
                     }
                 });
-                
-                // Add to team members and queue
-                for (const member of downline) {
-                    const memberLevel = currentLevel + 1;
-                    
-                    visited.add(member.addr);
-                    
-                    teamMembers.push({
-                        address: member.addr,
-                        level: memberLevel,
-                        balance: member.balance,
-                        usdtValue: member.balance * sellRate,
-                        upline: member.upline,
-                        directCount: member.directCount,
-                        lastBuyTimestamp: member.lastBuy,
-                        joinDate: member.lastBuy > 0 ? new Date(member.lastBuy * 1000) : null,
-                        isActive: member.balance > 0
-                    });
-                    
-                    queue.push({ addr: member.addr, level: memberLevel });
-                }
             }
             
-            console.log(`✅ Team built: ${teamMembers.length} members found`);
-            console.log('Level distribution:', teamMembers.reduce((acc, m) => {
-                acc[m.level] = (acc[m.level] || 0) + 1;
-                return acc;
-            }, {}));
-        }
-
-        // Update statistics
-        function updateStats() {
-            const total = teamMembers.length;
-            const direct = teamMembers.filter(m => m.level === 1).length;
-            const totalSigma = teamMembers.reduce((sum, m) => sum + m.balance, 0);
-            const totalUsdt = teamMembers.reduce((sum, m) => sum + m.usdtValue, 0);
-            const active = teamMembers.filter(m => m.balance > 0).length;
-            const zero = teamMembers.filter(m => m.balance === 0).length;
+            console.log(`Team size: ${teamMembers.length}`);
             
-            document.getElementById('totalMembers').textContent = total;
-            document.getElementById('teamBreakdown').innerHTML = `Active: ${active} | Zero: ${zero}`;
-            document.getElementById('directReferrals').textContent = direct;
+            // Update stats
+            document.getElementById('totalMembers').textContent = teamMembers.length;
+            document.getElementById('directReferrals').textContent = 
+                teamMembers.filter(m => m.level === 1).length;
+            
+            const totalSigma = teamMembers.reduce((sum, m) => sum + m.balance, 0);
             document.getElementById('teamHoldings').textContent = totalSigma.toFixed(2) + ' SIG6';
-            document.getElementById('teamHoldingsUSDT').innerHTML = '$' + totalUsdt.toFixed(2) + ' USDT';
+            
+            // Update table
+            updateTable();
         }
 
         // Update table
         function updateTable() {
-            const tbody = document.getElementById('tableBody');
-            const resultsDiv = document.getElementById('resultsCount');
-            
             if (teamMembers.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="9" class="loading">No team members found under your wallet</td></tr>';
-                resultsDiv.style.display = 'none';
+                document.getElementById('tableBody').innerHTML = 
+                    '<tr><td colspan="8" class="loading">No team members found</td></tr>';
                 return;
             }
             
-            filteredMembers = [...teamMembers];
-            resultsDiv.style.display = 'inline-block';
-            document.getElementById('resultsText').textContent = `${filteredMembers.length} members`;
-            
             let html = '';
-            filteredMembers.sort((a, b) => a.level - b.level).forEach((member, i) => {
-                const uplineShort = member.upline.slice(0,6) + '...' + member.upline.slice(-4);
-                const dateDisplay = member.lastBuyTimestamp > 0 ? 
-                    new Date(member.lastBuyTimestamp * 1000).toLocaleDateString() : '—';
+            teamMembers.sort((a, b) => a.level - b.level).forEach(member => {
+                const dateStr = member.lastBuy > 0 ? 
+                    new Date(member.lastBuy * 1000).toLocaleDateString() : '—';
                 
                 html += `
                     <tr>
-                        <td>${i+1}</td>
-                        <td>
-                            <span class="wallet-address">
-                                ${member.address.slice(0,8)}...${member.address.slice(-6)}
-                            </span>
-                            <div style="margin-top:5px">
-                                <i class="fas fa-copy" style="cursor:pointer; color:#666; margin-right:8px" 
-                                   onclick="copyAddress('${member.address}')" title="Copy"></i>
-                                <i class="fas fa-external-link-alt" style="cursor:pointer; color:#666" 
-                                   onclick="viewOnExplorer('${member.address}')" title="View on Explorer"></i>
-                            </div>
-                        </td>
-                        <td><span class="level-badge level-${Math.min(member.level, 3)}">Level ${member.level}</span></td>
-                        <td style="color: ${member.balance > 0 ? '#00ffcc' : '#888'}; font-weight: 600">
-                            ${member.balance.toFixed(2)}
-                        </td>
+                        <td><span class="wallet-address">${member.address.slice(0,8)}...${member.address.slice(-6)}</span></td>
+                        <td><span class="level-badge">Level ${member.level}</span></td>
+                        <td style="color: ${member.balance > 0 ? '#00ffcc' : '#888'}">${member.balance.toFixed(2)}</td>
                         <td>$${member.usdtValue.toFixed(2)}</td>
-                        <td>${dateDisplay}</td>
-                        <td><span class="wallet-address">${uplineShort}</span></td>
-                        <td style="text-align: center; color: #00ffcc">${member.directCount}</td>
-                        <td>
-                            <span class="${member.isActive ? 'status-active' : 'status-inactive'}">
-                                ${member.isActive ? '● Active' : '○ Inactive'}
-                            </span>
-                        </td>
+                        <td>${dateStr}</td>
+                        <td><span class="wallet-address">${member.upline.slice(0,6)}...</span></td>
+                        <td>${member.directCount}</td>
+                        <td style="color: ${member.isActive ? '#00ffcc' : '#888'}">${member.isActive ? 'Active' : 'Inactive'}</td>
                     </tr>
                 `;
             });
             
-            tbody.innerHTML = html;
+            document.getElementById('tableBody').innerHTML = html;
         }
 
         // Filter functions
         function applyFilters() {
-            const level = document.getElementById('levelFilter').value;
-            const search = document.getElementById('searchFilter').value.toLowerCase();
-            const balance = document.getElementById('balanceFilter').value;
-            
-            filteredMembers = teamMembers.filter(m => {
-                if (level !== 'all' && m.level !== parseInt(level)) return false;
-                if (search && !m.address.includes(search)) return false;
-                if (balance === 'positive' && m.balance === 0) return false;
-                if (balance === 'zero' && m.balance > 0) return false;
-                return true;
-            });
-            
+            // Implement filtering
             updateTable();
         }
 
         function resetFilters() {
             document.getElementById('levelFilter').value = 'all';
             document.getElementById('searchFilter').value = '';
-            document.getElementById('balanceFilter').value = 'all';
-            filteredMembers = [...teamMembers];
             updateTable();
         }
 
         function refreshData() {
             loadTeamData();
-        }
-
-        // Utility functions
-        function copyAddress(addr) {
-            navigator.clipboard.writeText(addr);
-            alert('Address copied!');
-        }
-
-        function viewOnExplorer(addr) {
-            window.open(`https://polygonscan.com/address/${addr}`, '_blank');
         }
     </script>
 </body>
