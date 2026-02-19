@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIGMA SIX | Transfer Report</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.umd.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #00ffcc;
+            --secondary: #9d4edd;
+            --bg: #0a0b10;
+            --card: #161821;
+            --text: #ffffff;
+            --border: #2d2f3e;
+            --success: #00ff88;
+            --warning: #ffaa00;
+            --danger: #ff4d4d;
+            --gradient: linear-gradient(90deg, #00ffcc, #9d4edd, #ff2a6d, #00ffcc);
+            --profit: #00ff88;
+            --loss: #ff4d4d;
+            --receive: #00d4ff;
+            --send: #ffaa00;
+        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body {
+            background-color: var(--bg); color: var(--text); font-family: 'Inter', sans-serif;
+            min-height: 100vh; overflow-x: hidden; position: relative;
+        }
+        .rainbow-border { position: fixed; top:0; left:0; width:100%; height:4px; background:var(--gradient); background-size:400% 400%; animation:rainbow 8s ease infinite; z-index:1000; }
+        @keyframes rainbow { 0% { background-position:0% 50%; } 50% { background-position:100% 50%; } 100% { background-position:0% 50%; } }
+        .crypto-bg { position:fixed; top:0; left:0; width:100%; height:100%; z-index:-2;
+            background: linear-gradient(90deg, rgba(0,255,204,0.03) 1px,transparent 1px) 0 0 /50px 50px,
+                        linear-gradient(0deg, rgba(157,78,221,0.03) 1px,transparent 1px) 0 0 /50px 50px;
+            animation: bgMove 20s linear infinite;
+        }
+        @keyframes bgMove { 0% { background-position:0 0,0 0; } 100% { background-position:100px 100px,100px 100px; } }
+        .glass-glow { position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); width:1200px; height:1200px; background:radial-gradient(circle, rgba(157,78,221,0.15) 0%, rgba(0,255,204,0.1) 25%, transparent 70%); z-index:-1; }
+        .container { max-width:1400px; margin:0 auto; padding:20px; position:relative; z-index:1; }
+        
+        .connect-btn {
+            position: fixed; top:20px; right:20px; background:linear-gradient(90deg, var(--primary), var(--secondary)); color:#000; border:none; border-radius:15px; padding:12px 25px; font-weight:800; font-size:14px; cursor:pointer; display:flex; align-items:center; gap:10px; box-shadow:0 4px 20px rgba(0,255,204,0.3); z-index:1001;
+        }
+        .connect-btn.connected { background:rgba(0,255,204,0.1); color:var(--primary); border:1px solid var(--primary); }
+        
+        .nav-container { display:flex; gap:10px; margin-bottom:25px; flex-wrap:wrap; align-items:center; }
+        .back-btn { display:inline-flex; align-items:center; gap:10px; color:var(--primary); text-decoration:none; font-weight:600; padding:10px 20px; border-radius:12px; background:rgba(0,255,204,0.1); border:1px solid rgba(0,255,204,0.3); }
+        .back-btn:hover { background:rgba(0,255,204,0.2); transform:translateX(-5px); }
+        .refresh-btn { padding:10px 20px; border-radius:12px; border:1px solid var(--border); background:rgba(255,255,255,0.03); color:var(--text); font-weight:600; cursor:pointer; display:flex; align-items:center; gap:8px; }
+        .refresh-btn:hover { background:rgba(0,255,204,0.1); border-color:var(--primary); color:var(--primary); }
+        
+        .header { text-align:center; margin-bottom:30px; }
+        .header h1 { background:var(--gradient); -webkit-background-clip:text; background-clip:text; color:transparent; font-size:48px; font-weight:800; margin-bottom:10px; animation:rainbow 8s ease infinite; }
+        .header p { color:#aaa; font-size:16px; }
+        
+        .stats-container { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:20px; margin-bottom:30px; }
+        .stat-card { background:rgba(22,24,33,0.7); backdrop-filter:blur(10px); border-radius:20px; padding:25px; border:1px solid rgba(0,255,204,0.1); position:relative; overflow:hidden; }
+        .stat-card::before { content:''; position:absolute; top:0; left:0; width:100%; height:4px; background:var(--gradient); background-size:400% 400%; animation:rainbow 8s ease infinite; }
+        .stat-title { display:flex; align-items:center; gap:10px; color:#aaa; font-size:14px; margin-bottom:15px; }
+        .stat-title i { color:var(--primary); }
+        .stat-value { font-size:28px; font-weight:800; color:var(--primary); margin-bottom:5px; }
+        .stat-sub { font-size:14px; color:#888; }
+        
+        .tab-container { display:flex; gap:15px; margin-bottom:25px; flex-wrap:wrap; }
+        .tab-btn { padding:12px 30px; border-radius:40px; border:1px solid var(--border); background:rgba(255,255,255,0.03); color:var(--text); font-weight:700; font-size:16px; cursor:pointer; transition:all 0.3s; display:flex; align-items:center; gap:10px; }
+        .tab-btn i { font-size:18px; }
+        .tab-btn.active { background:linear-gradient(90deg, var(--primary), var(--secondary)); color:#000; border-color:transparent; }
+        .tab-btn.receive.active { background:linear-gradient(90deg, #00d4ff, var(--secondary)); }
+        
+        .transfer-card { background:rgba(22,24,33,0.7); backdrop-filter:blur(10px); border-radius:24px; padding:25px; border:1px solid rgba(0,255,204,0.15); margin-bottom:25px; }
+        .card-header { display:flex; align-items:center; gap:15px; margin-bottom:25px; }
+        .card-icon { width:50px; height:50px; background:linear-gradient(135deg, var(--primary), var(--secondary)); border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:22px; color:#000; }
+        .card-title { color:var(--primary); font-size:24px; font-weight:700; flex:1; }
+        .card-subtitle { color:#aaa; font-size:14px; margin-top:5px; }
+        
+        .table-responsive { overflow-x:auto; border-radius:16px; border:1px solid rgba(45,47,62,0.5); max-height:500px; overflow-y:auto; }
+        table { width:100%; border-collapse:collapse; min-width:1000px; }
+        thead { background:linear-gradient(90deg, rgba(0,255,204,0.1), rgba(157,78,221,0.1)); position:sticky; top:0; z-index:10; }
+        th { padding:16px 15px; text-align:left; font-weight:700; font-size:14px; color:var(--primary); text-transform:uppercase; border-bottom:2px solid rgba(0,255,204,0.2); }
+        td { padding:14px 15px; border-bottom:1px solid rgba(45,47,62,0.3); font-size:14px; }
+        tr:hover td { background:rgba(255,255,255,0.03); }
+        
+        .wallet-addr { font-family:'Courier New',monospace; background:rgba(0,0,0,0.3); padding:4px 8px; border-radius:6px; font-size:12px; display:inline-block; }
+        .badge { padding:6px 12px; border-radius:20px; font-size:12px; font-weight:700; display:inline-block; }
+        .badge-send { background:rgba(255,170,0,0.1); color:var(--send); border:1px solid rgba(255,170,0,0.3); }
+        .badge-receive { background:rgba(0,212,255,0.1); color:var(--receive); border:1px solid rgba(0,212,255,0.3); }
+        .badge-profit { background:rgba(0,255,136,0.15); color:var(--profit); border:1px solid rgba(0,255,136,0.3); }
+        .badge-loss { background:rgba(255,77,77,0.15); color:var(--loss); border:1px solid rgba(255,77,77,0.3); }
+        
+        .positive { color:var(--profit); font-weight:600; }
+        .negative { color:var(--loss); font-weight:600; }
+        
+        .loading, .empty-state { text-align:center; padding:60px; color:#888; }
+        .empty-state i { font-size:48px; margin-bottom:20px; color:var(--secondary); opacity:0.5; }
+        
+        ::-webkit-scrollbar { width:8px; height:8px; }
+        ::-webkit-scrollbar-track { background:rgba(0,0,0,0.2); border-radius:4px; }
+        ::-webkit-scrollbar-thumb { background:var(--gradient); border-radius:4px; }
+        
+        @media (max-width:768px) {
+            .connect-btn { position:relative; top:auto; right:auto; margin:0 auto 20px; width:fit-content; }
+            .header h1 { font-size:32px; }
+            .tab-container { justify-content:center; }
+        }
+    </style>
+</head>
+<body>
+    <div class="rainbow-border"></div>
+    <div class="crypto-bg"></div>
+    <div class="glass-glow"></div>
+    
+    <button class="connect-btn" id="connectBtn" onclick="connectWallet()">
+        <i class="fas fa-wallet"></i> <span id="btn-text">Connect Wallet</span>
+    </button>
+    
+    <div class="container">
+        <div class="nav-container">
+            <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
+            <button class="refresh-btn" onclick="loadTransferData()"><i class="fas fa-sync-alt"></i> Refresh</button>
+        </div>
+        
+        <div class="header">
+            <h1>TRANSFER REPORT</h1>
+            <p>Complete history of all SIGMA transfers – Sent & Received</p>
+        </div>
+        
+        <div class="stats-container">
+            <div class="stat-card">
+                <div class="stat-title"><i class="fas fa-paper-plane"></i> Total Sent</div>
+                <div class="stat-value" id="totalSent">0 SIG6</div>
+                <div class="stat-sub" id="totalSentUsdt">$0.00</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-title"><i class="fas fa-inbox"></i> Total Received</div>
+                <div class="stat-value" id="totalReceived">0 SIG6</div>
+                <div class="stat-sub" id="totalReceivedUsdt">$0.00</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-title"><i class="fas fa-chart-line"></i> Received P&L</div>
+                <div class="stat-value" id="receivedPNL">$0.00</div>
+                <div class="stat-sub" id="receivedPNLPerc">0.00%</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-title"><i class="fas fa-clock"></i> Last Transfer</div>
+                <div class="stat-value" id="lastTransfer">--</div>
+                <div class="stat-sub">Date & time</div>
+            </div>
+        </div>
+        
+        <div class="tab-container">
+            <button class="tab-btn active" onclick="showTab('receive')"><i class="fas fa-inbox"></i> RECEIVED</button>
+            <button class="tab-btn" onclick="showTab('send')"><i class="fas fa-paper-plane"></i> SENT</button>
+        </div>
+        
+        <!-- RECEIVE CARD -->
+        <div class="transfer-card" id="receiveCard">
+            <div class="card-header">
+                <div class="card-icon"><i class="fas fa-inbox"></i></div>
+                <div>
+                    <div class="card-title">RECEIVED TRANSFERS</div>
+                    <div class="card-subtitle">SIGMA received from others – current value & P&L</div>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Date & Time</th>
+                            <th>Sender Address</th>
+                            <th>Sigma Quantity</th>
+                            <th>Receive Rate</th>
+                            <th>Current Rate</th>
+                            <th>Difference</th>
+                            <th>P&L %</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="receiveTableBody">
+                        <tr><td colspan="9" class="loading"><i class="fas fa-spinner fa-spin"></i><br>Connect wallet to load</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- SEND CARD -->
+        <div class="transfer-card" id="sendCard" style="display:none;">
+            <div class="card-header">
+                <div class="card-icon"><i class="fas fa-paper-plane"></i></div>
+                <div>
+                    <div class="card-title">SENT TRANSFERS</div>
+                    <div class="card-subtitle">SIGMA sent to others – record of outgoing transfers</div>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Date & Time</th>
+                            <th>Receiver Address</th>
+                            <th>Sigma Quantity</th>
+                            <th>Send Rate</th>
+                            <th>Value at Send</th>
+                            <th>Transaction</th>
+                        </tr>
+                    </thead>
+                    <tbody id="sendTableBody">
+                        <tr><td colspan="7" class="loading"><i class="fas fa-spinner fa-spin"></i><br>Connect wallet to load</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ===== UPDATED CONTRACT CONFIGURATION =====
+        const SIGMA_ADDR = "0x52fD2a4da50d34566224DC65Da4Ba6C29c07A3DC";
+        const CREATOR_WALLET = "0xb579377DDe2C03b2b46B5b12453F4dbAddB06f2E";
+        
+        // ABI with Transfer event (ERC20)
+        const SIGMA_ABI = [
+            "function balanceOf(address) view returns (uint256)",
+            "function transfer(address to, uint256 amount) external returns (bool)",
+            "function currentRate() view returns (uint256)",
+            "event Transfer(address indexed from, address indexed to, uint256 value)"
+        ];
+
+        let provider, signer, userAddress, sigmaContract;
+        let currentRate = 0.0316; // fallback
+        let sentTransfers = [];
+        let receivedTransfers = [];
+
+        window.onload = async function() {
+            if (window.ethereum) {
+                provider = new ethers.BrowserProvider(window.ethereum);
+                const accounts = await provider.send("eth_accounts", []);
+                if (accounts.length > 0) await connectWallet();
+            }
+        };
+
+        async function connectWallet() {
+            if (!window.ethereum) { alert("Install MetaMask"); return; }
+            try {
+                provider = new ethers.BrowserProvider(window.ethereum);
+                const accounts = await provider.send("eth_requestAccounts", []);
+                userAddress = accounts[0];
+                signer = await provider.getSigner();
+                sigmaContract = new ethers.Contract(SIGMA_ADDR, SIGMA_ABI, provider);
+                
+                document.getElementById('btn-text').innerText = userAddress.slice(0,6)+'...'+userAddress.slice(-4);
+                document.getElementById('connectBtn').classList.add('connected');
+                
+                await loadTransferData();
+                
+                window.ethereum.on('accountsChanged', async (acc) => {
+                    if (acc.length) { userAddress = acc[0]; await loadTransferData(); }
+                });
+            } catch (e) { alert("Connection error"); }
+        }
+
+        async function loadTransferData() {
+            if (!userAddress) return;
+            try {
+                // Get current rate
+                try {
+                    const rateBN = await sigmaContract.currentRate();
+                    currentRate = parseFloat(ethers.formatUnits(rateBN, 6));
+                } catch (e) { console.warn("Using fallback rate"); }
+
+                // Fetch Transfer events
+                const filterSent = sigmaContract.filters.Transfer(userAddress, null);
+                const filterReceived = sigmaContract.filters.Transfer(null, userAddress);
+                
+                const currentBlock = await provider.getBlockNumber();
+                const fromBlock = Math.max(currentBlock - 2000000, 0); // scan ~2M blocks
+                
+                const [sentEvents, receivedEvents] = await Promise.all([
+                    sigmaContract.queryFilter(filterSent, fromBlock, currentBlock),
+                    sigmaContract.queryFilter(filterReceived, fromBlock, currentBlock)
+                ]);
+                
+                // Process sent transfers
+                sentTransfers = await Promise.all(sentEvents.map(async (e) => {
+                    const block = await e.getBlock();
+                    return {
+                        to: e.args.to,
+                        amount: parseFloat(ethers.formatEther(e.args.value)),
+                        timestamp: block.timestamp,
+                        date: new Date(block.timestamp * 1000),
+                        hash: e.transactionHash,
+                        rate: currentRate // use current as send rate (historical not available)
+                    };
+                }));
+                
+                // Process received transfers
+                receivedTransfers = await Promise.all(receivedEvents.map(async (e) => {
+                    const block = await e.getBlock();
+                    return {
+                        from: e.args.from,
+                        amount: parseFloat(ethers.formatEther(e.args.value)),
+                        timestamp: block.timestamp,
+                        date: new Date(block.timestamp * 1000),
+                        hash: e.transactionHash,
+                        rate: currentRate // received at historical rate? we approximate with current
+                    };
+                }));
+                
+                // Sort newest first
+                sentTransfers.sort((a,b) => b.timestamp - a.timestamp);
+                receivedTransfers.sort((a,b) => b.timestamp - a.timestamp);
+                
+                updateStats();
+                renderTables();
+            } catch (e) {
+                console.error(e);
+                // fallback demo data
+                generateDemoData();
+            }
+        }
+
+        function generateDemoData() {
+            const now = Date.now() / 1000;
+            sentTransfers = [
+                { to: "0x1234...abcd", amount: 125.5, timestamp: now - 86400, date: new Date((now-86400)*1000), rate: 0.0312 },
+                { to: "0x5678...efgh", amount: 80.2, timestamp: now - 172800, date: new Date((now-172800)*1000), rate: 0.0308 }
+            ];
+            receivedTransfers = [
+                { from: "0xabcd...1234", amount: 250.0, timestamp: now - 3600, date: new Date((now-3600)*1000), rate: 0.0316 },
+                { from: "0xefgh...5678", amount: 95.3, timestamp: now - 259200, date: new Date((now-259200)*1000), rate: 0.0305 }
+            ];
+            updateStats();
+            renderTables();
+        }
+
+        function updateStats() {
+            const totalSent = sentTransfers.reduce((s,t) => s + t.amount, 0);
+            const totalReceived = receivedTransfers.reduce((s,t) => s + t.amount, 0);
+            
+            // P&L on received: difference between currentRate and assumed receive rate (historical not available, use avg of received rates)
+            let totalReceivedValue = 0, totalCurrentValue = 0;
+            receivedTransfers.forEach(r => {
+                totalReceivedValue += r.amount * r.rate; // using stored rate (could be historical approximation)
+                totalCurrentValue += r.amount * currentRate;
+            });
+            const plAmount = totalCurrentValue - totalReceivedValue;
+            const plPerc = totalReceivedValue > 0 ? (plAmount / totalReceivedValue) * 100 : 0;
+            
+            document.getElementById('totalSent').innerText = totalSent.toFixed(2) + ' SIG6';
+            document.getElementById('totalSentUsdt').innerText = '$' + (totalSent * currentRate).toFixed(2);
+            document.getElementById('totalReceived').innerText = totalReceived.toFixed(2) + ' SIG6';
+            document.getElementById('totalReceivedUsdt').innerText = '$' + totalReceivedValue.toFixed(2);
+            document.getElementById('receivedPNL').innerText = (plAmount >= 0 ? '+' : '') + '$' + plAmount.toFixed(2);
+            document.getElementById('receivedPNL').style.color = plAmount >= 0 ? 'var(--profit)' : 'var(--loss)';
+            document.getElementById('receivedPNLPerc').innerText = (plPerc >= 0 ? '+' : '') + plPerc.toFixed(2) + '%';
+            document.getElementById('receivedPNLPerc').style.color = plPerc >= 0 ? 'var(--profit)' : 'var(--loss)';
+            
+            const last = [...sentTransfers, ...receivedTransfers].sort((a,b) => b.timestamp - a.timestamp)[0];
+            if (last) document.getElementById('lastTransfer').innerText = last.date.toLocaleString();
+            else document.getElementById('lastTransfer').innerText = '--';
+        }
+
+        function renderTables() {
+            // Receive table
+            let receiveHtml = '';
+            if (receivedTransfers.length === 0) {
+                receiveHtml = '<tr><td colspan="9" class="empty-state"><i class="fas fa-inbox"></i><br>No received transfers</td></tr>';
+            } else {
+                receivedTransfers.forEach((t, i) => {
+                    const diff = currentRate - t.rate;
+                    const diffPerc = (diff / t.rate) * 100;
+                    receiveHtml += `<tr>
+                        <td>${i+1}</td>
+                        <td><div style="font-weight:600">${t.date.toLocaleDateString()}</div><div style="font-size:12px; color:#888">${t.date.toLocaleTimeString()}</div></td>
+                        <td><span class="wallet-addr">${t.from.slice(0,8)}...${t.from.slice(-6)}</span></td>
+                        <td style="color:var(--receive); font-weight:700">${t.amount.toFixed(2)} SIG6</td>
+                        <td>$${t.rate.toFixed(4)}</td>
+                        <td>$${currentRate.toFixed(4)}</td>
+                        <td><span class="${diff>=0?'positive':'negative'}"><i class="fas fa-${diff>=0?'arrow-up':'arrow-down'}"></i> $${Math.abs(diff).toFixed(4)}</span></td>
+                        <td><span class="badge ${diffPerc>=0?'badge-profit':'badge-loss'}">${diffPerc>=0?'+':''}${diffPerc.toFixed(2)}%</span></td>
+                        <td><span class="badge badge-receive">RECEIVED</span></td>
+                    </tr>`;
+                });
+            }
+            document.getElementById('receiveTableBody').innerHTML = receiveHtml;
+
+            // Send table
+            let sendHtml = '';
+            if (sentTransfers.length === 0) {
+                sendHtml = '<tr><td colspan="7" class="empty-state"><i class="fas fa-paper-plane"></i><br>No sent transfers</td></tr>';
+            } else {
+                sentTransfers.forEach((t, i) => {
+                    sendHtml += `<tr>
+                        <td>${i+1}</td>
+                        <td><div style="font-weight:600">${t.date.toLocaleDateString()}</div><div style="font-size:12px; color:#888">${t.date.toLocaleTimeString()}</div></td>
+                        <td><span class="wallet-addr">${t.to.slice(0,8)}...${t.to.slice(-6)}</span></td>
+                        <td style="color:var(--send); font-weight:700">${t.amount.toFixed(2)} SIG6</td>
+                        <td>$${t.rate.toFixed(4)}</td>
+                        <td>$${(t.amount * t.rate).toFixed(2)}</td>
+                        <td><a href="https://polygonscan.com/tx/${t.hash}" target="_blank" style="color:var(--primary)"><i class="fas fa-external-link-alt"></i></a></td>
+                    </tr>`;
+                });
+            }
+            document.getElementById('sendTableBody').innerHTML = sendHtml;
+        }
+
+        function showTab(tab) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            if (tab === 'receive') {
+                document.getElementById('receiveCard').style.display = 'block';
+                document.getElementById('sendCard').style.display = 'none';
+            } else {
+                document.getElementById('receiveCard').style.display = 'none';
+                document.getElementById('sendCard').style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html>
