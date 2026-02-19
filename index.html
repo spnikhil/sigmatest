@@ -190,7 +190,6 @@
         
         .cooldown-badge { background:rgba(255,170,0,0.15); border-radius:30px; padding:4px 12px; font-size:12px; color:var(--warning); display:inline-flex; align-items:center; gap:5px; margin-left:10px; }
         .cooldown-danger { color:var(--danger); background:rgba(255,77,77,0.15); }
-        .min-badge { background:rgba(0,255,204,0.15); border-radius:30px; padding:4px 12px; font-size:12px; color:var(--primary); display:inline-flex; align-items:center; gap:5px; margin-left:10px; }
         
         #statusMessage { font-size:13px; text-align:center; margin-top:15px; min-height:20px; color:var(--primary); font-weight:600; }
         .ref-box { background:rgba(0,0,0,0.3); padding:20px; border-radius:16px; border:1px solid var(--border); margin-top:25px; }
@@ -235,11 +234,10 @@
                     </div>
                 </div>
                 
-                <!-- Badges -->
+                <!-- Cooldown Badges -->
                 <div style="display:flex; gap:15px; justify-content:center; margin-bottom:10px; flex-wrap:wrap;">
                     <span id="sellCooldownBadge" class="cooldown-badge"><i class="fas fa-hourglass-half"></i> Sell cooldown: --</span>
                     <span id="buyCooldownBadge" class="cooldown-badge"><i class="fas fa-calendar-alt"></i> 30-day lock: --</span>
-                    <span id="minBuyBadge" class="min-badge"><i class="fas fa-info-circle"></i> Min Buy: 1 USDT</span>
                 </div>
                 
                 <!-- Approval Steps -->
@@ -385,12 +383,12 @@
     </div>
 
     <script>
-        // ========== CONTRACT CONFIGURATION (UPDATED) ==========
-        const SIGMA_ADDRESS = "0x437aD92455210c835Fbcee741037861379B97bc2"; // NEW CONTRACT
+        // ========== CONTRACT CONFIGURATION ==========
+        const SIGMA_ADDRESS = "0x437aD92455210c835Fbcee741037861379B97bc2";
         const USDT_ADDRESS = "0xc2132D05D31c914a87C6611C10748AEb04B58e8F";
         const CREATOR_WALLET = "0xb579377DDe2C03b2b46B5b12453F4dbAddB06f2E";
         
-        // ABI from the new contract
+        // ABI
         const SIGMA_ABI = [
             "function balanceOf(address) view returns (uint256)",
             "function buy(uint256 _usdtAmount, address _upline) external",
@@ -398,8 +396,7 @@
             "function currentRate() view returns (uint256)",
             "function getSellRate() view returns (uint256)",
             "function users(address) view returns (address upline, uint256 referralExpiry, uint256 totalReferralEarned, uint256 lastBuyTimestamp, bool isMigrated, bool hasBought, uint256 directCount)",
-            "function transfer(address to, uint256 value) external returns (bool)",
-            "function MIN_FOR_REFERRAL() view returns (uint256)"
+            "function transfer(address to, uint256 value) external returns (bool)"
         ];
 
         const USDT_ABI = [
@@ -421,10 +418,8 @@
         let cooldownInterval;
         let currentUSDTNeeded = 0;
         let isApproved = false;
-        let minForReferral = 0;
 
         const INR_RATE = 95;
-        const MIN_BUY_USDT = 1; // Contract requires minimum 1 USDT
 
         window.onload = async () => {
             createParticles();
@@ -706,7 +701,7 @@
             
             if (currentMode === 'buy') {
                 const totalUsdt = amount * buyRate;
-                const usdtWithTax = totalUsdt * 1.01;
+                const usdtWithTax = totalUsdt * 1.01; // 1% tax
                 currentUSDTNeeded = usdtWithTax;
                 
                 document.getElementById('calcLabel').textContent = 'Total USDT to Pay:';
@@ -718,16 +713,6 @@
                     document.getElementById('actionButton').innerHTML = '<i class="fas fa-ban"></i> CREATOR WALLET';
                     document.getElementById('approveBtn').style.display = 'none';
                     document.getElementById('approvalSteps').style.display = 'none';
-                    return;
-                }
-                
-                // Check minimum buy amount (1 USDT)
-                if (usdtWithTax < MIN_BUY_USDT) {
-                    document.getElementById('actionButton').disabled = true;
-                    document.getElementById('actionButton').innerHTML = '<i class="fas fa-exclamation-triangle"></i> MIN 1 USDT REQUIRED';
-                    document.getElementById('approveBtn').style.display = 'none';
-                    document.getElementById('approvalSteps').style.display = 'none';
-                    document.getElementById('statusMessage').innerHTML = `Minimum buy is 1 USDT. You need at least ${(MIN_BUY_USDT / (buyRate * 1.01)).toFixed(2)} SIG6`;
                     return;
                 }
                 
@@ -923,13 +908,6 @@
                     }
                     
                     const usdtWithTax = amount * buyRate * 1.01;
-                    
-                    // Double-check minimum buy
-                    if (usdtWithTax < MIN_BUY_USDT) {
-                        msg.innerHTML = `<i class="fas fa-exclamation-triangle" style="color:var(--danger)"></i> Minimum buy is 1 USDT`;
-                        return;
-                    }
-                    
                     const usdtWei = ethers.parseUnits(usdtWithTax.toFixed(6), 6);
                     
                     console.log("Buying with USDT:", usdtWei.toString());
@@ -999,8 +977,6 @@
                     errorMsg = "Transaction rejected";
                 } else if (error.message.includes("insufficient funds")) {
                     errorMsg = "Insufficient POL for gas";
-                } else if (error.message.includes("Min buy")) {
-                    errorMsg = "Minimum buy is 1 USDT";
                 }
                 
                 msg.innerHTML = `<i class="fas fa-exclamation-triangle" style="color:var(--danger)"></i> ❌ ${errorMsg}`;
