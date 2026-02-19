@@ -27,6 +27,7 @@
             min-height: 100vh; overflow-x: hidden; position: relative;
         }
         
+        /* ===== UPDATED CRISSCROSS LINE ANIMATION ===== */
         .crypto-bg {
             position: fixed;
             top: 0;
@@ -40,6 +41,7 @@
             transform-origin: center;
         }
         
+        /* Add second layer for crisscross effect */
         .crypto-bg::after {
             content: '';
             position: absolute;
@@ -194,6 +196,54 @@
         .copy-btn { background:linear-gradient(90deg, var(--secondary), #7b2cbf); color:white; border:none; border-radius:12px; padding:12px 20px; font-weight:600; font-size:13px; cursor:pointer; transition:all 0.3s; display:flex; align-items:center; gap:8px; white-space:nowrap; }
         .copy-btn:hover { background:linear-gradient(90deg, #7b2cbf, var(--secondary)); transform:translateY(-2px); box-shadow:0 5px 15px rgba(157,78,221,0.3); }
         
+        /* NEW: Referral section directly under contract address */
+        .referral-mini-box {
+            background: rgba(0,0,0,0.3);
+            padding: 15px 20px;
+            border-radius: 16px;
+            border: 1px dashed var(--primary);
+            margin-top: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .referral-mini-info {
+            flex: 1;
+        }
+        .referral-mini-label {
+            font-size: 11px;
+            color: #888;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .referral-mini-address {
+            font-size: 13px;
+            color: var(--primary);
+            font-family: monospace;
+            word-break: break-all;
+        }
+        .referral-mini-copy {
+            background: var(--primary);
+            color: #000;
+            border: none;
+            border-radius: 12px;
+            padding: 10px 16px;
+            font-weight: 700;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+        }
+        .referral-mini-copy:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,255,204,0.3);
+        }
+        
         .balance-footer { margin-top:25px; padding-top:20px; border-top:1px solid var(--border); font-size:14px; }
         .balance-item { display:flex; justify-content:space-between; margin-bottom:10px; padding-bottom:10px; border-bottom:1px solid rgba(255,255,255,0.05); }
         .balance-item:last-child { border-bottom:none; margin-bottom:0; padding-bottom:0; }
@@ -223,152 +273,8 @@
         .cooldown-danger { color:var(--danger); background:rgba(255,77,77,0.15); }
         
         #statusMessage { font-size:13px; text-align:center; margin-top:15px; min-height:20px; color:var(--primary); font-weight:600; }
-        
-        /* ===== NEW BEAUTIFUL REFERRAL BOX ===== */
-        .ref-box { 
-            background: linear-gradient(145deg, rgba(0,255,204,0.1), rgba(157,78,221,0.1));
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 20px;
-            margin: 20px 0 10px;
-            border: 2px solid transparent;
-            background-clip: padding-box;
-            position: relative;
-            box-shadow: 0 10px 30px rgba(0,255,204,0.2);
-            animation: glowPulse 3s ease-in-out infinite;
-        }
-        
-        .ref-box::before {
-            content: '';
-            position: absolute;
-            top: -2px;
-            left: -2px;
-            right: -2px;
-            bottom: -2px;
-            background: var(--gradient);
-            border-radius: 22px;
-            z-index: -1;
-            background-size: 400% 400%;
-            animation: rainbow 8s ease infinite;
-        }
-        
-        @keyframes glowPulse {
-            0%, 100% { box-shadow: 0 10px 30px rgba(0,255,204,0.2); }
-            50% { box-shadow: 0 15px 40px rgba(157,78,221,0.3); }
-        }
-        
-        .ref-box .ref-header {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 15px;
-            color: var(--primary);
-            font-size: 16px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        
-        .ref-box .ref-header i {
-            font-size: 20px;
-            background: var(--gradient);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-        
-        .ref-box .ref-content {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-        
-        @media (max-width: 768px) {
-            .ref-box .ref-content {
-                flex-direction: column;
-            }
-        }
-        
-        .ref-box .ref-input {
-            flex: 1;
-            background: rgba(0,0,0,0.4);
-            border: 1px solid var(--primary);
-            border-radius: 40px;
-            padding: 14px 20px;
-            color: var(--primary);
-            font-family: monospace;
-            font-size: 14px;
-            outline: none;
-            transition: all 0.3s;
-            min-width: 0;
-            box-shadow: 0 0 15px rgba(0,255,204,0.1);
-        }
-        
-        .ref-box .ref-input:focus {
-            border-color: var(--secondary);
-            box-shadow: 0 0 20px rgba(157,78,221,0.3);
-        }
-        
-        .ref-box .ref-copy-btn {
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
-            color: #000;
-            border: none;
-            border-radius: 40px;
-            padding: 14px 30px;
-            font-weight: 800;
-            font-size: 15px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            transition: all 0.3s;
-            white-space: nowrap;
-            box-shadow: 0 5px 15px rgba(0,255,204,0.3);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .ref-box .ref-copy-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-            transition: left 0.5s;
-        }
-        
-        .ref-box .ref-copy-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(157,78,221,0.4);
-        }
-        
-        .ref-box .ref-copy-btn:hover::before {
-            left: 100%;
-        }
-        
-        .ref-box .ref-copy-btn i {
-            font-size: 16px;
-        }
-        
-        .ref-box .ref-hint {
-            margin-top: 12px;
-            font-size: 12px;
-            color: #aaa;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-        
-        .ref-box .ref-hint i {
-            color: var(--primary);
-        }
-        
-        .ref-box.hidden {
-            display: none;
-        }
+        .ref-box { background:rgba(0,0,0,0.3); padding:20px; border-radius:16px; border:1px solid var(--border); margin-top:25px; }
+        .ref-box.hidden { display:none; }
         
         @media (max-width:768px) { .container { padding:15px; } .main-card, .menu-card { padding:20px; } .header h1 { font-size:32px; } .stat-value { font-size:18px; } input { font-size:26px; } }
     </style>
@@ -412,7 +318,7 @@
                 <!-- Cooldown Badges -->
                 <div style="display:flex; gap:15px; justify-content:center; margin-bottom:10px; flex-wrap:wrap;">
                     <span id="sellCooldownBadge" class="cooldown-badge"><i class="fas fa-hourglass-half"></i> Sell cooldown: --</span>
-                    <span id="buyCooldownBadge" class="cooldown-badge"><i class="fas fa-calendar-alt"></i> 30-day: --</span>
+                    <span id="buyCooldownBadge" class="cooldown-badge"><i class="fas fa-calendar-alt"></i> 30-day: --</span> <!-- Changed: Removed "lock" -->
                 </div>
                 
                 <!-- Approval Steps -->
@@ -475,30 +381,33 @@
                 
                 <div id="statusMessage"></div>
                 
-                <!-- ===== BEAUTIFUL REFERRAL LINK BOX (ONLY THIS ADDED) ===== -->
-                <div class="ref-box hidden" id="referralBox">
-                    <div class="ref-header">
-                        <i class="fas fa-link"></i>
-                        <span>YOUR REFERRAL LINK</span>
-                    </div>
-                    <div class="ref-content">
-                        <input type="text" class="ref-input" id="referralLink" readonly placeholder="Connect wallet to see link">
-                        <button class="ref-copy-btn" onclick="copyReferral()">
-                            <i class="fas fa-copy"></i> COPY LINK
-                        </button>
-                    </div>
-                    <div class="ref-hint">
-                        <i class="fas fa-info-circle"></i>
-                        Share this link with friends to earn 5-level referral rewards!
-                    </div>
-                </div>
-                
                 <div class="contract-box">
                     <div class="contract-info">
                         <div class="contract-label"><i class="fas fa-file-contract"></i> CONTRACT (NEW)</div>
                         <div class="contract-address">0x5bC7581A6f7dA420e931d17bD5CaF699C033f7Fd</div>
                     </div>
                     <button class="copy-btn" onclick="copyContract()"><i class="fas fa-copy"></i> COPY</button>
+                </div>
+                
+                <!-- NEW: Referral Mini Box (Under Contract Address) -->
+                <div class="referral-mini-box" id="referralMiniBox" style="display: none;">
+                    <div class="referral-mini-info">
+                        <div class="referral-mini-label"><i class="fas fa-link"></i> YOUR REFERRAL LINK</div>
+                        <div class="referral-mini-address" id="referralMiniAddress">Not connected</div>
+                    </div>
+                    <button class="referral-mini-copy" onclick="copyReferralMini()">
+                        <i class="fas fa-copy"></i> COPY
+                    </button>
+                </div>
+                
+                <div class="ref-box hidden" id="referralBox">
+                    <div class="row">
+                        <span style="color:#888"><i class="fas fa-link"></i> Referral Link</span>
+                        <button onclick="copyReferral()" style="background:var(--primary); border:none; border-radius:10px; padding:8px 15px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:5px">
+                            <i class="fas fa-copy"></i> COPY
+                        </button>
+                    </div>
+                    <input type="text" id="referralLink" readonly style="display:none;">
                 </div>
                 
                 <div class="balance-footer">
@@ -535,6 +444,7 @@
                 <div class="menu-grid">
                     <button class="menu-btn" onclick="window.location.href='team.html'"><i class="fas fa-users"></i><div><div>Team</div><div style="font-size:12px; color:#aaa;">Referral network</div></div></button>
                     <button class="menu-btn" onclick="window.location.href='income.html'"><i class="fas fa-chart-line"></i><div><div>Income</div><div style="font-size:12px; color:#aaa;">Rewards report</div></div></button>
+                    <!-- CHANGED: Trade History to Buy/Sell History -->
                     <button class="menu-btn" onclick="window.location.href='buy_sell.html'"><i class="fas fa-exchange-alt"></i><div><div>Buy/Sell History</div><div style="font-size:12px; color:#aaa;">Complete Open/Close report</div></div></button>
                     <button class="menu-btn" onclick="window.location.href='transfer.html'"><i class="fas fa-history"></i><div><div>Transfers</div><div style="font-size:12px; color:#aaa;">P2P history</div></div></button>
                 </div>
@@ -571,7 +481,7 @@
         const USDT_ADDRESS = "0xc2132D05D31c914a87C6611C10748AEb04B58e8F";
         const CREATOR_WALLET = "0xb579377DDe2C03b2b46B5b12453F4dbAddB06f2E";
         
-        // COMPLETE ABI (EXACTLY AS IN ORIGINAL CODE)
+        // COMPLETE ABI (REPLACED WITH PROVIDED ABI)
         const SIGMA_ABI = [
 		{
 			"inputs": [
@@ -637,7 +547,7 @@
 					"name": "needed",
 					"type": "uint256"
 				}
-			],
+				],
 			"name": "ERC20InsufficientAllowance",
 			"type": "error"
 		},
@@ -1627,6 +1537,7 @@
             document.getElementById('actionButton').innerHTML = '<i class="fas fa-lock"></i> CONNECT WALLET';
             document.getElementById('approveBtn').style.display = 'none';
             document.getElementById('approvalSteps').style.display = 'none';
+            document.getElementById('referralMiniBox').style.display = 'none';
             
             document.getElementById('usdtBalance').textContent = '--';
             document.getElementById('sigmaBalance').textContent = '--';
@@ -1635,9 +1546,6 @@
             document.getElementById('buyRate').textContent = '--';
             document.getElementById('sellRate').textContent = '--';
             document.getElementById('statusMessage').innerHTML = '';
-            
-            // Hide referral box on disconnect
-            document.getElementById('referralBox').classList.add('hidden');
         }
 
         async function loadData() {
@@ -1677,13 +1585,12 @@
                 
                 document.getElementById('polBalance').textContent = polBalanceNum.toFixed(4) + ' POL';
                 
-                // ===== SHOW REFERRAL BOX ONLY AFTER FIRST PURCHASE =====
                 if (userStruct && userStruct.hasBought) {
                     document.getElementById('referralBox').classList.remove('hidden');
+                    document.getElementById('referralMiniBox').style.display = 'flex';
                     const link = window.location.origin + window.location.pathname + '?ref=' + userAddress;
                     document.getElementById('referralLink').value = link;
-                } else {
-                    document.getElementById('referralBox').classList.add('hidden');
+                    document.getElementById('referralMiniAddress').textContent = userAddress.slice(0,10) + '...' + userAddress.slice(-8);
                 }
                 
                 updateCooldownUI();
@@ -1721,10 +1628,10 @@
             } else if (buyDiff < thirtyDays) {
                 const daysRem = Math.ceil((thirtyDays - buyDiff) / 86400);
                 buyBadge.className = 'cooldown-badge cooldown-danger';
-                buyBadge.innerHTML = `<i class="fas fa-exclamation-triangle"></i> 30-day lock: ${daysRem}d left`;
+                buyBadge.innerHTML = `<i class="fas fa-exclamation-triangle"></i> 30-day: ${daysRem}d left`; // Removed "lock"
             } else {
                 buyBadge.className = 'cooldown-badge';
-                buyBadge.innerHTML = `<i class="fas fa-check-circle" style="color:var(--success)"></i> 30d lock passed`;
+                buyBadge.innerHTML = `<i class="fas fa-check-circle" style="color:var(--success)"></i> 30-day passed`; // Removed "lock"
             }
         }
 
@@ -2144,6 +2051,13 @@
             const link = document.getElementById('referralLink');
             link.select();
             navigator.clipboard.writeText(link.value);
+            alert("Referral link copied!");
+        }
+
+        // New function for mini referral copy
+        function copyReferralMini() {
+            const link = document.getElementById('referralLink').value;
+            navigator.clipboard.writeText(link);
             alert("Referral link copied!");
         }
 
