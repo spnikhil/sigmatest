@@ -26,12 +26,45 @@
             background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif;
             min-height: 100vh; overflow-x: hidden; position: relative;
         }
-        .crypto-bg { position:fixed; top:0; left:0; width:100%; height:100%; z-index:-2;
-            background: linear-gradient(90deg, rgba(0,255,204,0.03) 1px,transparent 1px) 0 0 /50px 50px,
-                        linear-gradient(0deg, rgba(157,78,221,0.03) 1px,transparent 1px) 0 0 /50px 50px;
+        
+        /* ===== UPDATED CRISSCROSS LINE ANIMATION ===== */
+        .crypto-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            background: linear-gradient(90deg, rgba(0,255,204,0.03) 1px, transparent 1px) 0 0 / 50px 50px,
+                        linear-gradient(0deg, rgba(157,78,221,0.03) 1px, transparent 1px) 0 0 / 50px 50px;
             animation: bgMove 20s linear infinite;
+            transform-origin: center;
         }
-        @keyframes bgMove { 0% { background-position:0 0,0 0; } 100% { background-position:100px 100px,100px 100px; } }
+        
+        /* Add second layer for crisscross effect */
+        .crypto-bg::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(255,42,109,0.02) 1px, transparent 1px) 0 0 / 70px 70px,
+                        linear-gradient(-45deg, rgba(0,255,204,0.02) 1px, transparent 1px) 0 0 / 70px 70px;
+            animation: bgMoveReverse 15s linear infinite;
+            pointer-events: none;
+        }
+        
+        @keyframes bgMove {
+            0% { background-position: 0 0, 0 0; }
+            100% { background-position: 100px 100px, 100px 100px; }
+        }
+        
+        @keyframes bgMoveReverse {
+            0% { background-position: 0 0, 0 0; }
+            100% { background-position: -100px -100px, -100px -100px; }
+        }
+        
         .rainbow-border { position:fixed; top:0; left:0; width:100%; height:4px; background:var(--gradient); background-size:400% 400%; animation:rainbow 8s ease infinite; z-index:1000; }
         .rainbow-glow { position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); width:800px; height:800px; background:radial-gradient(circle, rgba(157,78,221,0.15) 0%, rgba(0,255,204,0.1) 25%, rgba(0,11,16,0) 70%); border-radius:50%; z-index:-1; animation:pulse 6s ease-in-out infinite alternate; }
         @keyframes rainbow { 0% { background-position:0% 50%; } 50% { background-position:100% 50%; } 100% { background-position:0% 50%; } }
@@ -352,7 +385,8 @@
                 <div class="menu-grid">
                     <button class="menu-btn" onclick="window.location.href='team.html'"><i class="fas fa-users"></i><div><div>Team</div><div style="font-size:12px; color:#aaa;">Referral network</div></div></button>
                     <button class="menu-btn" onclick="window.location.href='income.html'"><i class="fas fa-chart-line"></i><div><div>Income</div><div style="font-size:12px; color:#aaa;">Rewards report</div></div></button>
-                    <button class="menu-btn" onclick="window.location.href='buy_sell.html'"><i class="fas fa-exchange-alt"></i><div><div>Trade History</div><div style="font-size:12px; color:#aaa;">Buy/Sell report</div></div></button>
+                    <!-- CHANGED: Trade History to Buy/Sell History -->
+                    <button class="menu-btn" onclick="window.location.href='buy_sell.html'"><i class="fas fa-exchange-alt"></i><div><div>Buy/Sell History</div><div style="font-size:12px; color:#aaa;">Complete trade report</div></div></button>
                     <button class="menu-btn" onclick="window.location.href='transfer.html'"><i class="fas fa-history"></i><div><div>Transfers</div><div style="font-size:12px; color:#aaa;">P2P history</div></div></button>
                 </div>
             </div>
