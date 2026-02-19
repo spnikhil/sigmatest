@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SIGMA SIX | Trade History</title>
+    <title>SIGMA SIX | Buy/Sell Report</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.umd.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -51,62 +51,515 @@
         }
         .glass-bg { position:fixed; top:0; left:0; width:100%; height:100%; z-index:-2; background: radial-gradient(circle at 20% 30%, rgba(0,255,204,0.1) 0%, transparent 40%), radial-gradient(circle at 80% 70%, rgba(157,78,221,0.1) 0%, transparent 40%), radial-gradient(circle at 40% 80%, rgba(255,42,109,0.08) 0%, transparent 40%); }
         .container { max-width:1400px; margin:0 auto; padding:15px; position:relative; z-index:1; }
-        .header { text-align:center; margin-bottom:30px; padding-top:30px; }
-        .header h1 { background:var(--gradient); background-size:400% 400%; -webkit-background-clip:text; background-clip:text; color:transparent; font-size:clamp(32px,5vw,48px); font-weight:800; letter-spacing:2px; margin-bottom:15px; animation:rainbow 8s ease infinite; }
-        .header p { color:#aaa; font-size:clamp(14px,3vw,18px); }
-        .connect-btn { position:fixed; top:15px; right:15px; background:linear-gradient(90deg,var(--primary),var(--secondary)); color:#000; border:none; border-radius:15px; padding:12px 25px; font-weight:800; font-size:clamp(12px,3vw,14px); cursor:pointer; transition:all 0.3s; display:flex; align-items:center; gap:10px; box-shadow:0 4px 20px rgba(0,255,204,0.3); z-index:1001; white-space:nowrap; max-width:220px; animation:pulse 2s infinite; }
-        @keyframes pulse { 0% { box-shadow:0 4px 20px rgba(0,255,204,0.3); } 50% { box-shadow:0 4px 30px rgba(0,255,204,0.6); } 100% { box-shadow:0 4px 20px rgba(0,255,204,0.3); } }
+        
+        /* ===== MOBILE-FRIENDLY CONNECT BUTTON ===== */
+        .connect-btn {
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            color: #000;
+            border: none;
+            border-radius: 15px;
+            padding: 12px 25px;
+            font-weight: 800;
+            font-size: clamp(12px, 3vw, 14px);
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 20px rgba(0,255,204,0.3);
+            z-index: 1001;
+            white-space: nowrap;
+            max-width: 220px;
+            animation: pulse 2s infinite;
+        }
+        
+        @media (max-width: 768px) {
+            .connect-btn {
+                position: relative;
+                top: auto;
+                right: auto;
+                margin: 0 auto 20px;
+                width: fit-content;
+                max-width: 100%;
+            }
+        }
+        
+        @keyframes pulse { 
+            0% { box-shadow:0 4px 20px rgba(0,255,204,0.3); } 
+            50% { box-shadow:0 4px 30px rgba(0,255,204,0.6); } 
+            100% { box-shadow:0 4px 20px rgba(0,255,204,0.3); } 
+        }
+        
         .connect-btn:hover { transform:translateY(-3px); box-shadow:0 8px 30px rgba(0,255,204,0.6); }
         .connect-btn.connected { background:rgba(0,255,204,0.1); color:var(--primary); border:1px solid var(--primary); }
-        .stats-container { display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:20px; margin-bottom:30px; }
-        .stat-card { background:rgba(22,24,33,0.7); backdrop-filter:blur(10px); border-radius:20px; padding:25px; border:1px solid rgba(0,255,204,0.1); transition:all 0.3s; position:relative; overflow:hidden; }
-        .stat-card:hover { border-color:var(--primary); transform:translateY(-5px); box-shadow:0 15px 30px rgba(0,255,204,0.1); }
-        .stat-card::before { content:''; position:absolute; top:0; left:0; width:100%; height:4px; background:var(--gradient); background-size:400% 400%; animation:rainbow 8s ease infinite; }
-        .stat-title { display:flex; align-items:center; gap:12px; margin-bottom:15px; color:#aaa; font-size:16px; font-weight:600; }
-        .stat-title i { font-size:20px; color:var(--primary); }
-        .stat-value { font-size:32px; font-weight:800; color:var(--primary); margin-bottom:5px; }
-        .stat-change { font-size:14px; font-weight:600; }
-        .stat-change.positive { color:var(--profit); }
-        .stat-change.negative { color:var(--loss); }
-        .main-card { background:rgba(22,24,33,0.7); backdrop-filter:blur(10px); border-radius:24px; padding:25px; border:1px solid rgba(0,255,204,0.15); box-shadow:0 20px 40px rgba(0,0,0,0.3); margin-bottom:30px; position:relative; overflow:hidden; }
-        .main-card::before { content:''; position:absolute; top:0; left:0; width:100%; height:4px; background:var(--gradient); background-size:400% 400%; animation:rainbow 8s ease infinite; }
-        .card-header { display:flex; align-items:center; gap:15px; margin-bottom:25px; }
-        .card-icon { width:50px; height:50px; background:linear-gradient(135deg,var(--primary),var(--secondary)); border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:22px; color:#000; }
-        .card-title { color:var(--primary); font-size:24px; font-weight:700; flex:1; }
-        .card-subtitle { color:#aaa; font-size:14px; margin-top:5px; }
-        .table-responsive { overflow-x:auto; border-radius:16px; border:1px solid rgba(45,47,62,0.5); -webkit-overflow-scrolling:touch; max-height:600px; overflow-y:auto; }
-        table { width:100%; border-collapse:collapse; min-width:1000px; }
-        thead { background:linear-gradient(90deg,rgba(0,255,204,0.1),rgba(157,78,221,0.1)); position:sticky; top:0; z-index:10; }
-        th { padding:18px 15px; text-align:left; font-weight:700; font-size:14px; color:var(--primary); text-transform:uppercase; border-bottom:2px solid rgba(0,255,204,0.2); white-space:nowrap; }
-        td { padding:16px 15px; border-bottom:1px solid rgba(45,47,62,0.3); font-size:14px; }
-        tr:hover td { background:rgba(255,255,255,0.03); }
-        .badge { padding:6px 12px; border-radius:20px; font-size:12px; font-weight:700; }
-        .badge-active { background:rgba(0,255,204,0.1); color:var(--primary); border:1px solid rgba(0,255,204,0.3); }
-        .badge-closed { background:rgba(255,77,77,0.1); color:var(--loss); border:1px solid rgba(255,77,77,0.3); }
-        .badge-profit { background:rgba(0,255,136,0.15); color:var(--profit); padding:8px 15px; border-radius:10px; font-weight:800; }
-        .badge-loss { background:rgba(255,77,77,0.15); color:var(--loss); padding:8px 15px; border-radius:10px; font-weight:800; }
-        .pnl-indicator { display:inline-flex; align-items:center; gap:8px; padding:8px 15px; border-radius:10px; font-weight:700; font-size:14px; }
-        .pnl-positive { background:rgba(0,255,136,0.1); color:var(--profit); border:1px solid rgba(0,255,136,0.3); }
-        .pnl-negative { background:rgba(255,77,77,0.1); color:var(--loss); border:1px solid rgba(255,77,77,0.3); }
-        .loading { text-align:center; padding:60px 20px; color:var(--primary); }
-        .empty-state { text-align:center; padding:60px 20px; color:#888; }
-        .action-buttons { display:flex; gap:15px; margin-bottom:25px; flex-wrap:wrap; }
-        .action-btn { padding:12px 25px; border-radius:12px; border:1px solid var(--border); background:rgba(255,255,255,0.03); color:var(--text); font-weight:600; font-size:14px; cursor:pointer; transition:all 0.3s; display:flex; align-items:center; gap:10px; flex:1; justify-content:center; min-width:150px; }
-        .action-btn:hover { background:rgba(0,255,204,0.1); border-color:var(--primary); transform:translateY(-2px); }
-        .action-btn.active { background:linear-gradient(90deg,var(--primary),var(--secondary)); border-color:transparent; color:#000; font-weight:700; }
-        .nav-container { display:flex; gap:10px; margin-bottom:25px; flex-wrap:wrap; }
-        .nav-btn { padding:12px 25px; border-radius:12px; border:1px solid var(--border); background:rgba(255,255,255,0.03); color:#888; font-weight:600; font-size:14px; cursor:pointer; transition:all 0.3s; display:flex; align-items:center; gap:10px; }
-        .nav-btn:hover { background:rgba(0,255,204,0.1); border-color:var(--primary); color:var(--primary); }
-        .back-btn { display:inline-flex; align-items:center; gap:10px; color:var(--primary); text-decoration:none; font-weight:600; margin-bottom:20px; padding:10px 20px; border-radius:12px; background:rgba(0,255,204,0.1); border:1px solid rgba(0,255,204,0.3); }
-        .back-btn:hover { background:rgba(0,255,204,0.2); transform:translateX(-5px); }
-        @media (max-width:768px) {
-            .connect-btn { position:relative; top:auto; right:auto; margin:0 auto 20px; width:100%; max-width:100%; }
-            .stats-container { grid-template-columns:1fr; }
-            .action-buttons { flex-direction:column; }
+        
+        .header { text-align:center; margin-bottom:30px; padding-top:30px; }
+        .header h1 { 
+            background:var(--gradient); 
+            background-size:400% 400%; 
+            -webkit-background-clip:text; 
+            background-clip:text; 
+            color:transparent; 
+            font-size:clamp(32px,5vw,48px); 
+            font-weight:800; 
+            letter-spacing:2px; 
+            margin-bottom:15px; 
+            animation:rainbow 8s ease infinite;
+            text-transform: lowercase;
         }
-        ::-webkit-scrollbar { width:8px; height:8px; }
-        ::-webkit-scrollbar-track { background:rgba(0,0,0,0.2); border-radius:4px; }
-        ::-webkit-scrollbar-thumb { background:var(--gradient); border-radius:4px; }
+        .header h1::first-letter {
+            text-transform: uppercase;
+        }
+        .header p { color:#aaa; font-size:clamp(14px,3vw,18px); }
+        
+        /* ===== MOBILE-FRIENDLY STATS GRID ===== */
+        .stats-container { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+            gap: 20px; 
+            margin-bottom: 30px; 
+        }
+        
+        @media (max-width: 768px) {
+            .stats-container {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+        }
+        
+        .stat-card { 
+            background: rgba(22,24,33,0.7); 
+            backdrop-filter: blur(10px); 
+            border-radius: 20px; 
+            padding: 20px; 
+            border: 1px solid rgba(0,255,204,0.1); 
+            transition: all 0.3s; 
+            position: relative; 
+            overflow: hidden; 
+        }
+        
+        .stat-card:hover { 
+            border-color: var(--primary); 
+            transform: translateY(-5px); 
+            box-shadow: 0 15px 30px rgba(0,255,204,0.1); 
+        }
+        
+        .stat-card::before { 
+            content:''; 
+            position:absolute; 
+            top:0; 
+            left:0; 
+            width:100%; 
+            height:4px; 
+            background:var(--gradient); 
+            background-size:400% 400%; 
+            animation:rainbow 8s ease infinite; 
+        }
+        
+        .stat-title { 
+            display: flex; 
+            align-items: center; 
+            gap: 10px; 
+            margin-bottom: 12px; 
+            color: #aaa; 
+            font-size: 14px; 
+            font-weight: 600; 
+        }
+        
+        .stat-title i { 
+            font-size: 18px; 
+            color: var(--primary); 
+        }
+        
+        .stat-main {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        
+        .stat-value { 
+            font-size: 28px; 
+            font-weight: 800; 
+            color: var(--primary); 
+            line-height: 1.2;
+        }
+        
+        .stat-value-small {
+            font-size: 18px;
+            color: var(--primary);
+            opacity: 0.9;
+        }
+        
+        .stat-change { 
+            font-size: 14px; 
+            font-weight: 600;
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+        }
+        
+        .stat-change.positive { 
+            color: var(--profit); 
+            background: rgba(0,255,136,0.1);
+        }
+        
+        .stat-change.negative { 
+            color: var(--loss); 
+            background: rgba(255,77,77,0.1);
+        }
+        
+        /* INR Display */
+        .inr-value {
+            font-size: 16px;
+            color: #ffaa00;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .inr-value i {
+            font-size: 14px;
+            color: #ffaa00;
+        }
+        
+        .main-card { 
+            background: rgba(22,24,33,0.7); 
+            backdrop-filter: blur(10px); 
+            border-radius: 24px; 
+            padding: 20px; 
+            border: 1px solid rgba(0,255,204,0.15); 
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3); 
+            margin-bottom: 30px; 
+            position: relative; 
+            overflow: hidden; 
+        }
+        
+        @media (max-width: 768px) {
+            .main-card {
+                padding: 15px;
+            }
+        }
+        
+        .main-card::before { 
+            content:''; 
+            position:absolute; 
+            top:0; 
+            left:0; 
+            width:100%; 
+            height:4px; 
+            background:var(--gradient); 
+            background-size:400% 400%; 
+            animation:rainbow 8s ease infinite; 
+        }
+        
+        .card-header { 
+            display: flex; 
+            align-items: center; 
+            gap: 15px; 
+            margin-bottom: 20px; 
+            flex-wrap: wrap; 
+        }
+        
+        @media (max-width: 768px) {
+            .card-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+        }
+        
+        .card-icon { 
+            width: 50px; 
+            height: 50px; 
+            background: linear-gradient(135deg, var(--primary), var(--secondary)); 
+            border-radius: 12px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-size: 22px; 
+            color: #000; 
+        }
+        
+        .card-title { 
+            color: var(--primary); 
+            font-size: 24px; 
+            font-weight: 700; 
+            flex: 1; 
+        }
+        
+        @media (max-width: 768px) {
+            .card-title {
+                font-size: 20px;
+            }
+        }
+        
+        .card-subtitle { 
+            color: #aaa; 
+            font-size: 14px; 
+            margin-top: 5px; 
+        }
+        
+        /* ===== MOBILE-FRIENDLY NAVIGATION ===== */
+        .nav-container { 
+            display: flex; 
+            gap: 10px; 
+            margin-bottom: 20px; 
+            flex-wrap: wrap; 
+        }
+        
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+            }
+            
+            .nav-btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+        
+        .nav-btn { 
+            padding: 12px 20px; 
+            border-radius: 12px; 
+            border: 1px solid var(--border); 
+            background: rgba(255,255,255,0.03); 
+            color: #888; 
+            font-weight: 600; 
+            font-size: 14px; 
+            cursor: pointer; 
+            transition: all 0.3s; 
+            display: flex; 
+            align-items: center; 
+            gap: 8px; 
+        }
+        
+        .nav-btn:hover { 
+            background: rgba(0,255,204,0.1); 
+            border-color: var(--primary); 
+            color: var(--primary); 
+        }
+        
+        .back-btn { 
+            display: inline-flex; 
+            align-items: center; 
+            gap: 8px; 
+            color: var(--primary); 
+            text-decoration: none; 
+            font-weight: 600; 
+            margin-bottom: 0; 
+            padding: 12px 20px; 
+            border-radius: 12px; 
+            background: rgba(0,255,204,0.1); 
+            border: 1px solid rgba(0,255,204,0.3); 
+        }
+        
+        .back-btn:hover { 
+            background: rgba(0,255,204,0.2); 
+            transform: translateX(-5px); 
+        }
+        
+        /* ===== MOBILE-FRIENDLY ACTION BUTTONS ===== */
+        .action-buttons { 
+            display: flex; 
+            gap: 15px; 
+            margin-bottom: 25px; 
+            flex-wrap: wrap; 
+        }
+        
+        @media (max-width: 768px) {
+            .action-buttons {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+        
+        .action-btn { 
+            padding: 12px 20px; 
+            border-radius: 12px; 
+            border: 1px solid var(--border); 
+            background: rgba(255,255,255,0.03); 
+            color: var(--text); 
+            font-weight: 600; 
+            font-size: 14px; 
+            cursor: pointer; 
+            transition: all 0.3s; 
+            display: flex; 
+            align-items: center; 
+            gap: 8px; 
+            flex: 1; 
+            justify-content: center; 
+            min-width: 150px; 
+        }
+        
+        @media (max-width: 768px) {
+            .action-btn {
+                width: 100%;
+            }
+        }
+        
+        .action-btn:hover { 
+            background: rgba(0,255,204,0.1); 
+            border-color: var(--primary); 
+            transform: translateY(-2px); 
+        }
+        
+        .action-btn.active { 
+            background: linear-gradient(90deg, var(--primary), var(--secondary)); 
+            border-color: transparent; 
+            color: #000; 
+            font-weight: 700; 
+        }
+        
+        /* ===== MOBILE-FRIENDLY TABLE ===== */
+        .table-responsive { 
+            overflow-x: auto; 
+            border-radius: 16px; 
+            border: 1px solid rgba(45,47,62,0.5); 
+            -webkit-overflow-scrolling: touch; 
+            max-height: 500px; 
+            overflow-y: auto; 
+        }
+        
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            min-width: 900px; 
+        }
+        
+        @media (max-width: 768px) {
+            table {
+                min-width: 800px;
+            }
+        }
+        
+        thead { 
+            background: linear-gradient(90deg, rgba(0,255,204,0.1), rgba(157,78,221,0.1)); 
+            position: sticky; 
+            top: 0; 
+            z-index: 10; 
+        }
+        
+        th { 
+            padding: 15px 12px; 
+            text-align: left; 
+            font-weight: 700; 
+            font-size: 13px; 
+            color: var(--primary); 
+            text-transform: uppercase; 
+            border-bottom: 2px solid rgba(0,255,204,0.2); 
+            white-space: nowrap; 
+        }
+        
+        td { 
+            padding: 12px; 
+            border-bottom: 1px solid rgba(45,47,62,0.3); 
+            font-size: 13px; 
+        }
+        
+        tr:hover td { background: rgba(255,255,255,0.03); }
+        
+        .badge { 
+            padding: 4px 10px; 
+            border-radius: 20px; 
+            font-size: 11px; 
+            font-weight: 700; 
+            display: inline-block; 
+        }
+        
+        .badge-active { 
+            background: rgba(0,255,204,0.1); 
+            color: var(--primary); 
+            border: 1px solid rgba(0,255,204,0.3); 
+        }
+        
+        .badge-closed { 
+            background: rgba(255,77,77,0.1); 
+            color: var(--loss); 
+            border: 1px solid rgba(255,77,77,0.3); 
+        }
+        
+        .badge-profit { 
+            background: rgba(0,255,136,0.15); 
+            color: var(--profit); 
+            padding: 4px 10px; 
+            border-radius: 20px; 
+            font-weight: 700; 
+        }
+        
+        .badge-loss { 
+            background: rgba(255,77,77,0.15); 
+            color: var(--loss); 
+            padding: 4px 10px; 
+            border-radius: 20px; 
+            font-weight: 700; 
+        }
+        
+        .pnl-positive { 
+            background: rgba(0,255,136,0.1); 
+            color: var(--profit); 
+            border: 1px solid rgba(0,255,136,0.3); 
+            padding: 4px 8px; 
+            border-radius: 6px; 
+            font-weight: 600; 
+            font-size: 12px;
+            white-space: nowrap;
+        }
+        
+        .pnl-negative { 
+            background: rgba(255,77,77,0.1); 
+            color: var(--loss); 
+            border: 1px solid rgba(255,77,77,0.3); 
+            padding: 4px 8px; 
+            border-radius: 6px; 
+            font-weight: 600; 
+            font-size: 12px;
+            white-space: nowrap;
+        }
+        
+        .loading { 
+            text-align: center; 
+            padding: 40px 20px; 
+            color: var(--primary); 
+        }
+        
+        .empty-state { 
+            text-align: center; 
+            padding: 40px 20px; 
+            color: #888; 
+        }
+        
+        .empty-state i { 
+            font-size: 40px; 
+            margin-bottom: 15px; 
+            color: var(--secondary); 
+            opacity: 0.5; 
+        }
+        
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb { background: var(--gradient); border-radius: 4px; }
+        
+        /* INR Rate Display */
+        .rate-container {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        
+        .rate-usdt {
+            font-weight: 600;
+            color: var(--primary);
+        }
+        
+        .rate-inr {
+            font-size: 11px;
+            color: #ffaa00;
+            font-weight: 500;
+        }
     </style>
 </head>
 <body>
@@ -126,15 +579,43 @@
         </div>
         
         <div class="header">
-            <h1>BUY/SELL REPORT</h1>
+            <h1>Buy/sell report</h1>
             <p>Complete Trade History with Real-time P&L</p>
         </div>
         
         <div class="stats-container">
-            <div class="stat-card"><div class="stat-title"><i class="fas fa-shopping-cart"></i> Total SIGMA Bought</div><div class="stat-value" id="total-bought">0 SIG6</div><div class="stat-change positive" id="total-bought-value">$0.00</div></div>
-            <div class="stat-card"><div class="stat-title"><i class="fas fa-coins"></i> Total SIGMA Sold</div><div class="stat-value" id="total-sold">0 SIG6</div><div class="stat-change negative" id="total-sold-value">$0.00</div></div>
-            <div class="stat-card"><div class="stat-title"><i class="fas fa-chart-line"></i> Current Holdings</div><div class="stat-value" id="current-holdings">0 SIG6</div><div class="stat-change" id="holdings-value">$0.00</div></div>
-            <div class="stat-card"><div class="stat-title"><i class="fas fa-money-bill-wave"></i> Net P&L</div><div class="stat-value" id="net-pnl">$0.00</div><div class="stat-change positive" id="pnl-percentage">+0.00%</div></div>
+            <div class="stat-card">
+                <div class="stat-title"><i class="fas fa-shopping-cart"></i> Total SIGMA Bought</div>
+                <div class="stat-main">
+                    <div class="stat-value" id="total-bought">0 SIG6</div>
+                    <div class="stat-change positive" id="total-bought-value">$0.00</div>
+                    <div class="inr-value" id="total-bought-inr">₹0.00</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-title"><i class="fas fa-coins"></i> Total SIGMA Sold</div>
+                <div class="stat-main">
+                    <div class="stat-value" id="total-sold">0 SIG6</div>
+                    <div class="stat-change negative" id="total-sold-value">$0.00</div>
+                    <div class="inr-value" id="total-sold-inr">₹0.00</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-title"><i class="fas fa-chart-line"></i> Current Holdings</div>
+                <div class="stat-main">
+                    <div class="stat-value" id="current-holdings">0 SIG6</div>
+                    <div class="stat-change" id="holdings-value">$0.00</div>
+                    <div class="inr-value" id="holdings-inr">₹0.00</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-title"><i class="fas fa-money-bill-wave"></i> Net P&L</div>
+                <div class="stat-main">
+                    <div class="stat-value" id="net-pnl">$0.00</div>
+                    <div class="stat-change positive" id="pnl-percentage">+0.00%</div>
+                    <div class="inr-value" id="pnl-inr">₹0.00</div>
+                </div>
+            </div>
         </div>
         
         <div class="action-buttons">
@@ -143,20 +624,69 @@
         </div>
         
         <div class="main-card" id="active-section">
-            <div class="card-header"><div class="card-icon"><i class="fas fa-chart-bar"></i></div><div><div class="card-title">ACTIVE POSITIONS</div><div class="card-subtitle">All your SIGMA purchases with current valuation</div></div></div>
-            <div class="table-responsive"><table id="active-table"><thead><tr><th>#</th><th>Date & Time</th><th>Sigma Quantity</th><th>Buy Rate</th><th>Current Rate</th><th>Difference</th><th>P&L %</th><th>Status</th></tr></thead><tbody id="active-body"><tr><td colspan="8" class="loading"><i class="fas fa-spinner fa-spin"></i><br>Connect wallet to load</td></tr></tbody></table></div>
+            <div class="card-header">
+                <div class="card-icon"><i class="fas fa-chart-bar"></i></div>
+                <div>
+                    <div class="card-title">ACTIVE POSITIONS</div>
+                    <div class="card-subtitle">All your SIGMA purchases with current valuation</div>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table id="active-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Date & Time</th>
+                            <th>Sigma Quantity</th>
+                            <th>Buy Rate</th>
+                            <th>Current Rate</th>
+                            <th>Difference</th>
+                            <th>P&L %</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="active-body">
+                        <tr><td colspan="8" class="loading"><i class="fas fa-spinner fa-spin"></i><br>Connect wallet to load</td></tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
         
         <div class="main-card" id="closed-section" style="display:none;">
-            <div class="card-header"><div class="card-icon"><i class="fas fa-history"></i></div><div><div class="card-title">CLOSED POSITIONS</div><div class="card-subtitle">All your SIGMA sales with profit/loss</div></div></div>
-            <div class="table-responsive"><table id="closed-table"><thead><tr><th>#</th><th>Date & Time</th><th>Sigma Quantity</th><th>Buy Rate</th><th>Sell Rate</th><th>P&L Amount</th><th>P&L %</th><th>Status</th></tr></thead><tbody id="closed-body"><tr><td colspan="8" class="loading"><i class="fas fa-spinner fa-spin"></i><br>Connect wallet to load</td></tr></tbody></table></div>
+            <div class="card-header">
+                <div class="card-icon"><i class="fas fa-history"></i></div>
+                <div>
+                    <div class="card-title">CLOSED POSITIONS</div>
+                    <div class="card-subtitle">All your SIGMA sales with profit/loss</div>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table id="closed-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Date & Time</th>
+                            <th>Sigma Quantity</th>
+                            <th>Buy Rate</th>
+                            <th>Sell Rate</th>
+                            <th>P&L Amount</th>
+                            <th>P&L %</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="closed-body">
+                        <tr><td colspan="8" class="loading"><i class="fas fa-spinner fa-spin"></i><br>Connect wallet to load</td></tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
     <script>
-        // ===== UPDATED CONTRACT CONFIGURATION =====
+        // ===== CONTRACT CONFIGURATION =====
         const SIGMA_CONTRACT_ADDRESS = "0x6024c57518bb116ac199EAD176486354635BFC46";
-        const USDT_ADDRESS = "0xc2132D05D31c914a87C6611C10748AEb04B58e8F"; // USDT on Polygon
+        const USDT_ADDRESS = "0xc2132D05D31c914a87C6611C10748AEb04B58e8F";
+        const INR_RATE = 95; // 1 USDT = 95 INR
         
         let provider, userAddress, sigmaContract;
         let currentTab = 'active';
@@ -165,7 +695,6 @@
         let currentBuyRate = 0;
         let currentSellRate = 0;
         
-        // ===== UPDATED ABI (based on your contract) =====
         const sigmaABI = [
             "function balanceOf(address) view returns (uint256)",
             "function buy(uint256 _usdtAmount, address _upline) external",
@@ -186,12 +715,32 @@
             }
         }
 
+        // ===== AUTO-CONNECT ON PAGE LOAD =====
+        window.onload = async function() {
+            createParticles();
+            if (window.ethereum) {
+                try {
+                    provider = new ethers.BrowserProvider(window.ethereum);
+                    const accounts = await provider.send("eth_accounts", []);
+                    if (accounts.length > 0) {
+                        await connectWallet();
+                    }
+                } catch (e) {
+                    console.log("Auto-connect skipped:", e);
+                }
+            }
+        };
+
         async function connectWallet() {
-            if (!window.ethereum) { alert("Install MetaMask"); return; }
+            if (!window.ethereum) { 
+                alert("Please install MetaMask!"); 
+                window.open("https://metamask.io/download/", "_blank");
+                return; 
+            }
+            
             try {
                 provider = new ethers.BrowserProvider(window.ethereum);
                 
-                // Check network
                 const network = await provider.getNetwork();
                 if (network.chainId !== 137n) {
                     alert("Please switch to Polygon Mainnet");
@@ -212,6 +761,14 @@
                 document.getElementById('btn-text').textContent = userAddress.slice(0,6)+'...'+userAddress.slice(-4);
                 document.getElementById('connectBtn').classList.add('connected');
                 await loadData();
+                
+                // Auto-refresh every 30 seconds
+                setInterval(async () => {
+                    if (userAddress) {
+                        await loadData();
+                    }
+                }, 30000);
+                
             } catch (e) { 
                 console.error(e);
                 alert("Connection error: "+e.message); 
@@ -219,7 +776,12 @@
         }
 
         async function loadData() {
-            if (!userAddress) { alert("Connect wallet first"); return; }
+            if (!userAddress) { 
+                document.getElementById('active-body').innerHTML = '<tr><td colspan="8" class="empty-state"><i class="fas fa-plug"></i><br>Connect wallet to view data</td></tr>';
+                document.getElementById('closed-body').innerHTML = '<tr><td colspan="8" class="empty-state"><i class="fas fa-plug"></i><br>Connect wallet to view data</td></tr>';
+                return; 
+            }
+            
             try {
                 document.getElementById('active-body').innerHTML = '<tr><td colspan="8" class="loading"><i class="fas fa-spinner fa-spin"></i><br>Loading...</td></tr>';
                 document.getElementById('closed-body').innerHTML = '<tr><td colspan="8" class="loading"><i class="fas fa-spinner fa-spin"></i><br>Loading...</td></tr>';
@@ -232,7 +794,7 @@
                 currentSellRate = parseFloat(ethers.formatUnits(sr, 6));
                 
                 const currentBlock = await provider.getBlockNumber();
-                const fromBlock = Math.max(currentBlock - 2000000, 0); // scan ~2M blocks back
+                const fromBlock = Math.max(currentBlock - 2000000, 0);
                 
                 const boughtFilter = sigmaContract.filters.Bought(userAddress);
                 const soldFilter = sigmaContract.filters.Sold(userAddress);
@@ -264,7 +826,6 @@
                     });
                 }
                 
-                // Sort by timestamp (newest first)
                 buyTransactions.sort((a,b) => b.timestamp - a.timestamp);
                 sellTransactions.sort((a,b) => b.timestamp - a.timestamp);
                 
@@ -274,7 +835,8 @@
                 updateTables();
             } catch (e) { 
                 console.error(e); 
-                alert("Error loading data: "+e.message); 
+                document.getElementById('active-body').innerHTML = '<tr><td colspan="8" class="empty-state"><i class="fas fa-exclamation-triangle"></i><br>Error loading data</td></tr>';
+                document.getElementById('closed-body').innerHTML = '<tr><td colspan="8" class="empty-state"><i class="fas fa-exclamation-triangle"></i><br>Error loading data</td></tr>';
             }
         }
 
@@ -306,20 +868,23 @@
             const netPL = holdingsVal - (holdings * avgBuy);
             const plPerc = totalBoughtVal > 0 ? (netPL / totalBoughtVal)*100 : 0;
             
+            // Update USDT values
             document.getElementById('total-bought').innerText = totalBought.toFixed(2)+' SIG6';
             document.getElementById('total-bought-value').innerText = '$'+totalBoughtVal.toFixed(2);
-            document.getElementById('total-bought-value').className = 'stat-change positive';
+            document.getElementById('total-bought-inr').innerHTML = '<i class="fas fa-rupee-sign"></i> '+(totalBoughtVal * INR_RATE).toFixed(2);
             
             document.getElementById('total-sold').innerText = totalSold.toFixed(2)+' SIG6';
             document.getElementById('total-sold-value').innerText = '$'+totalSoldVal.toFixed(2);
-            document.getElementById('total-sold-value').className = `stat-change ${totalSoldVal>0?'negative':'positive'}`;
+            document.getElementById('total-sold-inr').innerHTML = '<i class="fas fa-rupee-sign"></i> '+(totalSoldVal * INR_RATE).toFixed(2);
             
             document.getElementById('current-holdings').innerText = holdings.toFixed(2)+' SIG6';
             document.getElementById('holdings-value').innerText = '$'+holdingsVal.toFixed(2);
-            document.getElementById('holdings-value').className = `stat-change ${holdingsVal>0?'positive':''}`;
+            document.getElementById('holdings-inr').innerHTML = '<i class="fas fa-rupee-sign"></i> '+(holdingsVal * INR_RATE).toFixed(2);
             
             document.getElementById('net-pnl').innerText = '$'+netPL.toFixed(2);
             document.getElementById('net-pnl').style.color = netPL>=0 ? 'var(--profit)' : 'var(--loss)';
+            document.getElementById('pnl-inr').innerHTML = '<i class="fas fa-rupee-sign"></i> '+(netPL * INR_RATE).toFixed(2);
+            document.getElementById('pnl-inr').style.color = netPL>=0 ? 'var(--profit)' : 'var(--loss)';
             
             document.getElementById('pnl-percentage').innerText = (netPL>=0?'+':'')+plPerc.toFixed(2)+'%';
             document.getElementById('pnl-percentage').className = `stat-change ${plPerc>=0?'positive':'negative'}`;
@@ -335,11 +900,21 @@
                     const diffPerc = (diff/t.rate)*100;
                     activeHtml += `<tr>
                         <td>${i+1}</td>
-                        <td><div style="font-weight:600">${t.date.toLocaleDateString()}</div><div style="font-size:12px; color:#888">${t.date.toLocaleTimeString()}</div></td>
+                        <td><div style="font-weight:600">${t.date.toLocaleDateString()}</div><div style="font-size:11px; color:#888">${t.date.toLocaleTimeString()}</div></td>
                         <td style="color:var(--primary); font-weight:700">${t.amount.toFixed(2)} SIG6</td>
-                        <td>$${t.rate.toFixed(4)}</td>
-                        <td>$${currentBuyRate.toFixed(4)}</td>
-                        <td><span class="${diff>=0?'pnl-positive':'pnl-negative'}" style="padding:4px 8px; border-radius:6px;"><i class="fas fa-${diff>=0?'arrow-up':'arrow-down'}"></i> $${Math.abs(diff).toFixed(4)}</span></td>
+                        <td>
+                            <div class="rate-container">
+                                <span class="rate-usdt">$${t.rate.toFixed(4)}</span>
+                                <span class="rate-inr">₹${(t.rate * INR_RATE).toFixed(2)}</span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="rate-container">
+                                <span class="rate-usdt">$${currentBuyRate.toFixed(4)}</span>
+                                <span class="rate-inr">₹${(currentBuyRate * INR_RATE).toFixed(2)}</span>
+                            </div>
+                        </td>
+                        <td><span class="${diff>=0?'pnl-positive':'pnl-negative'}"><i class="fas fa-${diff>=0?'arrow-up':'arrow-down'}"></i> $${Math.abs(diff).toFixed(4)}</span></td>
                         <td><span class="${diffPerc>=0?'badge-profit':'badge-loss'}">${diffPerc>=0?'+':''}${diffPerc.toFixed(2)}%</span></td>
                         <td><span class="badge badge-active">ACTIVE</span></td>
                     </tr>`;
@@ -357,11 +932,21 @@
                     const plPerc = buyRate > 0 ? ((t.rate - buyRate)/buyRate)*100 : 0;
                     closedHtml += `<tr>
                         <td>${i+1}</td>
-                        <td><div style="font-weight:600">${t.date.toLocaleDateString()}</div><div style="font-size:12px; color:#888">${t.date.toLocaleTimeString()}</div></td>
+                        <td><div style="font-weight:600">${t.date.toLocaleDateString()}</div><div style="font-size:11px; color:#888">${t.date.toLocaleTimeString()}</div></td>
                         <td style="color:${plAmount>=0?'var(--profit)':'var(--loss)'}; font-weight:700">${t.amount.toFixed(2)} SIG6</td>
-                        <td>$${buyRate.toFixed(4)}</td>
-                        <td>$${t.rate.toFixed(4)}</td>
-                        <td><span class="${plAmount>=0?'pnl-positive':'pnl-negative'}" style="padding:4px 8px; border-radius:6px;"><i class="fas fa-${plAmount>=0?'arrow-up':'arrow-down'}"></i> $${Math.abs(plAmount).toFixed(2)}</span></td>
+                        <td>
+                            <div class="rate-container">
+                                <span class="rate-usdt">$${buyRate.toFixed(4)}</span>
+                                <span class="rate-inr">₹${(buyRate * INR_RATE).toFixed(2)}</span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="rate-container">
+                                <span class="rate-usdt">$${t.rate.toFixed(4)}</span>
+                                <span class="rate-inr">₹${(t.rate * INR_RATE).toFixed(2)}</span>
+                            </div>
+                        </td>
+                        <td><span class="${plAmount>=0?'pnl-positive':'pnl-negative'}"><i class="fas fa-${plAmount>=0?'arrow-up':'arrow-down'}"></i> $${Math.abs(plAmount).toFixed(2)}</span></td>
                         <td><span class="${plPerc>=0?'badge-profit':'badge-loss'}">${plPerc>=0?'+':''}${plPerc.toFixed(2)}%</span></td>
                         <td><span class="badge badge-closed">CLOSED</span></td>
                     </tr>`;
@@ -382,19 +967,19 @@
             if (!userAddress) { alert("Connect wallet first"); return; }
             let csv = "";
             if (currentTab === 'active') {
-                csv = "Serial No,Date,Time,Sigma Quantity,Buy Rate,Current Rate,Difference,P&L %,Status\n";
+                csv = "Serial No,Date,Time,Sigma Quantity,Buy Rate (USDT),Buy Rate (INR),Current Rate (USDT),Current Rate (INR),Difference,P&L %,Status\n";
                 buyTransactions.forEach((t,i) => {
                     const diff = currentBuyRate - t.rate;
                     const diffPerc = (diff/t.rate)*100;
-                    csv += `${i+1},${t.date.toLocaleDateString()},${t.date.toLocaleTimeString()},${t.amount.toFixed(2)},${t.rate.toFixed(4)},${currentBuyRate.toFixed(4)},${diff.toFixed(4)},${diffPerc.toFixed(2)}%,ACTIVE\n`;
+                    csv += `${i+1},${t.date.toLocaleDateString()},${t.date.toLocaleTimeString()},${t.amount.toFixed(2)},${t.rate.toFixed(4)},${(t.rate*INR_RATE).toFixed(2)},${currentBuyRate.toFixed(4)},${(currentBuyRate*INR_RATE).toFixed(2)},${diff.toFixed(4)},${diffPerc.toFixed(2)}%,ACTIVE\n`;
                 });
             } else {
-                csv = "Serial No,Date,Time,Sigma Quantity,Buy Rate,Sell Rate,P&L Amount,P&L %,Status\n";
+                csv = "Serial No,Date,Time,Sigma Quantity,Buy Rate (USDT),Buy Rate (INR),Sell Rate (USDT),Sell Rate (INR),P&L Amount (USDT),P&L Amount (INR),P&L %,Status\n";
                 sellTransactions.forEach((t,i) => {
                     const buyRate = findAvgBuyRateBefore(t.timestamp);
                     const plAmount = t.amount * (t.rate - buyRate);
                     const plPerc = ((t.rate - buyRate)/buyRate)*100;
-                    csv += `${i+1},${t.date.toLocaleDateString()},${t.date.toLocaleTimeString()},${t.amount.toFixed(2)},${buyRate.toFixed(4)},${t.rate.toFixed(4)},${plAmount.toFixed(2)},${plPerc.toFixed(2)}%,CLOSED\n`;
+                    csv += `${i+1},${t.date.toLocaleDateString()},${t.date.toLocaleTimeString()},${t.amount.toFixed(2)},${buyRate.toFixed(4)},${(buyRate*INR_RATE).toFixed(2)},${t.rate.toFixed(4)},${(t.rate*INR_RATE).toFixed(2)},${plAmount.toFixed(2)},${(plAmount*INR_RATE).toFixed(2)},${plPerc.toFixed(2)}%,CLOSED\n`;
                 });
             }
             const blob = new Blob([csv], {type:'text/csv'});
@@ -403,13 +988,6 @@
             a.download = `sigma_${currentTab}_${new Date().toISOString().split('T')[0]}.csv`;
             a.click();
         }
-
-        window.onload = function() {
-            createParticles();
-            if (window.ethereum && window.ethereum.selectedAddress) {
-                connectWallet();
-            }
-        };
     </script>
 </body>
 </html>
