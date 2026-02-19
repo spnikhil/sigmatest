@@ -196,7 +196,7 @@
         .copy-btn { background:linear-gradient(90deg, var(--secondary), #7b2cbf); color:white; border:none; border-radius:12px; padding:12px 20px; font-weight:600; font-size:13px; cursor:pointer; transition:all 0.3s; display:flex; align-items:center; gap:8px; white-space:nowrap; }
         .copy-btn:hover { background:linear-gradient(90deg, #7b2cbf, var(--secondary)); transform:translateY(-2px); box-shadow:0 5px 15px rgba(157,78,221,0.3); }
         
-        /* NEW: Referral section directly under contract address */
+        /* Referral section directly under contract address */
         .referral-mini-box {
             background: rgba(0,0,0,0.3);
             padding: 15px 20px;
@@ -273,8 +273,6 @@
         .cooldown-danger { color:var(--danger); background:rgba(255,77,77,0.15); }
         
         #statusMessage { font-size:13px; text-align:center; margin-top:15px; min-height:20px; color:var(--primary); font-weight:600; }
-        .ref-box { background:rgba(0,0,0,0.3); padding:20px; border-radius:16px; border:1px solid var(--border); margin-top:25px; }
-        .ref-box.hidden { display:none; }
         
         @media (max-width:768px) { .container { padding:15px; } .main-card, .menu-card { padding:20px; } .header h1 { font-size:32px; } .stat-value { font-size:18px; } input { font-size:26px; } }
     </style>
@@ -389,7 +387,7 @@
                     <button class="copy-btn" onclick="copyContract()"><i class="fas fa-copy"></i> COPY</button>
                 </div>
                 
-                <!-- NEW: Referral Mini Box (Under Contract Address) -->
+                <!-- ONLY ONE REFERRAL BOX - Contract ke neeche wala -->
                 <div class="referral-mini-box" id="referralMiniBox" style="display: none;">
                     <div class="referral-mini-info">
                         <div class="referral-mini-label"><i class="fas fa-link"></i> YOUR REFERRAL LINK</div>
@@ -398,16 +396,6 @@
                     <button class="referral-mini-copy" onclick="copyReferralMini()">
                         <i class="fas fa-copy"></i> COPY
                     </button>
-                </div>
-                
-                <div class="ref-box hidden" id="referralBox">
-                    <div class="row">
-                        <span style="color:#888"><i class="fas fa-link"></i> Referral Link</span>
-                        <button onclick="copyReferral()" style="background:var(--primary); border:none; border-radius:10px; padding:8px 15px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:5px">
-                            <i class="fas fa-copy"></i> COPY
-                        </button>
-                    </div>
-                    <input type="text" id="referralLink" readonly style="display:none;">
                 </div>
                 
                 <div class="balance-footer">
@@ -444,7 +432,6 @@
                 <div class="menu-grid">
                     <button class="menu-btn" onclick="window.location.href='team.html'"><i class="fas fa-users"></i><div><div>Team</div><div style="font-size:12px; color:#aaa;">Referral network</div></div></button>
                     <button class="menu-btn" onclick="window.location.href='income.html'"><i class="fas fa-chart-line"></i><div><div>Income</div><div style="font-size:12px; color:#aaa;">Rewards report</div></div></button>
-                    <!-- CHANGED: Trade History to Buy/Sell History -->
                     <button class="menu-btn" onclick="window.location.href='buy_sell.html'"><i class="fas fa-exchange-alt"></i><div><div>Buy/Sell History</div><div style="font-size:12px; color:#aaa;">Complete Open/Close report</div></div></button>
                     <button class="menu-btn" onclick="window.location.href='transfer.html'"><i class="fas fa-history"></i><div><div>Transfers</div><div style="font-size:12px; color:#aaa;">P2P history</div></div></button>
                 </div>
@@ -1585,13 +1572,13 @@
                 
                 document.getElementById('polBalance').textContent = polBalanceNum.toFixed(4) + ' POL';
                 
-                // ✅ FIXED: Ab har connected wallet ko referral link dikhega
+                // ✅ SIRF EK REFERRAL BOX - Contract ke neeche wala
                 if (userAddress) {
-                    document.getElementById('referralBox').classList.remove('hidden');
                     document.getElementById('referralMiniBox').style.display = 'flex';
                     const link = window.location.origin + window.location.pathname + '?ref=' + userAddress;
-                    document.getElementById('referralLink').value = link;
                     document.getElementById('referralMiniAddress').textContent = userAddress.slice(0,10) + '...' + userAddress.slice(-8);
+                    // Store link for copy function
+                    window.referralLink = link;
                 }
                 
                 updateCooldownUI();
@@ -2048,18 +2035,12 @@
             alert("New contract address copied!");
         }
 
-        function copyReferral() {
-            const link = document.getElementById('referralLink');
-            link.select();
-            navigator.clipboard.writeText(link.value);
-            alert("Referral link copied!");
-        }
-
-        // New function for mini referral copy
+        // ✅ Single referral copy function
         function copyReferralMini() {
-            const link = document.getElementById('referralLink').value;
-            navigator.clipboard.writeText(link);
-            alert("Referral link copied!");
+            if (window.referralLink) {
+                navigator.clipboard.writeText(window.referralLink);
+                alert("Referral link copied!");
+            }
         }
 
         function copyWallet() {
