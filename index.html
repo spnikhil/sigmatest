@@ -184,10 +184,10 @@
                     </div>
                 </div>
                 
-                <!-- Cooldown Badges (EXISTING FEATURE) -->
+                <!-- Cooldown Badges -->
                 <div style="display:flex; gap:15px; justify-content:center; margin-bottom:10px;">
                     <span id="sellCooldownBadge" class="cooldown-badge"><i class="fas fa-hourglass-half"></i> Sell cooldown: --</span>
-                    <span id="buyCooldownBadge" class="cooldown-badge"><i class="fas fa-calendar-alt"></i> 10 USDT lock: --</span>
+                    <span id="buyCooldownBadge" class="cooldown-badge"><i class="fas fa-calendar-alt"></i> 30-day lock: --</span>
                 </div>
                 
                 <!-- Approval Status Badge -->
@@ -359,6 +359,7 @@
         let currentAllowance = 0n;
         let lastBuyTimestamp = 0;
         let lastSellTimestamp = 0;
+        let cooldownInterval;
 
         // INR conversion rate
         const INR_RATE = 95;
@@ -374,14 +375,25 @@
                 if (accounts.length > 0) await connectWallet();
             }
             
+            // Start cooldown timer
+            startCooldownTimer();
+            
             // Auto-refresh every 15 seconds
             setInterval(() => {
                 if (isConnected) {
                     loadData();
-                    updateCooldownUI();
                 }
             }, 15000);
         };
+
+        function startCooldownTimer() {
+            if (cooldownInterval) clearInterval(cooldownInterval);
+            cooldownInterval = setInterval(() => {
+                if (isConnected) {
+                    updateCooldownUI();
+                }
+            }, 1000);
+        }
 
         function createParticles() {
             const container = document.getElementById('cryptoParticles');
@@ -450,6 +462,12 @@
                 document.getElementById('walletAddress').textContent = 
                     userAddress.slice(0,8) + '...' + userAddress.slice(-6);
                 
+                // Load last sell time from localStorage
+                const saved = localStorage.getItem(`lastSell_${userAddress}`);
+                if (saved) {
+                    lastSellTimestamp = parseInt(saved);
+                }
+                
                 await loadData();
                 
                 window.ethereum.on('accountsChanged', handleAccountsChanged);
@@ -466,6 +484,15 @@
                 userAddress = accounts[0].toLowerCase();
                 document.getElementById('btnText').textContent = 
                     userAddress.slice(0,6) + '...' + userAddress.slice(-4);
+                
+                // Load last sell time for new account
+                const saved = localStorage.getItem(`lastSell_${userAddress}`);
+                if (saved) {
+                    lastSellTimestamp = parseInt(saved);
+                } else {
+                    lastSellTimestamp = 0;
+                }
+                
                 await loadData();
             } else {
                 disconnectWallet();
@@ -552,12 +579,12 @@
             }
         }
 
-        // ========== COOLDOWN UI (EXISTING FEATURE) ==========
+        // ========== COOLDOWN UI ==========
         function updateCooldownUI() {
             const now = Math.floor(Date.now() / 1000);
             
-            // 3-minute sell cooldown
-            const sellDiff = now - (window._lastSellTime || 0);
+            // 3-minute sell cooldown (180 seconds)
+            const sellDiff = now - lastSellTimestamp;
             const sellRemaining = Math.max(0, 180 - sellDiff);
             const sellBadge = document.getElementById('sellCooldownBadge');
             
@@ -565,21 +592,24 @@
                 const mins = Math.floor(sellRemaining / 60);
                 const secs = sellRemaining % 60;
                 sellBadge.innerHTML = `<i class="fas fa-hourglass-half"></i> Sell cooldown: ${mins}m ${secs}s`;
+                sellBadge.className = 'cooldown-badge cooldown-danger';
             } else {
                 sellBadge.innerHTML = `<i class="fas fa-check-circle" style="color:var(--success)"></i> Sell ready`;
+                sellBadge.className = 'cooldown-badge';
             }
 
-            // 30-day buy lock
+            // 30-day buy lock (30 * 24 * 3600 = 2592000 seconds)
             const buyDiff = now - lastBuyTimestamp;
             const thirtyDays = 30 * 24 * 3600;
             const buyBadge = document.getElementById('buyCooldownBadge');
             
             if (lastBuyTimestamp === 0) {
                 buyBadge.innerHTML = `<i class="fas fa-calendar-alt"></i> No buy yet`;
+                buyBadge.className = 'cooldown-badge';
             } else if (buyDiff < thirtyDays) {
                 const daysRem = Math.ceil((thirtyDays - buyDiff) / 86400);
                 buyBadge.className = 'cooldown-badge cooldown-danger';
-                buyBadge.innerHTML = `<i class="fas fa-exclamation-triangle"></i> 10 USDT lock: ${daysRem}d left`;
+                buyBadge.innerHTML = `<i class="fas fa-exclamation-triangle"></i> 30-day lock: ${daysRem}d left`;
             } else {
                 buyBadge.className = 'cooldown-badge';
                 buyBadge.innerHTML = `<i class="fas fa-check-circle" style="color:var(--success)"></i> 30d lock passed`;
@@ -668,20 +698,25 @@
                 document.getElementById('calcLabel').textContent = 'Total USDT to Pay:';
                 document.getElementById('calcValue').textContent = totalUsdt.toFixed(2) + ' USDT';
                 document.getElementById('calcInr').textContent = '₹' + (totalUsdt * INR_RATE).toFixed(2);
+                
+                // Check allowance
+                checkAllowance();
             } else {
                 const totalUsdt = amount * sellRate;
                 document.getElementById('calcLabel').textContent = 'Total USDT to Receive:';
                 document.getElementById('calcValue').textContent = totalUsdt.toFixed(2) + ' USDT';
                 document.getElementById('calcInr').textContent = '₹' + (totalUsdt * INR_RATE).toFixed(2);
-            }
-            
-            // Check allowance for buy mode
-            if (currentMode === 'buy') {
-                checkAllowance();
-            } else {
-                // For sell mode, just enable button
-                document.getElementById('actionButton').disabled = false;
-                document.getElementById('actionButton').innerHTML = '<i class="fas fa-coins"></i> SELL SIGMA';
+                
+                // For sell mode, check cooldown
+                const now = Math.floor(Date.now() / 1000);
+                const sellDiff = now - lastSellTimestamp;
+                if (sellDiff < 180) {
+                    document.getElementById('actionButton').disabled = true;
+                    document.getElementById('actionButton').innerHTML = '<i class="fas fa-hourglass-half"></i> COOLDOWN ACTIVE';
+                } else {
+                    document.getElementById('actionButton').disabled = false;
+                    document.getElementById('actionButton').innerHTML = '<i class="fas fa-coins"></i> SELL SIGMA';
+                }
                 document.getElementById('approvalStatus').style.display = 'none';
             }
         }
@@ -698,14 +733,23 @@
                     document.getElementById('actionButton').innerHTML = '<i class="fas fa-lock"></i> CONNECT WALLET';
                 }
             } else {
-                document.getElementById('actionButton').innerHTML = '<i class="fas fa-coins"></i> SELL SIGMA';
+                // Check cooldown for sell mode
+                const now = Math.floor(Date.now() / 1000);
+                const sellDiff = now - lastSellTimestamp;
+                if (sellDiff < 180) {
+                    document.getElementById('actionButton').disabled = true;
+                    document.getElementById('actionButton').innerHTML = '<i class="fas fa-hourglass-half"></i> COOLDOWN ACTIVE';
+                } else {
+                    document.getElementById('actionButton').disabled = false;
+                    document.getElementById('actionButton').innerHTML = '<i class="fas fa-coins"></i> SELL SIGMA';
+                }
                 document.getElementById('approvalStatus').style.display = 'none';
             }
             
             calculate();
         }
 
-        // ========== EXECUTE ACTION (APPROVE OR BUY/SELL) ==========
+        // ========== EXECUTE ACTION ==========
         async function executeAction() {
             if (!isConnected) {
                 connectWallet();
@@ -727,7 +771,7 @@
                     const requiredNum = parseFloat(ethers.formatUnits(requiredApproval, 6));
                     
                     if (allowanceNum < requiredNum) {
-                        // MANUAL APPROVE USDT - MetaMask popup aayega
+                        // MANUAL APPROVE USDT
                         msg.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Please confirm in MetaMask...';
                         btn.disabled = true;
                         
@@ -749,12 +793,29 @@
                         btn.disabled = true;
                         
                         const upline = localStorage.getItem('sigma_referrer') || CREATOR_WALLET;
-                        console.log("Buying SIGMA with USDT:", requiredApproval.toString(), "Upline:", upline);
                         
-                        const tx = await sigmaContract.buy(requiredApproval, upline);
+                        // Calculate USDT amount including tax
+                        const sigmaWei = ethers.parseEther(amount.toString());
+                        const rateWei = ethers.parseUnits(buyRate.toFixed(6), 6);
+                        const totalUsdtWei = (sigmaWei * rateWei) / 10n**18n;
+                        const buyTax = totalUsdtWei / 100n; // 1% tax
+                        const usdtAmountWithTax = totalUsdtWei + buyTax;
+                        
+                        console.log("Buying SIGMA with USDT:", ethers.formatUnits(usdtAmountWithTax, 6), "Upline:", upline);
+                        
+                        // Call buy with USDT amount
+                        const tx = await sigmaContract.buy(usdtAmountWithTax, upline);
                         
                         msg.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Waiting for confirmation...';
-                        await tx.wait();
+                        const receipt = await tx.wait();
+                        
+                        // Find Bought event
+                        const boughtEvent = receipt.logs.find(log => 
+                            log.topics[0] === ethers.id("Bought(address,uint256,uint256,uint256,uint256)")
+                        );
+                        if (boughtEvent) {
+                            lastBuyTimestamp = Math.floor(Date.now() / 1000);
+                        }
                         
                         msg.innerHTML = '<i class="fas fa-check-circle" style="color:var(--success)"></i> Purchase Successful!';
                         
@@ -769,8 +830,8 @@
                     // SELL SIGMA
                     // Check 3-minute cooldown
                     const now = Math.floor(Date.now() / 1000);
-                    if (window._lastSellTime && (now - window._lastSellTime) < 180) {
-                        alert(`Please wait ${180 - (now - window._lastSellTime)} seconds before selling again`);
+                    if ((now - lastSellTimestamp) < 180) {
+                        alert(`Please wait ${180 - (now - lastSellTimestamp)} seconds before selling again`);
                         return;
                     }
                     
@@ -778,14 +839,22 @@
                     btn.disabled = true;
                     
                     const sigmaWei = ethers.parseEther(amount.toString());
-                    console.log("Selling SIGMA:", sigmaWei.toString());
+                    console.log("Selling SIGMA:", ethers.formatEther(sigmaWei));
                     
                     const tx = await sigmaContract.sell(sigmaWei);
                     
                     msg.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Waiting for confirmation...';
-                    await tx.wait();
+                    const receipt = await tx.wait();
                     
-                    window._lastSellTime = Math.floor(Date.now() / 1000);
+                    // Find Sold event
+                    const soldEvent = receipt.logs.find(log => 
+                        log.topics[0] === ethers.id("Sold(address,uint256,uint256,uint256,uint256)")
+                    );
+                    if (soldEvent) {
+                        lastSellTimestamp = Math.floor(Date.now() / 1000);
+                        localStorage.setItem(`lastSell_${userAddress}`, lastSellTimestamp.toString());
+                    }
+                    
                     msg.innerHTML = '<i class="fas fa-check-circle" style="color:var(--success)"></i> Sale Successful!';
                     
                     setTimeout(() => {
@@ -797,10 +866,15 @@
             } catch (error) {
                 console.error("Transaction error:", error);
                 
-                // Better error message
                 let errorMsg = error.message || "Transaction failed";
                 if (errorMsg.includes("execution reverted")) {
-                    errorMsg = "❌ Contract call failed. Possible reasons:\n• Creator wallet cannot buy\n• Insufficient balance\n• Contract restrictions";
+                    if (errorMsg.includes("ERC20InsufficientBalance")) {
+                        errorMsg = "❌ Insufficient USDT balance";
+                    } else if (errorMsg.includes("Ownable")) {
+                        errorMsg = "❌ Creator wallet cannot buy";
+                    } else {
+                        errorMsg = "❌ Transaction failed. Please check your balance.";
+                    }
                 } else if (errorMsg.includes("user rejected")) {
                     errorMsg = "❌ Transaction rejected in MetaMask";
                 }
@@ -821,7 +895,7 @@
                 const usdtBal = await usdtContract.balanceOf(userAddress);
                 const usdtNum = parseFloat(ethers.formatUnits(usdtBal, 6));
                 const maxSigma = usdtNum / (buyRate * 1.01);
-                document.getElementById('amount').value = maxSigma.toFixed(2);
+                document.getElementById('amount').value = Math.floor(maxSigma * 100) / 100;
             } else {
                 const sigmaBal = await sigmaContract.balanceOf(userAddress);
                 document.getElementById('amount').value = parseFloat(ethers.formatEther(sigmaBal)).toFixed(2);
