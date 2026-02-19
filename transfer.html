@@ -171,15 +171,14 @@
                             <th>Date & Time</th>
                             <th>Sender Address</th>
                             <th>Sigma Quantity</th>
-                            <th>Receive Rate</th>
                             <th>Current Rate</th>
-                            <th>Difference</th>
-                            <th>P&L %</th>
+                            <th>Current Value</th>
                             <th>Status</th>
+                            <th>Transaction</th>
                         </tr>
                     </thead>
                     <tbody id="receiveTableBody">
-                        <tr><td colspan="9" class="loading"><i class="fas fa-spinner fa-spin"></i><br>Connect wallet to load</td></tr>
+                        <tr><td colspan="8" class="loading"><i class="fas fa-spinner fa-spin"></i><br>Connect wallet to load</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -202,8 +201,8 @@
                             <th>Date & Time</th>
                             <th>Receiver Address</th>
                             <th>Sigma Quantity</th>
-                            <th>Send Rate</th>
-                            <th>Value at Send</th>
+                            <th>Current Rate</th>
+                            <th>Current Value</th>
                             <th>Transaction</th>
                         </tr>
                     </thead>
@@ -217,19 +216,25 @@
 
     <script>
         // ===== UPDATED CONTRACT CONFIGURATION =====
-        const SIGMA_ADDR = "0x52fD2a4da50d34566224DC65Da4Ba6C29c07A3DC";
+        const SIGMA_ADDR = "0x6024c57518bb116ac199EAD176486354635BFC46";
         const CREATOR_WALLET = "0xb579377DDe2C03b2b46B5b12453F4dbAddB06f2E";
         
-        // ABI with Transfer event (ERC20)
+        // Complete ABI with all events from the contract
         const SIGMA_ABI = [
+            // View Functions
             "function balanceOf(address) view returns (uint256)",
             "function transfer(address to, uint256 amount) external returns (bool)",
             "function currentRate() view returns (uint256)",
-            "event Transfer(address indexed from, address indexed to, uint256 value)"
+            "function getSellRate() view returns (uint256)",
+            "function users(address) view returns (address upline, uint256 referralExpiry, uint256 totalReferralEarned, uint256 lastBuyTimestamp, uint256 directCount, bool isMigrated, bool hasBought)",
+            
+            // Events
+            "event Transfer(address indexed from, address indexed to, uint256 value)",
+            "event P2PTransfer(address indexed from, address indexed to, uint256 amount, uint256 timestamp, uint256 currentRate)"
         ];
 
         let provider, signer, userAddress, sigmaContract;
-        let currentRate = 0.0316; // fallback
+        let currentRate = 0.0105; // fallback
         let sentTransfers = [];
         let receivedTransfers = [];
 
@@ -245,8 +250,23 @@
             if (!window.ethereum) { alert("Install MetaMask"); return; }
             try {
                 provider = new ethers.BrowserProvider(window.ethereum);
+                
+                // Check network
+                const network = await provider.getNetwork();
+                if (network.chainId !== 137n) {
+                    alert("Please switch to Polygon Mainnet");
+                    try {
+                        await window.ethereum.request({
+                            method: 'wallet_switchEthereumChain',
+                            params: [{ chainId: '0x89' }],
+                        });
+                    } catch (switchError) {
+                        console.log("Network switch error:", switchError);
+                    }
+                }
+                
                 const accounts = await provider.send("eth_requestAccounts", []);
-                userAddress = accounts[0];
+                userAddress = accounts[0].toLowerCase();
                 signer = await provider.getSigner();
                 sigmaContract = new ethers.Contract(SIGMA_ADDR, SIGMA_ABI, provider);
                 
@@ -256,9 +276,15 @@
                 await loadTransferData();
                 
                 window.ethereum.on('accountsChanged', async (acc) => {
-                    if (acc.length) { userAddress = acc[0]; await loadTransferData(); }
+                    if (acc.length) { 
+                        userAddress = acc[0].toLowerCase(); 
+                        await loadTransferData(); 
+                    }
                 });
-            } catch (e) { alert("Connection error"); }
+            } catch (e) { 
+                console.error(e);
+                alert("Connection error: " + e.message); 
+            }
         }
 
         async function loadTransferData() {
@@ -268,45 +294,63 @@
                 try {
                     const rateBN = await sigmaContract.currentRate();
                     currentRate = parseFloat(ethers.formatUnits(rateBN, 6));
-                } catch (e) { console.warn("Using fallback rate"); }
+                } catch (e) { 
+                    console.warn("Using fallback rate", e); 
+                }
 
                 // Fetch Transfer events
                 const filterSent = sigmaContract.filters.Transfer(userAddress, null);
                 const filterReceived = sigmaContract.filters.Transfer(null, userAddress);
                 
                 const currentBlock = await provider.getBlockNumber();
-                const fromBlock = Math.max(currentBlock - 2000000, 0); // scan ~2M blocks
+                const fromBlock = Math.max(currentBlock - 2000000, 0); // scan ~2M blocks back
+                
+                console.log("Fetching Transfer events from block", fromBlock, "to", currentBlock);
                 
                 const [sentEvents, receivedEvents] = await Promise.all([
                     sigmaContract.queryFilter(filterSent, fromBlock, currentBlock),
                     sigmaContract.queryFilter(filterReceived, fromBlock, currentBlock)
                 ]);
                 
+                console.log(`Found ${sentEvents.length} sent, ${receivedEvents.length} received`);
+                
                 // Process sent transfers
                 sentTransfers = await Promise.all(sentEvents.map(async (e) => {
-                    const block = await e.getBlock();
-                    return {
-                        to: e.args.to,
-                        amount: parseFloat(ethers.formatEther(e.args.value)),
-                        timestamp: block.timestamp,
-                        date: new Date(block.timestamp * 1000),
-                        hash: e.transactionHash,
-                        rate: currentRate // use current as send rate (historical not available)
-                    };
+                    try {
+                        const block = await e.getBlock();
+                        return {
+                            to: e.args.to.toLowerCase(),
+                            amount: parseFloat(ethers.formatEther(e.args.value)),
+                            timestamp: block.timestamp,
+                            date: new Date(block.timestamp * 1000),
+                            hash: e.transactionHash,
+                            value: e.args.value.toString()
+                        };
+                    } catch (err) {
+                        console.error("Error processing sent event:", err);
+                        return null;
+                    }
                 }));
+                sentTransfers = sentTransfers.filter(t => t !== null);
                 
                 // Process received transfers
                 receivedTransfers = await Promise.all(receivedEvents.map(async (e) => {
-                    const block = await e.getBlock();
-                    return {
-                        from: e.args.from,
-                        amount: parseFloat(ethers.formatEther(e.args.value)),
-                        timestamp: block.timestamp,
-                        date: new Date(block.timestamp * 1000),
-                        hash: e.transactionHash,
-                        rate: currentRate // received at historical rate? we approximate with current
-                    };
+                    try {
+                        const block = await e.getBlock();
+                        return {
+                            from: e.args.from.toLowerCase(),
+                            amount: parseFloat(ethers.formatEther(e.args.value)),
+                            timestamp: block.timestamp,
+                            date: new Date(block.timestamp * 1000),
+                            hash: e.transactionHash,
+                            value: e.args.value.toString()
+                        };
+                    } catch (err) {
+                        console.error("Error processing received event:", err);
+                        return null;
+                    }
                 }));
+                receivedTransfers = receivedTransfers.filter(t => t !== null);
                 
                 // Sort newest first
                 sentTransfers.sort((a,b) => b.timestamp - a.timestamp);
@@ -315,72 +359,61 @@
                 updateStats();
                 renderTables();
             } catch (e) {
-                console.error(e);
-                // fallback demo data
-                generateDemoData();
+                console.error("Error loading transfers:", e);
+                // Show error in tables
+                document.getElementById('receiveTableBody').innerHTML = '<tr><td colspan="8" class="empty-state"><i class="fas fa-exclamation-triangle"></i><br>Error loading data: ' + e.message + '</td></tr>';
+                document.getElementById('sendTableBody').innerHTML = '<tr><td colspan="7" class="empty-state"><i class="fas fa-exclamation-triangle"></i><br>Error loading data</td></tr>';
             }
-        }
-
-        function generateDemoData() {
-            const now = Date.now() / 1000;
-            sentTransfers = [
-                { to: "0x1234...abcd", amount: 125.5, timestamp: now - 86400, date: new Date((now-86400)*1000), rate: 0.0312 },
-                { to: "0x5678...efgh", amount: 80.2, timestamp: now - 172800, date: new Date((now-172800)*1000), rate: 0.0308 }
-            ];
-            receivedTransfers = [
-                { from: "0xabcd...1234", amount: 250.0, timestamp: now - 3600, date: new Date((now-3600)*1000), rate: 0.0316 },
-                { from: "0xefgh...5678", amount: 95.3, timestamp: now - 259200, date: new Date((now-259200)*1000), rate: 0.0305 }
-            ];
-            updateStats();
-            renderTables();
         }
 
         function updateStats() {
             const totalSent = sentTransfers.reduce((s,t) => s + t.amount, 0);
             const totalReceived = receivedTransfers.reduce((s,t) => s + t.amount, 0);
             
-            // P&L on received: difference between currentRate and assumed receive rate (historical not available, use avg of received rates)
-            let totalReceivedValue = 0, totalCurrentValue = 0;
-            receivedTransfers.forEach(r => {
-                totalReceivedValue += r.amount * r.rate; // using stored rate (could be historical approximation)
-                totalCurrentValue += r.amount * currentRate;
-            });
-            const plAmount = totalCurrentValue - totalReceivedValue;
-            const plPerc = totalReceivedValue > 0 ? (plAmount / totalReceivedValue) * 100 : 0;
+            const totalSentUsdt = totalSent * currentRate;
+            const totalReceivedUsdt = totalReceived * currentRate;
+            
+            // P&L on received (since you received for free, all is profit)
+            const plAmount = totalReceivedUsdt;
+            const plPerc = totalReceived > 0 ? 100 : 0;
             
             document.getElementById('totalSent').innerText = totalSent.toFixed(2) + ' SIG6';
-            document.getElementById('totalSentUsdt').innerText = '$' + (totalSent * currentRate).toFixed(2);
-            document.getElementById('totalReceived').innerText = totalReceived.toFixed(2) + ' SIG6';
-            document.getElementById('totalReceivedUsdt').innerText = '$' + totalReceivedValue.toFixed(2);
-            document.getElementById('receivedPNL').innerText = (plAmount >= 0 ? '+' : '') + '$' + plAmount.toFixed(2);
-            document.getElementById('receivedPNL').style.color = plAmount >= 0 ? 'var(--profit)' : 'var(--loss)';
-            document.getElementById('receivedPNLPerc').innerText = (plPerc >= 0 ? '+' : '') + plPerc.toFixed(2) + '%';
-            document.getElementById('receivedPNLPerc').style.color = plPerc >= 0 ? 'var(--profit)' : 'var(--loss)';
+            document.getElementById('totalSentUsdt').innerText = '$' + totalSentUsdt.toFixed(2);
             
-            const last = [...sentTransfers, ...receivedTransfers].sort((a,b) => b.timestamp - a.timestamp)[0];
-            if (last) document.getElementById('lastTransfer').innerText = last.date.toLocaleString();
-            else document.getElementById('lastTransfer').innerText = '--';
+            document.getElementById('totalReceived').innerText = totalReceived.toFixed(2) + ' SIG6';
+            document.getElementById('totalReceivedUsdt').innerText = '$' + totalReceivedUsdt.toFixed(2);
+            
+            document.getElementById('receivedPNL').innerText = '+' + plAmount.toFixed(2);
+            document.getElementById('receivedPNL').style.color = 'var(--profit)';
+            document.getElementById('receivedPNLPerc').innerText = '+100.00%';
+            document.getElementById('receivedPNLPerc').style.color = 'var(--profit)';
+            
+            const allTransfers = [...sentTransfers, ...receivedTransfers];
+            if (allTransfers.length > 0) {
+                const last = allTransfers.sort((a,b) => b.timestamp - a.timestamp)[0];
+                document.getElementById('lastTransfer').innerText = last.date.toLocaleString();
+            } else {
+                document.getElementById('lastTransfer').innerText = '--';
+            }
         }
 
         function renderTables() {
             // Receive table
             let receiveHtml = '';
             if (receivedTransfers.length === 0) {
-                receiveHtml = '<tr><td colspan="9" class="empty-state"><i class="fas fa-inbox"></i><br>No received transfers</td></tr>';
+                receiveHtml = '<tr><td colspan="8" class="empty-state"><i class="fas fa-inbox"></i><br>No received transfers found</td></tr>';
             } else {
                 receivedTransfers.forEach((t, i) => {
-                    const diff = currentRate - t.rate;
-                    const diffPerc = (diff / t.rate) * 100;
+                    const currentValue = t.amount * currentRate;
                     receiveHtml += `<tr>
                         <td>${i+1}</td>
                         <td><div style="font-weight:600">${t.date.toLocaleDateString()}</div><div style="font-size:12px; color:#888">${t.date.toLocaleTimeString()}</div></td>
                         <td><span class="wallet-addr">${t.from.slice(0,8)}...${t.from.slice(-6)}</span></td>
                         <td style="color:var(--receive); font-weight:700">${t.amount.toFixed(2)} SIG6</td>
-                        <td>$${t.rate.toFixed(4)}</td>
                         <td>$${currentRate.toFixed(4)}</td>
-                        <td><span class="${diff>=0?'positive':'negative'}"><i class="fas fa-${diff>=0?'arrow-up':'arrow-down'}"></i> $${Math.abs(diff).toFixed(4)}</span></td>
-                        <td><span class="badge ${diffPerc>=0?'badge-profit':'badge-loss'}">${diffPerc>=0?'+':''}${diffPerc.toFixed(2)}%</span></td>
+                        <td>$${currentValue.toFixed(2)}</td>
                         <td><span class="badge badge-receive">RECEIVED</span></td>
+                        <td><a href="https://polygonscan.com/tx/${t.hash}" target="_blank" style="color:var(--primary)"><i class="fas fa-external-link-alt"></i></a></td>
                     </tr>`;
                 });
             }
@@ -389,16 +422,17 @@
             // Send table
             let sendHtml = '';
             if (sentTransfers.length === 0) {
-                sendHtml = '<tr><td colspan="7" class="empty-state"><i class="fas fa-paper-plane"></i><br>No sent transfers</td></tr>';
+                sendHtml = '<tr><td colspan="7" class="empty-state"><i class="fas fa-paper-plane"></i><br>No sent transfers found</td></tr>';
             } else {
                 sentTransfers.forEach((t, i) => {
+                    const currentValue = t.amount * currentRate;
                     sendHtml += `<tr>
                         <td>${i+1}</td>
                         <td><div style="font-weight:600">${t.date.toLocaleDateString()}</div><div style="font-size:12px; color:#888">${t.date.toLocaleTimeString()}</div></td>
                         <td><span class="wallet-addr">${t.to.slice(0,8)}...${t.to.slice(-6)}</span></td>
                         <td style="color:var(--send); font-weight:700">${t.amount.toFixed(2)} SIG6</td>
-                        <td>$${t.rate.toFixed(4)}</td>
-                        <td>$${(t.amount * t.rate).toFixed(2)}</td>
+                        <td>$${currentRate.toFixed(4)}</td>
+                        <td>$${currentValue.toFixed(2)}</td>
                         <td><a href="https://polygonscan.com/tx/${t.hash}" target="_blank" style="color:var(--primary)"><i class="fas fa-external-link-alt"></i></a></td>
                     </tr>`;
                 });
