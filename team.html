@@ -482,34 +482,6 @@
         
         .zero-balance { opacity: 0.7; }
         
-        .level-filter-multiselect {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 10px;
-        }
-        
-        .level-chip {
-            padding: 6px 12px;
-            border-radius: 20px;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid var(--border);
-            color: var(--text);
-            font-size: 12px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        
-        .level-chip.selected {
-            background: var(--primary);
-            color: #000;
-            border-color: var(--primary);
-        }
-        
-        .level-chip:hover {
-            border-color: var(--primary);
-        }
-        
         ::-webkit-scrollbar { width: 8px; height: 8px; }
         ::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); border-radius: 4px; }
         ::-webkit-scrollbar-thumb { background: var(--gradient); border-radius: 4px; animation: rainbow 8s ease infinite; }
@@ -532,17 +504,17 @@
         
         <div class="header">
             <h1>COMPLETE DOWNLINE</h1>
-            <p>All Team Members • 10 Levels Deep • Live Balances</p>
+            <p>Your Team Members • 10 Levels Deep • Live Balances</p>
         </div>
         
         <div class="stats-container" id="statsContainer">
             <div class="stat-card">
-                <div class="stat-title"><i class="fas fa-users"></i> Total Team Members</div>
+                <div class="stat-title"><i class="fas fa-users"></i> Your Team Members</div>
                 <div class="stat-value" id="total-members">0</div>
                 <div class="stat-sub" id="stats-breakdown">Active: 0 | Zero Balance: 0</div>
             </div>
             <div class="stat-card">
-                <div class="stat-title"><i class="fas fa-sitemap"></i> Direct Referrals</div>
+                <div class="stat-title"><i class="fas fa-sitemap"></i> Your Direct Referrals</div>
                 <div class="stat-value" id="direct-referrals">0</div>
                 <div class="stat-sub">Level 1 members</div>
             </div>
@@ -597,7 +569,7 @@
         
         <div class="main-card">
             <div class="card-header">
-                <div class="card-title"><i class="fas fa-sitemap"></i> TEAM NETWORK • 10 LEVELS DEEP</div>
+                <div class="card-title"><i class="fas fa-sitemap"></i> YOUR TEAM NETWORK • 10 LEVELS DEEP</div>
                 <div class="card-actions">
                     <button class="action-btn" onclick="sortTable('balance')"><i class="fas fa-sort-amount-down"></i> Balance</button>
                     <button class="action-btn" onclick="sortTable('date')"><i class="fas fa-sort-numeric-down"></i> Join Date</button>
@@ -626,7 +598,7 @@
                         </tr>
                     </thead>
                     <tbody id="team-body">
-                        <tr><td colspan="10" class="loading"><i class="fas fa-spinner fa-spin"></i><br>Connect wallet to view team</td></tr>
+                        <tr><td colspan="10" class="loading"><i class="fas fa-spinner fa-spin"></i><br>Connect wallet to view your team</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -634,51 +606,17 @@
     </div>
 
     <script>
-        // ===== UPDATED CONTRACT CONFIGURATION =====
+        // ===== CONTRACT CONFIGURATION =====
         const SIGMA_ADDR = "0x6024c57518bb116ac199EAD176486354635BFC46";
         const CREATOR_WALLET = "0xb579377DDe2C03b2b46B5b12453F4dbAddB06f2E";
         
-        // COMPLETE ABI INCLUDING ALL EVENTS
         const SIGMA_ABI = [
-            // View Functions
             "function balanceOf(address) view returns (uint256)",
             "function currentRate() view returns (uint256)",
             "function getSellRate() view returns (uint256)",
             "function users(address) view returns (address upline, uint256 referralExpiry, uint256 totalReferralEarned, uint256 lastBuyTimestamp, uint256 directCount, bool isMigrated, bool hasBought)",
-            "function BASE_RATE() view returns (uint256)",
-            "function INCREMENT() view returns (uint256)",
-            "function MIN_USDT_FOR_REF() view returns (uint256)",
-            "function levelRewards(uint256) view returns (uint256)",
-            "function owner() view returns (address)",
-            "function creatorWallet() view returns (address)",
-            "function usdt() view returns (address)",
-            "function totalSupply() view returns (uint256)",
-            "function decimals() view returns (uint8)",
-            "function name() view returns (string)",
-            "function symbol() view returns (string)",
-            
-            // Write Functions
-            "function buy(uint256 _usdtAmount, address _upline) external",
-            "function sell(uint256 _sigmaAmount) external",
-            "function p2pTransfer(address _to, uint256 _amount) external",
-            "function transfer(address to, uint256 value) external returns (bool)",
-            "function transferFrom(address from, address to, uint256 value) external returns (bool)",
-            "function approve(address spender, uint256 value) external returns (bool)",
-            
-            // Admin Functions
-            "function migrateUsers(address[] calldata _users, uint256[] calldata _balances, address[] calldata _uplines) external",
-            "function creatorWithdrawTreasury() external",
-            "function emergencyWithdraw() external",
-            
-            // Events - IMPORTANT: These are needed for filters
             "event Transfer(address indexed from, address indexed to, uint256 value)",
-            "event Approval(address indexed owner, address indexed spender, uint256 value)",
-            "event Bought(address indexed user, uint256 usdtAmount, uint256 sigmaAmount, uint256 rate, uint256 timestamp)",
-            "event Sold(address indexed user, uint256 sigmaAmount, uint256 usdtAmount, uint256 rate, uint256 timestamp)",
-            "event ReferralPaid(address indexed from, address indexed to, uint256 amount, uint256 level, uint256 timestamp)",
-            "event IncomeLapsed(address indexed user, uint256 amount, string reason, uint256 timestamp)",
-            "event P2PTransfer(address indexed from, address indexed to, uint256 amount, uint256 timestamp, uint256 currentRate)",
-            "event OwnershipTransferred(address indexed previousOwner, address indexed newOwner)"
+            "event Bought(address indexed user, uint256 usdtAmount, uint256 sigmaAmount, uint256 rate, uint256 timestamp)"
         ];
 
         let provider, userAddress, sigmaContract;
@@ -688,15 +626,13 @@
         let sellRate = 0.0100;
         let currentSort = { field: 'level', order: 'asc' };
         let isLoading = false;
-        let allAddresses = [];
+        let allUsersData = [];
 
         window.onload = async () => {
             if (window.ethereum) {
                 provider = new ethers.BrowserProvider(window.ethereum);
                 const accounts = await provider.send("eth_accounts", []);
-                if (accounts.length > 0) {
-                    await connectWallet();
-                }
+                if (accounts.length > 0) await connectWallet();
             }
         };
 
@@ -718,87 +654,127 @@
                             method: 'wallet_switchEthereumChain',
                             params: [{ chainId: '0x89' }],
                         });
-                    } catch (switchError) {
-                        console.log("Network switch error:", switchError);
-                    }
+                    } catch (switchError) {}
                 }
                 
                 const accounts = await provider.send("eth_requestAccounts", []);
                 userAddress = accounts[0].toLowerCase();
-                
                 sigmaContract = new ethers.Contract(SIGMA_ADDR, SIGMA_ABI, provider);
                 
-                document.getElementById('btn-text').textContent = 
-                    userAddress.slice(0,6) + '...' + userAddress.slice(-4);
+                document.getElementById('btn-text').textContent = userAddress.slice(0,6) + '...' + userAddress.slice(-4);
                 document.getElementById('connectBtn').classList.add('connected');
                 
+                await loadAllAddresses();
                 await loadTeamData();
                 
-                window.ethereum.on('accountsChanged', async (accs) => {
-                    if (accs.length > 0) {
-                        userAddress = accs[0].toLowerCase();
-                        document.getElementById('btn-text').textContent = 
-                            userAddress.slice(0,6) + '...' + userAddress.slice(-4);
-                        await loadTeamData();
-                    }
-                });
             } catch (error) {
                 console.error(error);
                 alert("Connection failed");
             }
         }
 
-        // Cache for user data
-        const userCache = new Map();
-        
-        async function getUserData(addr) {
-            if (userCache.has(addr)) return userCache.get(addr);
-            
+        // Load all addresses from events
+        async function loadAllAddresses() {
             try {
-                const [balanceBN, userStruct] = await Promise.all([
-                    sigmaContract.balanceOf(addr),
-                    sigmaContract.users(addr).catch(() => null)
-                ]);
+                const transferFilter = sigmaContract.filters.Transfer();
+                const transferEvents = await sigmaContract.queryFilter(transferFilter, 0, 'latest');
                 
-                const balance = parseFloat(ethers.formatEther(balanceBN));
+                const boughtFilter = sigmaContract.filters.Bought();
+                const boughtEvents = await sigmaContract.queryFilter(boughtFilter, 0, 'latest');
                 
-                let upline = "0x0000000000000000000000000000000000000000";
-                let directCount = 0;
-                let lastBuyTimestamp = 0;
-                let referralExpiry = 0;
-                let isMigrated = false;
+                const addressSet = new Set();
+                addressSet.add(CREATOR_WALLET.toLowerCase());
                 
-                if (userStruct) {
-                    upline = userStruct.upline?.toLowerCase() || "0x0000000000000000000000000000000000000000";
-                    directCount = Number(userStruct.directCount);
-                    lastBuyTimestamp = Number(userStruct.lastBuyTimestamp);
-                    referralExpiry = Number(userStruct.referralExpiry);
-                    isMigrated = userStruct.isMigrated;
+                transferEvents.forEach(e => {
+                    const from = e.args.from.toLowerCase();
+                    const to = e.args.to.toLowerCase();
+                    if (from !== "0x0000000000000000000000000000000000000000") addressSet.add(from);
+                    if (to !== "0x0000000000000000000000000000000000000000") addressSet.add(to);
+                });
+                
+                boughtEvents.forEach(e => addressSet.add(e.args.user.toLowerCase()));
+                
+                const addresses = Array.from(addressSet);
+                
+                // Get data for all addresses
+                allUsersData = [];
+                const batchSize = 50;
+                
+                for (let i = 0; i < addresses.length; i += batchSize) {
+                    const batch = addresses.slice(i, i + batchSize);
+                    const promises = batch.map(async (addr) => {
+                        try {
+                            const [balanceBN, userStruct] = await Promise.all([
+                                sigmaContract.balanceOf(addr),
+                                sigmaContract.users(addr).catch(() => null)
+                            ]);
+                            
+                            const balance = parseFloat(ethers.formatEther(balanceBN));
+                            
+                            let upline = "0x0000000000000000000000000000000000000000";
+                            let directCount = 0;
+                            let lastBuyTimestamp = 0;
+                            
+                            if (userStruct) {
+                                upline = userStruct.upline?.toLowerCase() || "0x0000000000000000000000000000000000000000";
+                                directCount = Number(userStruct.directCount);
+                                lastBuyTimestamp = Number(userStruct.lastBuyTimestamp);
+                            }
+                            
+                            return { address: addr, balance, upline, directCount, lastBuyTimestamp };
+                        } catch {
+                            return { address: addr, balance: 0, upline: "0x0000000000000000000000000000000000000000", directCount: 0, lastBuyTimestamp: 0 };
+                        }
+                    });
+                    
+                    const results = await Promise.all(promises);
+                    allUsersData.push(...results);
+                    
+                    if (i + batchSize < addresses.length) await new Promise(resolve => setTimeout(resolve, 100));
                 }
                 
-                const data = { balance, upline, directCount, lastBuyTimestamp, referralExpiry, isMigrated };
-                userCache.set(addr, data);
-                return data;
-            } catch {
-                const data = { balance: 0, upline: "0x0000000000000000000000000000000000000000", directCount: 0, lastBuyTimestamp: 0, referralExpiry: 0, isMigrated: false };
-                userCache.set(addr, data);
-                return data;
+                console.log(`✅ Loaded data for ${allUsersData.length} addresses`);
+                
+            } catch (error) {
+                console.error("Error loading addresses:", error);
             }
         }
 
+        function getDownline(startAddress, currentLevel = 1, maxLevel = 10) {
+            if (currentLevel > maxLevel) return [];
+            
+            const members = [];
+            
+            // Find all users whose upline is startAddress
+            const directDownline = allUsersData.filter(u => u.upline === startAddress);
+            
+            for (const member of directDownline) {
+                members.push({
+                    ...member,
+                    level: currentLevel
+                });
+                
+                // Recursively get their downline
+                const subMembers = getDownline(member.address, currentLevel + 1, maxLevel);
+                members.push(...subMembers);
+            }
+            
+            return members;
+        }
+
         async function loadTeamData() {
-            if (!userAddress || isLoading) return;
+            if (!userAddress || isLoading || allUsersData.length === 0) return;
             isLoading = true;
             
             try {
                 document.getElementById('team-body').innerHTML = `
                     <tr><td colspan="10" class="loading">
                         <i class="fas fa-spinner fa-spin"></i><br>
-                        Loading complete team structure (1-10 levels)...
+                        Loading your team structure...
                     </td></tr>
                 `;
 
-                // Get current rates
+                // Get rates
                 try {
                     const rateBN = await sigmaContract.currentRate();
                     const sellRateBN = await sigmaContract.getSellRate();
@@ -807,122 +783,24 @@
                     
                     document.getElementById('buy-rate').textContent = buyRate.toFixed(4) + ' USDT';
                     document.getElementById('sell-rate').textContent = `Sell: ${sellRate.toFixed(4)} USDT`;
-                } catch (e) {
-                    console.log("Rate fetch error:", e);
-                }
+                } catch (e) {}
 
-                // Get ALL Transfer events (now it will work because we added the event)
-                console.log("🔍 Fetching Transfer events...");
-                const transferFilter = sigmaContract.filters.Transfer();
-                const transferEvents = await sigmaContract.queryFilter(transferFilter, 0, 'latest');
+                // Get user's own data
+                const userData = allUsersData.find(u => u.address === userAddress) || 
+                               { balance: 0, upline: "0x0000000000000000000000000000000000000000", directCount: 0 };
+
+                // CRITICAL FIX: Get downline starting from current user, NOT from creator
+                teamMembers = getDownline(userAddress, 1, 10);
                 
-                // Get ALL Bought events
-                console.log("🔍 Fetching Bought events...");
-                const boughtFilter = sigmaContract.filters.Bought();
-                const boughtEvents = await sigmaContract.queryFilter(boughtFilter, 0, 'latest');
+                console.log(`✅ Found ${teamMembers.length} team members under ${userAddress.slice(0,8)}...`);
                 
-                // Collect all unique addresses
-                const addressSet = new Set();
-                const joinDates = new Map();
-                
-                // Add creator
-                addressSet.add(CREATOR_WALLET.toLowerCase());
-                addressSet.add(userAddress.toLowerCase());
-                
-                // Process Transfer events
-                transferEvents.forEach(e => {
-                    const from = e.args.from.toLowerCase();
-                    const to = e.args.to.toLowerCase();
-                    if (from !== "0x0000000000000000000000000000000000000000") addressSet.add(from);
-                    if (to !== "0x0000000000000000000000000000000000000000") addressSet.add(to);
-                });
-                
-                // Process Bought events for join dates
-                boughtEvents.forEach(e => {
-                    const user = e.args.user.toLowerCase();
-                    const timestamp = Number(e.args.timestamp);
-                    addressSet.add(user);
-                    
-                    if (!joinDates.has(user) || joinDates.get(user) > timestamp) {
-                        joinDates.set(user, timestamp);
-                    }
-                });
-                
-                allAddresses = Array.from(addressSet);
-                console.log(`🔍 Found ${allAddresses.length} unique addresses`);
-                
-                // Clear cache
-                userCache.clear();
-                
-                // Get all users data in batches
-                console.log("🔍 Fetching all users data...");
-                const allUsersData = [];
-                const batchSize = 50;
-                
-                for (let i = 0; i < allAddresses.length; i += batchSize) {
-                    const batch = allAddresses.slice(i, i + batchSize);
-                    const promises = batch.map(async (addr) => {
-                        const data = await getUserData(addr);
-                        return { address: addr, ...data };
-                    });
-                    
-                    const results = await Promise.all(promises);
-                    allUsersData.push(...results);
-                    
-                    if (i + batchSize < allAddresses.length) {
-                        await new Promise(resolve => setTimeout(resolve, 100));
-                    }
-                }
-                
-                // Build team structure starting from creator
-                console.log("🔍 Building team structure...");
-                
-                // Function to get downline for an address
-                function getDownline(addr, currentLevel, maxLevel) {
-                    if (currentLevel > maxLevel) return [];
-                    
-                    const members = [];
-                    const directDownline = allUsersData.filter(u => u.upline === addr);
-                    
-                    for (const member of directDownline) {
-                        members.push({
-                            ...member,
-                            level: currentLevel
-                        });
-                        
-                        // Recursively get their downline
-                        const subMembers = getDownline(member.address, currentLevel + 1, maxLevel);
-                        members.push(...subMembers);
-                    }
-                    
-                    return members;
-                }
-                
-                // Get all team members starting from creator (level 0)
-                const allTeamMembers = getDownline(CREATOR_WALLET.toLowerCase(), 1, 10);
-                
-                // Remove duplicates and sort
-                const uniqueMembers = new Map();
-                allTeamMembers.forEach(m => uniqueMembers.set(m.address, m));
-                teamMembers = Array.from(uniqueMembers.values());
-                
-                console.log(`✅ Found ${teamMembers.length} team members`);
-                
-                // Add join dates and derived fields
+                // Add join dates and USDT values
                 teamMembers = teamMembers.map(m => ({
                     ...m,
-                    joinTimestamp: joinDates.get(m.address) || m.lastBuyTimestamp || 0,
-                    joinDate: (joinDates.get(m.address) || m.lastBuyTimestamp) ? 
-                        new Date((joinDates.get(m.address) || m.lastBuyTimestamp) * 1000) : null,
-                    isActive: m.referralExpiry > Math.floor(Date.now() / 1000),
-                    usdtValue: m.balance * sellRate
+                    usdtValue: m.balance * sellRate,
+                    joinDate: m.lastBuyTimestamp > 0 ? new Date(m.lastBuyTimestamp * 1000) : null,
+                    isActive: m.balance > 0
                 }));
-                
-                // Sort by level and balance
-                teamMembers.sort((a, b) => {
-                    if (a.level !== b.level) return a.level - b.level;
-                    return b.balance - a.balance;
-                });
                 
                 filteredMembers = [...teamMembers];
                 
@@ -947,7 +825,7 @@
             const direct = teamMembers.filter(m => m.level === 1).length;
             const totalSigma = teamMembers.reduce((sum, m) => sum + m.balance, 0);
             const totalUsdt = teamMembers.reduce((sum, m) => sum + m.usdtValue, 0);
-            const active = teamMembers.filter(m => m.isActive).length;
+            const active = teamMembers.filter(m => m.balance > 0).length;
             const zeroBal = teamMembers.filter(m => m.balance === 0).length;
             
             document.getElementById('total-members').textContent = total;
@@ -960,34 +838,22 @@
         function updateTeamTable() {
             const tbody = document.getElementById('team-body');
             const resultsDiv = document.getElementById('results-count');
-            const resultsText = document.getElementById('results-text');
             
             if (filteredMembers.length === 0) {
                 tbody.innerHTML = `
                     <tr><td colspan="10" class="empty-state">
                         <i class="fas fa-users-slash"></i><br>
-                        No team members found in your network
+                        No team members found under your wallet
                     </td></tr>
                 `;
                 resultsDiv.style.display = 'none';
                 return;
             }
             
-            const activeCount = filteredMembers.filter(m => m.isActive).length;
-            
-            // Show level distribution
-            const levelCounts = {};
-            for (let lvl = 1; lvl <= 10; lvl++) {
-                const count = filteredMembers.filter(m => m.level === lvl).length;
-                if (count > 0) levelCounts[lvl] = count;
-            }
-            
-            let levelText = Object.entries(levelCounts)
-                .map(([lvl, cnt]) => `L${lvl}:${cnt}`)
-                .join(' • ');
+            const activeCount = filteredMembers.filter(m => m.balance > 0).length;
             
             resultsDiv.style.display = 'block';
-            resultsText.innerHTML = `${filteredMembers.length} members (${activeCount} active) • ${levelText}`;
+            document.getElementById('results-text').innerHTML = `${filteredMembers.length} members (${activeCount} active)`;
             
             let html = '';
             filteredMembers.forEach((member, i) => {
@@ -995,24 +861,16 @@
                     member.upline.slice(0,6) + '...' + member.upline.slice(-4);
                 
                 let dateDisplay = '—';
-                if (member.joinTimestamp > 0) {
-                    dateDisplay = new Date(member.joinTimestamp * 1000).toLocaleDateString('en-IN', {
+                if (member.lastBuyTimestamp > 0) {
+                    dateDisplay = new Date(member.lastBuyTimestamp * 1000).toLocaleDateString('en-IN', {
                         day: '2-digit', month: 'short', year: 'numeric'
                     });
                 }
                 
-                // Address display with crown for 5+ directs
-                let badgeHtml = '';
-                if (member.directCount >= 5) {
-                    badgeHtml = `<span class="member-badge" title="Senior Team Leader (${member.directCount} directs)"><i class="fas fa-crown" style="color: gold;"></i> ${member.directCount}</span>`;
-                } else if (member.directCount > 0) {
-                    badgeHtml = `<span class="member-badge" title="Team Leader (${member.directCount} directs)"><i class="fas fa-star" style="color: #ffaa00;"></i> ${member.directCount}</span>`;
-                }
-                
+                // Address display
                 const addressDisplay = `
                     <span class="wallet-address ${member.balance === 0 ? 'zero-balance' : ''}">
                         ${member.address.slice(0,8)}...${member.address.slice(-6)}
-                        ${badgeHtml}
                     </span>
                 `;
                 
@@ -1036,18 +894,15 @@
                         <td>$${member.usdtValue.toFixed(2)}</td>
                         <td>${dateDisplay}</td>
                         <td><span class="wallet-address" style="font-size:12px">${uplineShort}</span></td>
-                        <td style="text-align: center; font-weight: ${member.directCount > 0 ? 'bold' : 'normal'}; color: ${member.directCount >= 5 ? 'gold' : (member.directCount > 0 ? '#ffaa00' : '#888')}">
-                            ${member.directCount}
-                        </td>
+                        <td style="text-align: center;">${member.directCount}</td>
                         <td>
-                            <span class="level-badge ${member.isActive ? 'level-1' : 'level-5'}" 
-                                  style="min-width:70px">
-                                ${member.isActive ? 'Active' : 'Inactive'}
+                            <span class="level-badge ${member.balance > 0 ? 'level-1' : 'level-5'}" style="min-width:70px">
+                                ${member.balance > 0 ? 'Active' : 'Inactive'}
                             </span>
                         </td>
                         <td>
                             <button class="action-btn" style="padding:6px 12px" onclick="viewMember('${member.address}')">
-                                <i class="fas fa-eye"></i> View
+                                <i class="fas fa-eye"></i>
                             </button>
                         </td>
                     </tr>
@@ -1102,7 +957,7 @@
                         comparison = b.balance - a.balance;
                         break;
                     case 'date':
-                        comparison = b.joinTimestamp - a.joinTimestamp;
+                        comparison = b.lastBuyTimestamp - a.lastBuyTimestamp;
                         break;
                     default: // level
                         comparison = a.level - b.level;
@@ -1113,7 +968,7 @@
 
         function copyAddress(addr) { 
             navigator.clipboard.writeText(addr); 
-            alert("Address copied to clipboard!");
+            alert("Address copied!");
         }
 
         function viewOnExplorer(addr) { 
@@ -1123,17 +978,17 @@
         function viewMember(addr) { 
             const m = teamMembers.find(m => m.address === addr);
             if(m) {
-                alert(`Member: ${addr}\nLevel: ${m.level}\nBalance: ${m.balance.toFixed(2)} SIG6\nValue: $${m.usdtValue.toFixed(2)} USDT\nDirect Referrals: ${m.directCount}\nActive: ${m.isActive ? 'Yes' : 'No'}`);
+                alert(`Member: ${addr}\nLevel: ${m.level}\nBalance: ${m.balance.toFixed(2)} SIG6\nValue: $${m.usdtValue.toFixed(2)} USDT\nDirects: ${m.directCount}`);
             }
         }
 
         function exportData() {
             if (!teamMembers.length) return;
             
-            let csv = "Level,Address,Balance (SIG6),USDT Value,Status,Join Date,Upline,Direct Count,Active\n";
+            let csv = "Level,Address,Balance (SIG6),USDT Value,Status,Join Date,Upline,Direct Count\n";
             teamMembers.forEach(m => {
-                const joinDate = m.joinTimestamp > 0 ? new Date(m.joinTimestamp*1000).toLocaleString() : '';
-                csv += `${m.level},${m.address},${m.balance.toFixed(2)},${m.usdtValue.toFixed(2)},${m.isActive ? 'Active' : 'Inactive'},${joinDate},${m.upline},${m.directCount},${m.isActive}\n`;
+                const joinDate = m.lastBuyTimestamp > 0 ? new Date(m.lastBuyTimestamp*1000).toLocaleString() : '';
+                csv += `${m.level},${m.address},${m.balance.toFixed(2)},${m.usdtValue.toFixed(2)},${m.balance > 0 ? 'Active' : 'Inactive'},${joinDate},${m.upline},${m.directCount}\n`;
             });
             
             const blob = new Blob([csv], { type: 'text/csv' });
