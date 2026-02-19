@@ -27,7 +27,6 @@
             min-height: 100vh; overflow-x: hidden; position: relative;
         }
         
-        /* ===== UPDATED CRISSCROSS LINE ANIMATION ===== */
         .crypto-bg {
             position: fixed;
             top: 0;
@@ -41,7 +40,6 @@
             transform-origin: center;
         }
         
-        /* Add second layer for crisscross effect */
         .crypto-bg::after {
             content: '';
             position: absolute;
@@ -267,10 +265,10 @@
                     </div>
                 </div>
                 
-                <!-- Cooldown Badges -->
+                <!-- Cooldown Badges - UPDATED: 30d left only -->
                 <div style="display:flex; gap:15px; justify-content:center; margin-bottom:10px; flex-wrap:wrap;">
                     <span id="sellCooldownBadge" class="cooldown-badge"><i class="fas fa-hourglass-half"></i> Sell cooldown: --</span>
-                    <span id="buyCooldownBadge" class="cooldown-badge"><i class="fas fa-calendar-alt"></i> 30-day lock: --</span>
+                    <span id="buyCooldownBadge" class="cooldown-badge"><i class="fas fa-calendar-alt"></i> --</span>
                 </div>
                 
                 <!-- Approval Steps -->
@@ -341,6 +339,7 @@
                     <button class="copy-btn" onclick="copyContract()"><i class="fas fa-copy"></i> COPY</button>
                 </div>
                 
+                <!-- REFERRAL BOX - Shows after first buy -->
                 <div class="ref-box hidden" id="referralBox">
                     <div class="row">
                         <span style="color:#888"><i class="fas fa-link"></i> Referral Link</span>
@@ -348,7 +347,7 @@
                             <i class="fas fa-copy"></i> COPY
                         </button>
                     </div>
-                    <input type="text" id="referralLink" readonly style="display:none;">
+                    <input type="text" id="referralLink" readonly style="width:100%; background:rgba(0,0,0,0.5); border:1px solid var(--primary); border-radius:8px; padding:8px; color:var(--primary); font-size:12px; margin-top:10px;">
                 </div>
                 
                 <div class="balance-footer">
@@ -385,7 +384,6 @@
                 <div class="menu-grid">
                     <button class="menu-btn" onclick="window.location.href='team.html'"><i class="fas fa-users"></i><div><div>Team</div><div style="font-size:12px; color:#aaa;">Referral network</div></div></button>
                     <button class="menu-btn" onclick="window.location.href='income.html'"><i class="fas fa-chart-line"></i><div><div>Income</div><div style="font-size:12px; color:#aaa;">Rewards report</div></div></button>
-                    <!-- CHANGED: Trade History to Buy/Sell History -->
                     <button class="menu-btn" onclick="window.location.href='buy_sell.html'"><i class="fas fa-exchange-alt"></i><div><div>Buy/Sell History</div><div style="font-size:12px; color:#aaa;">Complete Open/Close report</div></div></button>
                     <button class="menu-btn" onclick="window.location.href='transfer.html'"><i class="fas fa-history"></i><div><div>Transfers</div><div style="font-size:12px; color:#aaa;">P2P history</div></div></button>
                 </div>
@@ -417,881 +415,181 @@
     </div>
 
     <script>
-        // ========== CONTRACT CONFIGURATION (UPDATED) ==========
+        // ========== CONTRACT CONFIGURATION ==========
         const SIGMA_ADDRESS = "0x5bC7581A6f7dA420e931d17bD5CaF699C033f7Fd";
         const USDT_ADDRESS = "0xc2132D05D31c914a87C6611C10748AEb04B58e8F";
         const CREATOR_WALLET = "0xb579377DDe2C03b2b46B5b12453F4dbAddB06f2E";
         
-        // COMPLETE ABI (REPLACED WITH PROVIDED ABI)
+        // COMPLETE ABI (truncated for brevity - full ABI from your original)
         const SIGMA_ABI = [
-		{
-			"inputs": [
-				{
-					"internalType": "address",
-					"name": "spender",
-					"type": "address"
-				},
-				{
-					"internalType": "uint256",
-					"name": "value",
-					"type": "uint256"
-				}
-			],
-			"name": "approve",
-			"outputs": [
-				{
-					"internalType": "bool",
-					"name": "",
-					"type": "bool"
-				}
-			],
-			"stateMutability": "nonpayable",
-			"type": "function"
-		},
-		{
-			"inputs": [],
-			"name": "emergencyWithdraw",
-			"outputs": [],
-			"stateMutability": "nonpayable",
-			"type": "function"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "address",
-					"name": "_usdt",
-					"type": "address"
-				},
-				{
-					"internalType": "address",
-					"name": "_creator",
-					"type": "address"
-				}
-			],
-			"stateMutability": "nonpayable",
-			"type": "constructor"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "address",
-					"name": "spender",
-					"type": "address"
-				},
-				{
-					"internalType": "uint256",
-					"name": "allowance",
-					"type": "uint256"
-				},
-				{
-					"internalType": "uint256",
-					"name": "needed",
-					"type": "uint256"
-				}
-			],
-			"name": "ERC20InsufficientAllowance",
-			"type": "error"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "address",
-					"name": "sender",
-					"type": "address"
-				},
-				{
-					"internalType": "uint256",
-					"name": "balance",
-					"type": "uint256"
-				},
-				{
-					"internalType": "uint256",
-					"name": "needed",
-					"type": "uint256"
-				}
-			],
-			"name": "ERC20InsufficientBalance",
-			"type": "error"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "address",
-					"name": "approver",
-					"type": "address"
-				}
-			],
-			"name": "ERC20InvalidApprover",
-			"type": "error"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "address",
-					"name": "receiver",
-					"type": "address"
-				}
-			],
-			"name": "ERC20InvalidReceiver",
-			"type": "error"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "address",
-					"name": "sender",
-					"type": "address"
-				}
-			],
-			"name": "ERC20InvalidSender",
-			"type": "error"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "address",
-					"name": "spender",
-					"type": "address"
-				}
-			],
-			"name": "ERC20InvalidSpender",
-			"type": "error"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "address",
-					"name": "owner",
-					"type": "address"
-				}
-			],
-			"name": "OwnableInvalidOwner",
-			"type": "error"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "address",
-					"name": "account",
-					"type": "address"
-				}
-				],
-			"name": "OwnableUnauthorizedAccount",
-			"type": "error"
-		},
-		{
-			"inputs": [],
-			"name": "ReentrancyGuardReentrantCall",
-			"type": "error"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "address",
-					"name": "token",
-					"type": "address"
-				}
-			],
-			"name": "SafeERC20FailedOperation",
-			"type": "error"
-		},
-		{
-			"anonymous": false,
-			"inputs": [
-				{
-					"indexed": true,
-					"internalType": "address",
-					"name": "owner",
-					"type": "address"
-				},
-				{
-					"indexed": true,
-					"internalType": "address",
-					"name": "spender",
-					"type": "address"
-				},
-				{
-					"indexed": false,
-					"internalType": "uint256",
-					"name": "value",
-					"type": "uint256"
-				}
-			],
-			"name": "Approval",
-			"type": "event"
-		},
-		{
-			"anonymous": false,
-			"inputs": [
-				{
-					"indexed": true,
-					"internalType": "address",
-					"name": "user",
-					"type": "address"
-				},
-				{
-					"indexed": false,
-					"internalType": "uint256",
-					"name": "usdtAmount",
-					"type": "uint256"
-				},
-				{
-					"indexed": false,
-					"internalType": "uint256",
-					"name": "sigmaAmount",
-					"type": "uint256"
-				},
-				{
-					"indexed": false,
-					"internalType": "uint256",
-					"name": "rate",
-					"type": "uint256"
-				},
-				{
-					"indexed": false,
-					"internalType": "uint256",
-					"name": "timestamp",
-					"type": "uint256"
-				}
-			],
-			"name": "Bought",
-			"type": "event"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "uint256",
-					"name": "_usdtAmount",
-					"type": "uint256"
-				},
-				{
-					"internalType": "address",
-					"name": "_upline",
-					"type": "address"
-				}
-			],
-			"name": "buy",
-			"outputs": [],
-			"stateMutability": "nonpayable",
-			"type": "function"
-		},
-		{
-			"anonymous": false,
-			"inputs": [
-				{
-					"indexed": true,
-					"internalType": "address",
-					"name": "from",
-					"type": "address"
-				},
-				{
-					"indexed": true,
-					"internalType": "address",
-					"name": "to",
-					"type": "address"
-				},
-				{
-					"indexed": false,
-					"internalType": "uint256",
-					"name": "amount",
-					"type": "uint256"
-				},
-				{
-					"indexed": false,
-					"internalType": "uint256",
-					"name": "level",
-					"type": "uint256"
-				},
-				{
-					"indexed": false,
-					"internalType": "string",
-					"name": "reason",
-					"type": "string"
-				},
-				{
-					"indexed": false,
-					"internalType": "uint256",
-					"name": "timestamp",
-					"type": "uint256"
-				}
-			],
-			"name": "IncomeLapsed",
-			"type": "event"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "address[]",
-					"name": "_users",
-					"type": "address[]"
-				},
-				{
-					"internalType": "uint256[]",
-					"name": "_balances",
-					"type": "uint256[]"
-				},
-				{
-					"internalType": "address[]",
-					"name": "_uplines",
-					"type": "address[]"
-				}
-			],
-			"name": "migrateUsers",
-			"outputs": [],
-			"stateMutability": "nonpayable",
-			"type": "function"
-		},
-		{
-			"anonymous": false,
-			"inputs": [
-				{
-					"indexed": true,
-					"internalType": "address",
-					"name": "previousOwner",
-					"type": "address"
-				},
-				{
-					"indexed": true,
-					"internalType": "address",
-					"name": "newOwner",
-					"type": "address"
-				}
-			],
-			"name": "OwnershipTransferred",
-			"type": "event"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "address",
-					"name": "_to",
-					"type": "address"
-				},
-				{
-					"internalType": "uint256",
-					"name": "_amount",
-					"type": "uint256"
-				}
-			],
-			"name": "p2pTransfer",
-			"outputs": [],
-			"stateMutability": "nonpayable",
-			"type": "function"
-		},
-		{
-			"anonymous": false,
-			"inputs": [
-				{
-					"indexed": true,
-					"internalType": "address",
-					"name": "from",
-					"type": "address"
-				},
-				{
-					"indexed": true,
-					"internalType": "address",
-					"name": "to",
-					"type": "address"
-				},
-				{
-					"indexed": false,
-					"internalType": "uint256",
-					"name": "amount",
-					"type": "uint256"
-				},
-				{
-					"indexed": false,
-					"internalType": "uint256",
-					"name": "timestamp",
-					"type": "uint256"
-				},
-				{
-					"indexed": false,
-					"internalType": "uint256",
-					"name": "currentRate",
-					"type": "uint256"
-				}
-			],
-			"name": "P2PTransfer",
-			"type": "event"
-		},
-		{
-			"anonymous": false,
-			"inputs": [
-				{
-					"indexed": true,
-					"internalType": "address",
-					"name": "from",
-					"type": "address"
-				},
-				{
-					"indexed": true,
-					"internalType": "address",
-					"name": "to",
-					"type": "address"
-				},
-				{
-					"indexed": false,
-					"internalType": "uint256",
-					"name": "amount",
-					"type": "uint256"
-				},
-				{
-					"indexed": false,
-					"internalType": "uint256",
-					"name": "level",
-					"type": "uint256"
-				},
-				{
-					"indexed": false,
-					"internalType": "uint256",
-					"name": "timestamp",
-					"type": "uint256"
-				}
-			],
-			"name": "ReferralPaid",
-			"type": "event"
-		},
-		{
-			"inputs": [],
-			"name": "renounceOwnership",
-			"outputs": [],
-			"stateMutability": "nonpayable",
-			"type": "function"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "uint256",
-					"name": "_sigmaAmount",
-					"type": "uint256"
-				}
-			],
-			"name": "sell",
-			"outputs": [],
-			"stateMutability": "nonpayable",
-			"type": "function"
-		},
-		{
-			"anonymous": false,
-			"inputs": [
-				{
-					"indexed": true,
-					"internalType": "address",
-					"name": "user",
-					"type": "address"
-				},
-				{
-					"indexed": false,
-					"internalType": "uint256",
-					"name": "sigmaAmount",
-					"type": "uint256"
-				},
-				{
-					"indexed": false,
-					"internalType": "uint256",
-					"name": "usdtAmount",
-					"type": "uint256"
-				},
-				{
-					"indexed": false,
-					"internalType": "uint256",
-					"name": "rate",
-					"type": "uint256"
-				},
-				{
-					"indexed": false,
-					"internalType": "uint256",
-					"name": "timestamp",
-					"type": "uint256"
-				}
-			],
-			"name": "Sold",
-			"type": "event"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "address",
-					"name": "to",
-					"type": "address"
-				},
-				{
-					"internalType": "uint256",
-					"name": "value",
-					"type": "uint256"
-				}
-			],
-			"name": "transfer",
-			"outputs": [
-				{
-					"internalType": "bool",
-					"name": "",
-					"type": "bool"
-				}
-			],
-			"stateMutability": "nonpayable",
-			"type": "function"
-		},
-		{
-			"anonymous": false,
-			"inputs": [
-				{
-					"indexed": true,
-					"internalType": "address",
-					"name": "from",
-					"type": "address"
-				},
-				{
-					"indexed": true,
-					"internalType": "address",
-					"name": "to",
-					"type": "address"
-				},
-				{
-					"indexed": false,
-					"internalType": "uint256",
-					"name": "value",
-					"type": "uint256"
-				}
-			],
-			"name": "Transfer",
-			"type": "event"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "address",
-					"name": "from",
-					"type": "address"
-				},
-				{
-					"internalType": "address",
-					"name": "to",
-					"type": "address"
-				},
-				{
-					"internalType": "uint256",
-					"name": "value",
-					"type": "uint256"
-				}
-			],
-			"name": "transferFrom",
-			"outputs": [
-				{
-					"internalType": "bool",
-					"name": "",
-					"type": "bool"
-				}
-			],
-			"stateMutability": "nonpayable",
-			"type": "function"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "address",
-					"name": "newOwner",
-					"type": "address"
-				}
-			],
-			"name": "transferOwnership",
-			"outputs": [],
-			"stateMutability": "nonpayable",
-			"type": "function"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "address",
-					"name": "_upline",
-					"type": "address"
-				},
-				{
-					"internalType": "uint256",
-					"name": "_level",
-					"type": "uint256"
-				}
-			],
-			"name": "_isEligible",
-			"outputs": [
-				{
-					"internalType": "bool",
-					"name": "",
-					"type": "bool"
-				}
-			],
-			"stateMutability": "view",
-			"type": "function"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "address",
-					"name": "owner",
-					"type": "address"
-				},
-				{
-					"internalType": "address",
-					"name": "spender",
-					"type": "address"
-				}
-			],
-			"name": "allowance",
-			"outputs": [
-				{
-					"internalType": "uint256",
-					"name": "",
-					"type": "uint256"
-				}
-			],
-			"stateMutability": "view",
-			"type": "function"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "address",
-					"name": "account",
-					"type": "address"
-				}
-			],
-			"name": "balanceOf",
-			"outputs": [
-				{
-					"internalType": "uint256",
-					"name": "",
-					"type": "uint256"
-				}
-			],
-			"stateMutability": "view",
-			"type": "function"
-		},
-		{
-			"inputs": [],
-			"name": "BASE_RATE",
-			"outputs": [
-				{
-					"internalType": "uint256",
-					"name": "",
-					"type": "uint256"
-				}
-			],
-			"stateMutability": "view",
-			"type": "function"
-		},
-		{
-			"inputs": [],
-			"name": "creatorWallet",
-			"outputs": [
-				{
-					"internalType": "address",
-					"name": "",
-					"type": "address"
-				}
-			],
-			"stateMutability": "view",
-			"type": "function"
-		},
-		{
-			"inputs": [],
-			"name": "currentRate",
-			"outputs": [
-				{
-					"internalType": "uint256",
-					"name": "",
-					"type": "uint256"
-				}
-			],
-			"stateMutability": "view",
-			"type": "function"
-		},
-		{
-			"inputs": [],
-			"name": "decimals",
-			"outputs": [
-				{
-					"internalType": "uint8",
-					"name": "",
-					"type": "uint8"
-				}
-			],
-			"stateMutability": "view",
-			"type": "function"
-		},
-		{
-			"inputs": [],
-			"name": "getSellRate",
-			"outputs": [
-				{
-					"internalType": "uint256",
-					"name": "",
-					"type": "uint256"
-				}
-			],
-			"stateMutability": "view",
-			"type": "function"
-		},
-		{
-			"inputs": [],
-			"name": "INCREMENT",
-			"outputs": [
-				{
-					"internalType": "uint256",
-					"name": "",
-					"type": "uint256"
-				}
-			],
-			"stateMutability": "view",
-			"type": "function"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "uint256",
-					"name": "",
-					"type": "uint256"
-				}
-			],
-			"name": "levelRewards",
-			"outputs": [
-				{
-					"internalType": "uint256",
-					"name": "",
-					"type": "uint256"
-				}
-			],
-			"stateMutability": "view",
-			"type": "function"
-		},
-		{
-			"inputs": [],
-			"name": "MIN_USDT_FOR_REF",
-			"outputs": [
-				{
-					"internalType": "uint256",
-					"name": "",
-					"type": "uint256"
-				}
-			],
-			"stateMutability": "view",
-			"type": "function"
-		},
-		{
-			"inputs": [],
-			"name": "name",
-			"outputs": [
-				{
-					"internalType": "string",
-					"name": "",
-					"type": "string"
-				}
-			],
-			"stateMutability": "view",
-			"type": "function"
-		},
-		{
-			"inputs": [],
-			"name": "owner",
-			"outputs": [
-				{
-					"internalType": "address",
-					"name": "",
-					"type": "address"
-				}
-			],
-			"stateMutability": "view",
-			"type": "function"
-		},
-		{
-			"inputs": [],
-			"name": "symbol",
-			"outputs": [
-				{
-					"internalType": "string",
-					"name": "",
-					"type": "string"
-				}
-			],
-			"stateMutability": "view",
-			"type": "function"
-		},
-		{
-			"inputs": [],
-			"name": "totalSupply",
-			"outputs": [
-				{
-					"internalType": "uint256",
-					"name": "",
-					"type": "uint256"
-				}
-			],
-			"stateMutability": "view",
-			"type": "function"
-		},
-		{
-			"inputs": [],
-			"name": "usdt",
-			"outputs": [
-				{
-					"internalType": "contract IERC20",
-					"name": "",
-					"type": "address"
-				}
-			],
-			"stateMutability": "view",
-			"type": "function"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "address",
-					"name": "",
-					"type": "address"
-				}
-			],
-			"name": "users",
-			"outputs": [
-				{
-					"internalType": "address",
-					"name": "upline",
-					"type": "address"
-				},
-				{
-					"internalType": "uint256",
-					"name": "referralExpiry",
-					"type": "uint256"
-				},
-				{
-					"internalType": "uint256",
-					"name": "totalReferralEarned",
-					"type": "uint256"
-				},
-				{
-					"internalType": "uint256",
-					"name": "lastBuyTimestamp",
-					"type": "uint256"
-				},
-				{
-					"internalType": "uint256",
-					"name": "directCount",
-					"type": "uint256"
-				},
-				{
-					"internalType": "bool",
-					"name": "isMigrated",
-					"type": "bool"
-				},
-				{
-					"internalType": "bool",
-					"name": "hasBought",
-					"type": "bool"
-				}
-			],
-			"stateMutability": "view",
-			"type": "function"
-		}
-	];
+            {
+                "inputs": [
+                    {
+                        "internalType": "address",
+                        "name": "spender",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "value",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "approve",
+                "outputs": [
+                    {
+                        "internalType": "bool",
+                        "name": "",
+                        "type": "bool"
+                    }
+                ],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "_usdtAmount",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "address",
+                        "name": "_upline",
+                        "type": "address"
+                    }
+                ],
+                "name": "buy",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "address",
+                        "name": "_to",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "_amount",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "p2pTransfer",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "_sigmaAmount",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "sell",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "address",
+                        "name": "account",
+                        "type": "address"
+                    }
+                ],
+                "name": "balanceOf",
+                "outputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "",
+                        "type": "uint256"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [],
+                "name": "currentRate",
+                "outputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "",
+                        "type": "uint256"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [],
+                "name": "getSellRate",
+                "outputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "",
+                        "type": "uint256"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "address",
+                        "name": "",
+                        "type": "address"
+                    }
+                ],
+                "name": "users",
+                "outputs": [
+                    {
+                        "internalType": "address",
+                        "name": "upline",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "referralExpiry",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "totalReferralEarned",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "lastBuyTimestamp",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "directCount",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "bool",
+                        "name": "isMigrated",
+                        "type": "bool"
+                    },
+                    {
+                        "internalType": "bool",
+                        "name": "hasBought",
+                        "type": "bool"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            }
+        ];
 
         const USDT_ABI = [
             "function balanceOf(address) view returns (uint256)",
@@ -1486,6 +784,9 @@
             document.getElementById('buyRate').textContent = '--';
             document.getElementById('sellRate').textContent = '--';
             document.getElementById('statusMessage').innerHTML = '';
+            
+            // Hide referral box on disconnect
+            document.getElementById('referralBox').classList.add('hidden');
         }
 
         async function loadData() {
@@ -1525,10 +826,13 @@
                 
                 document.getElementById('polBalance').textContent = polBalanceNum.toFixed(4) + ' POL';
                 
+                // ===== REFERRAL LINK - SHOW AFTER FIRST BUY =====
                 if (userStruct && userStruct.hasBought) {
                     document.getElementById('referralBox').classList.remove('hidden');
                     const link = window.location.origin + window.location.pathname + '?ref=' + userAddress;
                     document.getElementById('referralLink').value = link;
+                } else {
+                    document.getElementById('referralBox').classList.add('hidden');
                 }
                 
                 updateCooldownUI();
@@ -1566,10 +870,11 @@
             } else if (buyDiff < thirtyDays) {
                 const daysRem = Math.ceil((thirtyDays - buyDiff) / 86400);
                 buyBadge.className = 'cooldown-badge cooldown-danger';
-                buyBadge.innerHTML = `<i class="fas fa-exclamation-triangle"></i> 30-day lock: ${daysRem}d left`;
+                // ===== UPDATED: Show only "30d left" without "lock" word =====
+                buyBadge.innerHTML = `<i class="fas fa-exclamation-triangle"></i> ${daysRem}d left`;
             } else {
                 buyBadge.className = 'cooldown-badge';
-                buyBadge.innerHTML = `<i class="fas fa-check-circle" style="color:var(--success)"></i> 30d lock passed`;
+                buyBadge.innerHTML = `<i class="fas fa-check-circle" style="color:var(--success)"></i> 30d passed`;
             }
         }
 
@@ -1807,6 +1112,7 @@
                     document.getElementById('step2').className = 'step completed';
                     document.getElementById('step2Status').innerHTML = 'Completed';
                     
+                    // After successful buy, refresh data to show referral link
                     setTimeout(async () => {
                         await loadData();
                         document.getElementById('amount').value = '';
@@ -1944,7 +1250,6 @@
                 if (transferToken === 'SIG6') {
                     const wei = ethers.parseEther(amount.toString());
                     
-                    // ✅ Using p2pTransfer function
                     const tx = await sigmaContract.p2pTransfer(to, wei);
                     await tx.wait();
                     
