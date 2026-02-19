@@ -407,12 +407,12 @@
         table { 
             width: 100%; 
             border-collapse: collapse; 
-            min-width: 1100px; 
+            min-width: 1000px; 
         }
         
         @media (max-width: 768px) {
             table {
-                min-width: 1000px;
+                min-width: 900px;
             }
         }
         
@@ -523,7 +523,7 @@
         ::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); border-radius: 4px; }
         ::-webkit-scrollbar-thumb { background: var(--gradient); border-radius: 4px; }
         
-        /* Rate Display with INR */
+        /* Rate Display with INR - ONLY for Buy Rate and Current Rate */
         .rate-container {
             display: flex;
             flex-direction: column;
@@ -541,15 +541,8 @@
             font-weight: 500;
         }
         
-        .difference-container {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .inr-gold {
-            color: var(--inr-gold);
-            font-size: 12px;
+        /* Difference and P&L Amount - USDT ONLY */
+        .difference-usdt, .pnl-amount-usdt {
             font-weight: 600;
         }
     </style>
@@ -864,7 +857,6 @@
                 buyTransactions.forEach((t,i) => {
                     const diff = currentBuyRate - t.rate;
                     const diffPerc = (diff/t.rate)*100;
-                    const diffInr = diff * INR_RATE;
                     activeHtml += `<tr>
                         <td>${i+1}</td>
                         <td><div style="font-weight:600">${t.date.toLocaleDateString()}</div><div style="font-size:11px; color:#888">${t.date.toLocaleTimeString()}</div></td>
@@ -882,10 +874,7 @@
                             </div>
                         </td>
                         <td>
-                            <div>
-                                <span class="${diff>=0?'pnl-positive':'pnl-negative'}"><i class="fas fa-${diff>=0?'arrow-up':'arrow-down'}"></i> $${Math.abs(diff).toFixed(4)}</span>
-                                <div class="inr-gold">₹${Math.abs(diffInr).toFixed(2)}</div>
-                            </div>
+                            <span class="${diff>=0?'pnl-positive':'pnl-negative'}"><i class="fas fa-${diff>=0?'arrow-up':'arrow-down'}"></i> $${Math.abs(diff).toFixed(4)}</span>
                         </td>
                         <td><span class="${diffPerc>=0?'badge-profit':'badge-loss'}">${diffPerc>=0?'+':''}${diffPerc.toFixed(2)}%</span></td>
                         <td><span class="badge badge-active">ACTIVE</span></td>
@@ -902,7 +891,6 @@
                     const buyRate = findAvgBuyRateBefore(t.timestamp);
                     const plAmount = t.amount * (t.rate - buyRate);
                     const plPerc = buyRate > 0 ? ((t.rate - buyRate)/buyRate)*100 : 0;
-                    const plInr = plAmount * INR_RATE;
                     closedHtml += `<tr>
                         <td>${i+1}</td>
                         <td><div style="font-weight:600">${t.date.toLocaleDateString()}</div><div style="font-size:11px; color:#888">${t.date.toLocaleTimeString()}</div></td>
@@ -920,10 +908,7 @@
                             </div>
                         </td>
                         <td>
-                            <div>
-                                <span class="${plAmount>=0?'pnl-positive':'pnl-negative'}"><i class="fas fa-${plAmount>=0?'arrow-up':'arrow-down'}"></i> $${Math.abs(plAmount).toFixed(2)}</span>
-                                <div class="inr-gold">₹${Math.abs(plInr).toFixed(2)}</div>
-                            </div>
+                            <span class="${plAmount>=0?'pnl-positive':'pnl-negative'}"><i class="fas fa-${plAmount>=0?'arrow-up':'arrow-down'}"></i> $${Math.abs(plAmount).toFixed(2)}</span>
                         </td>
                         <td><span class="${plPerc>=0?'badge-profit':'badge-loss'}">${plPerc>=0?'+':''}${plPerc.toFixed(2)}%</span></td>
                         <td><span class="badge badge-closed">CLOSED</span></td>
@@ -945,19 +930,19 @@
             if (!userAddress) { alert("Connect wallet first"); return; }
             let csv = "";
             if (currentTab === 'active') {
-                csv = "Serial No,Date,Time,Sigma Quantity,Buy Rate (USDT),Buy Rate (INR),Current Rate (USDT),Current Rate (INR),Difference (USDT),Difference (INR),P&L %,Status\n";
+                csv = "Serial No,Date,Time,Sigma Quantity,Buy Rate (USDT),Buy Rate (INR),Current Rate (USDT),Current Rate (INR),Difference (USDT),P&L %,Status\n";
                 buyTransactions.forEach((t,i) => {
                     const diff = currentBuyRate - t.rate;
                     const diffPerc = (diff/t.rate)*100;
-                    csv += `${i+1},${t.date.toLocaleDateString()},${t.date.toLocaleTimeString()},${t.amount.toFixed(2)},${t.rate.toFixed(4)},${(t.rate*INR_RATE).toFixed(2)},${currentBuyRate.toFixed(4)},${(currentBuyRate*INR_RATE).toFixed(2)},${diff.toFixed(4)},${(diff*INR_RATE).toFixed(2)},${diffPerc.toFixed(2)}%,ACTIVE\n`;
+                    csv += `${i+1},${t.date.toLocaleDateString()},${t.date.toLocaleTimeString()},${t.amount.toFixed(2)},${t.rate.toFixed(4)},${(t.rate*INR_RATE).toFixed(2)},${currentBuyRate.toFixed(4)},${(currentBuyRate*INR_RATE).toFixed(2)},${diff.toFixed(4)},${diffPerc.toFixed(2)}%,ACTIVE\n`;
                 });
             } else {
-                csv = "Serial No,Date,Time,Sigma Quantity,Buy Rate (USDT),Buy Rate (INR),Sell Rate (USDT),Sell Rate (INR),P&L Amount (USDT),P&L Amount (INR),P&L %,Status\n";
+                csv = "Serial No,Date,Time,Sigma Quantity,Buy Rate (USDT),Buy Rate (INR),Sell Rate (USDT),Sell Rate (INR),P&L Amount (USDT),P&L %,Status\n";
                 sellTransactions.forEach((t,i) => {
                     const buyRate = findAvgBuyRateBefore(t.timestamp);
                     const plAmount = t.amount * (t.rate - buyRate);
                     const plPerc = ((t.rate - buyRate)/buyRate)*100;
-                    csv += `${i+1},${t.date.toLocaleDateString()},${t.date.toLocaleTimeString()},${t.amount.toFixed(2)},${buyRate.toFixed(4)},${(buyRate*INR_RATE).toFixed(2)},${t.rate.toFixed(4)},${(t.rate*INR_RATE).toFixed(2)},${plAmount.toFixed(2)},${(plAmount*INR_RATE).toFixed(2)},${plPerc.toFixed(2)}%,CLOSED\n`;
+                    csv += `${i+1},${t.date.toLocaleDateString()},${t.date.toLocaleTimeString()},${t.amount.toFixed(2)},${buyRate.toFixed(4)},${(buyRate*INR_RATE).toFixed(2)},${t.rate.toFixed(4)},${(t.rate*INR_RATE).toFixed(2)},${plAmount.toFixed(2)},${plPerc.toFixed(2)}%,CLOSED\n`;
                 });
             }
             const blob = new Blob([csv], {type:'text/csv'});
