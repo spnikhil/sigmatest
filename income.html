@@ -115,7 +115,7 @@
         
         <div class="header">
             <h1>INCOME REPORT</h1>
-            <p>ICO Bonus (10%) + Team Referral (10 Levels) + Lapsed Income</p>
+            <p>ICO Bonus (10% Only Once) + Team Referral (10 Levels) + Lapsed Income</p>
         </div>
         
         <!-- Stats Cards -->
@@ -154,7 +154,7 @@
         <div class="income-card" id="icoCard">
             <div class="card-header">
                 <i class="fas fa-gift"></i>
-                <h2>ICO Bonus (10% Extra on First Buy)</h2>
+                <h2>ICO Bonus (10% Extra on First Buy Only)</h2>
                 <span id="icoCount">0 transactions</span>
             </div>
             <div class="table-responsive">
@@ -166,10 +166,11 @@
                             <th>Bonus %</th>
                             <th>Amount (SIG6)</th>
                             <th>USDT Value</th>
+                            <th>Rate at Buy</th>
                         </tr>
                     </thead>
                     <tbody id="icoTableBody">
-                        <tr><td colspan="5" class="loading"><i class="fas fa-spinner fa-spin"></i><br>Loading ICO bonus...</td></tr>
+                        <tr><td colspan="6" class="loading"><i class="fas fa-spinner fa-spin"></i><br>Loading ICO bonus...</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -345,35 +346,54 @@
                     console.log("Rate fetch error:", e);
                 }
                 
-                // Get user data to check if migrated
-                const userData = await sigmaContract.users(userAddress).catch(() => null);
-                const isMigrated = userData ? userData.isMigrated : false;
-                
                 // ===== FETCH BOUGHT EVENTS (for ICO Bonus) =====
                 console.log("🔍 Fetching Bought events...");
                 const boughtFilter = sigmaContract.filters.Bought(userAddress);
                 const boughtEvents = await sigmaContract.queryFilter(boughtFilter, 0, 'latest');
                 
                 icoIncome = [];
-                for (const event of boughtEvents) {
+                
+                // Sort events by timestamp (oldest first) to find first buy
+                const sortedEvents = boughtEvents.sort((a, b) => 
+                    Number(a.args.timestamp) - Number(b.args.timestamp)
+                );
+                
+                // Track if we've already added ICO bonus
+                let hasAddedICO = false;
+                
+                for (const event of sortedEvents) {
                     const timestamp = Number(event.args.timestamp);
                     const sigmaAmount = parseFloat(ethers.formatEther(event.args.sigmaAmount));
                     const usdtAmount = parseFloat(ethers.formatUnits(event.args.usdtAmount, 6));
+                    const rateAtBuy = parseFloat(ethers.formatUnits(event.args.rate, 6));
                     
-                    // Calculate base amount (without bonus)
-                    // Formula from contract: tokensToMint = (usdtAmount * 99 * 1e18) / (100 * currentRate)
-                    const baseAmount = (usdtAmount * 99) / (100 * currentRate);
+                    // Calculate base amount WITHOUT bonus using the rate at time of buy
+                    // Formula from contract: tokensToMint = (usdtAmount * 99 * 1e18) / (100 * rate)
+                    const baseAmount = (usdtAmount * 99) / (100 * rateAtBuy);
                     const bonusAmount = sigmaAmount - baseAmount;
                     
-                    // Only show if there was a bonus (first buy for non-migrated)
-                    if (bonusAmount > 0.000001) {
+                    console.log(`Buy at ${new Date(timestamp*1000).toLocaleString()}:`, {
+                        usdtAmount,
+                        sigmaAmount,
+                        rateAtBuy,
+                        baseAmount,
+                        bonusAmount,
+                        hasBonus: bonusAmount > 0.01
+                    });
+                    
+                    // Only add ICO bonus ONCE for the first buy that has bonus
+                    if (bonusAmount > 0.01 && !hasAddedICO) {
                         icoIncome.push({
                             date: new Date(timestamp * 1000),
                             txHash: event.transactionHash,
                             percentage: 10.00,
                             amount: bonusAmount,
-                            usdtValue: bonusAmount * sellRate
+                            usdtValue: bonusAmount * sellRate,
+                            rateAtBuy: rateAtBuy
                         });
+                        
+                        hasAddedICO = true;
+                        console.log("✅ Added ICO bonus for first buy");
                     }
                 }
                 
@@ -441,7 +461,7 @@
                 
             } catch (error) {
                 console.error("Error loading income data:", error);
-                document.getElementById('icoTableBody').innerHTML = '<tr><td colspan="5" class="empty-state"><i class="fas fa-exclamation-triangle"></i><br>Error loading data</td></tr>';
+                document.getElementById('icoTableBody').innerHTML = '<tr><td colspan="6" class="empty-state"><i class="fas fa-exclamation-triangle"></i><br>Error loading data</td></tr>';
             }
         }
         
@@ -468,7 +488,7 @@
             // ICO Bonus Table
             let icoHtml = '';
             if (icoIncome.length === 0) {
-                icoHtml = '<tr><td colspan="5" class="empty-state"><i class="fas fa-gift"></i><br>No ICO bonus found</td></tr>';
+                icoHtml = '<tr><td colspan="6" class="empty-state"><i class="fas fa-gift"></i><br>No ICO bonus found</td></tr>';
             } else {
                 icoIncome.sort((a, b) => b.date - a.date).forEach(i => {
                     icoHtml += `<tr>
@@ -482,6 +502,7 @@
                         <td><span class="percentage">${i.percentage.toFixed(2)}%</span></td>
                         <td style="color:var(--primary); font-weight:700">${i.amount.toFixed(2)} SIG6</td>
                         <td>$${i.usdtValue.toFixed(2)}</td>
+                        <td>${i.rateAtBuy.toFixed(4)} USDT</td>
                     </tr>`;
                 });
             }
