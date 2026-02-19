@@ -54,7 +54,20 @@
         .connect-btn.connected { background:rgba(0,255,204,0.1); color:var(--primary); border:1px solid var(--primary); }
         .back-btn { display:inline-flex; align-items:center; gap:10px; color:var(--primary); text-decoration:none; font-weight:600; margin-bottom:20px; padding:10px 20px; border-radius:12px; background:rgba(0,255,204,0.1); border:1px solid rgba(0,255,204,0.3); }
         .header { text-align:center; margin-bottom:30px; }
-        .header h1 { background:var(--gradient); -webkit-background-clip:text; background-clip:text; color:transparent; font-size:48px; font-weight:800; margin-bottom:10px; animation:rainbow 8s ease infinite; }
+        .header h1 { 
+            background: var(--gradient); 
+            -webkit-background-clip: text; 
+            background-clip: text; 
+            color: transparent; 
+            font-size: 48px; 
+            font-weight: 800; 
+            margin-bottom: 10px; 
+            animation: rainbow 8s ease infinite;
+            text-transform: lowercase;
+        }
+        .header h1::first-letter {
+            text-transform: uppercase;
+        }
         .header p { color:#aaa; font-size:16px; }
         .stats-container { display:grid; grid-template-columns:repeat(auto-fit, minmax(240px,1fr)); gap:20px; margin-bottom:30px; }
         .stat-card { background:rgba(22,24,33,0.7); backdrop-filter:blur(10px); border-radius:20px; padding:25px; border:1px solid rgba(0,255,204,0.1); position:relative; overflow:hidden; }
@@ -114,8 +127,8 @@
         <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
         
         <div class="header">
-            <h1>INCOME REPORT</h1>
-            <p>ICO Bonus (10% Only Once) + Team Referral (10 Levels) + Lapsed Income</p>
+            <h1>Income report</h1>
+            <p>ICO Bonus (10% Only Once) + Team Referral + Lapsed Income</p>
         </div>
         
         <!-- Stats Cards -->
@@ -180,7 +193,7 @@
         <div class="income-card" id="referralCard">
             <div class="card-header">
                 <i class="fas fa-sitemap"></i>
-                <h2>Team Referral Income (10 Levels)</h2>
+                <h2>Team Referral Income</h2>
                 <span id="refCount">0 transactions</span>
             </div>
             <div class="table-responsive">
