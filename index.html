@@ -318,7 +318,7 @@
                 <!-- Cooldown Badges -->
                 <div style="display:flex; gap:15px; justify-content:center; margin-bottom:10px; flex-wrap:wrap;">
                     <span id="sellCooldownBadge" class="cooldown-badge"><i class="fas fa-hourglass-half"></i> Sell cooldown: --</span>
-                    <span id="buyCooldownBadge" class="cooldown-badge"><i class="fas fa-calendar-alt"></i> 30-day: --</span> <!-- Changed: Removed "lock" -->
+                    <span id="buyCooldownBadge" class="cooldown-badge"><i class="fas fa-calendar-alt"></i> 30-day: --</span>
                 </div>
                 
                 <!-- Approval Steps -->
@@ -1585,7 +1585,8 @@
                 
                 document.getElementById('polBalance').textContent = polBalanceNum.toFixed(4) + ' POL';
                 
-                if (userStruct && userStruct.hasBought) {
+                // ✅ FIXED: Ab har connected wallet ko referral link dikhega
+                if (userAddress) {
                     document.getElementById('referralBox').classList.remove('hidden');
                     document.getElementById('referralMiniBox').style.display = 'flex';
                     const link = window.location.origin + window.location.pathname + '?ref=' + userAddress;
@@ -1628,10 +1629,10 @@
             } else if (buyDiff < thirtyDays) {
                 const daysRem = Math.ceil((thirtyDays - buyDiff) / 86400);
                 buyBadge.className = 'cooldown-badge cooldown-danger';
-                buyBadge.innerHTML = `<i class="fas fa-exclamation-triangle"></i> 30-day: ${daysRem}d left`; // Removed "lock"
+                buyBadge.innerHTML = `<i class="fas fa-exclamation-triangle"></i> 30-day: ${daysRem}d left`;
             } else {
                 buyBadge.className = 'cooldown-badge';
-                buyBadge.innerHTML = `<i class="fas fa-check-circle" style="color:var(--success)"></i> 30-day passed`; // Removed "lock"
+                buyBadge.innerHTML = `<i class="fas fa-check-circle" style="color:var(--success)"></i> 30-day passed`;
             }
         }
 
