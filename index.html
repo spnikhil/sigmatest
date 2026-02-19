@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIGMA SIX | NEXT GEN DAPP</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.umd.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* ========== ROOT & BACKGROUND ========== */
+        :root {
+            --primary: #00ffcc;
+            --secondary: #9d4edd;
+            --bg: #0a0b10;
+            --card: #161821;
+            --text: #ffffff;
+            --border: #2d2f3e;
+            --success: #00ff88;
+            --warning: #ffaa00;
+            --danger: #ff4d4d;
+            --gradient: linear-gradient(90deg, #00ffcc, #9d4edd, #ff2a6d, #00ffcc);
+        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body {
+            background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif;
+            min-height: 100vh; overflow-x: hidden; position: relative;
+        }
+        .crypto-bg { position:fixed; top:0; left:0; width:100%; height:100%; z-index:-2;
+            background: linear-gradient(90deg, rgba(0,255,204,0.03) 1px,transparent 1px) 0 0 /50px 50px,
+                        linear-gradient(0deg, rgba(157,78,221,0.03) 1px,transparent 1px) 0 0 /50px 50px;
+            animation: bgMove 20s linear infinite;
+        }
+        @keyframes bgMove { 0% { background-position:0 0,0 0; } 100% { background-position:100px 100px,100px 100px; } }
+        .rainbow-border { position:fixed; top:0; left:0; width:100%; height:4px; background:var(--gradient); background-size:400% 400%; animation:rainbow 8s ease infinite; z-index:1000; }
+        .rainbow-glow { position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); width:800px; height:800px; background:radial-gradient(circle, rgba(157,78,221,0.15) 0%, rgba(0,255,204,0.1) 25%, rgba(0,11,16,0) 70%); border-radius:50%; z-index:-1; animation:pulse 6s ease-in-out infinite alternate; }
+        @keyframes rainbow { 0% { background-position:0% 50%; } 50% { background-position:100% 50%; } 100% { background-position:0% 50%; } }
+        @keyframes pulse { 0% { opacity:0.5; transform:translate(-50%,-50%) scale(0.9); } 100% { opacity:0.8; transform:translate(-50%,-50%) scale(1.1); } }
+        
+        .ticker-container { background:rgba(10,11,16,0.9); backdrop-filter:blur(10px); border-bottom:1px solid rgba(0,255,204,0.2); padding:10px 0; overflow:hidden; position:relative; z-index:10; }
+        .ticker-wrapper { display:flex; width:max-content; animation:ticker 30s linear infinite; }
+        @keyframes ticker { 0% { transform:translateX(0); } 100% { transform:translateX(-50%); } }
+        .ticker-item { display:flex; align-items:center; margin:0 30px; white-space:nowrap; }
+        .ticker-symbol { font-weight:700; font-size:14px; color:var(--primary); margin-right:8px; }
+        .ticker-price { font-weight:600; font-size:14px; }
+        .ticker-change { font-weight:600; font-size:12px; margin-left:8px; padding:2px 6px; border-radius:4px; }
+        .positive { color:var(--success); background:rgba(0,255,136,0.1); }
+        .negative { color:var(--danger); background:rgba(255,77,77,0.1); }
+        
+        .container { max-width:1200px; margin:0 auto; padding:20px; display:grid; grid-template-columns:1fr 1fr; gap:30px; position:relative; z-index:1; }
+        @media (max-width:992px) { .container { grid-template-columns:1fr; } }
+        .left-panel, .right-panel { display:flex; flex-direction:column; gap:20px; }
+        
+        .connect-btn { background:linear-gradient(90deg, var(--primary), var(--secondary)); color:#000; border:none; border-radius:15px; padding:16px 30px; font-weight:800; font-size:16px; cursor:pointer; transition:all 0.3s; display:flex; align-items:center; justify-content:center; gap:10px; box-shadow:0 4px 20px rgba(0,255,204,0.3); animation:float 4s ease-in-out infinite; }
+        @keyframes float { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-10px); } }
+        .connect-btn:hover { transform:translateY(-3px); box-shadow:0 8px 25px rgba(0,255,204,0.5); }
+        .connect-btn.connected { background:rgba(0,255,204,0.1); color:var(--primary); border:1px solid var(--primary); }
+        
+        .main-card { background:rgba(22,24,33,0.8); backdrop-filter:blur(10px); border-radius:24px; padding:30px; border:1px solid rgba(0,255,204,0.2); box-shadow:0 20px 40px rgba(0,0,0,0.5); position:relative; overflow:hidden; }
+        .main-card::before { content:''; position:absolute; top:0; left:0; width:100%; height:4px; background:var(--gradient); background-size:400% 400%; animation:rainbow 8s ease infinite; }
+        .header { text-align:center; margin-bottom:30px; }
+        .header h1 { background:var(--gradient); background-size:400% 400%; -webkit-background-clip:text; background-clip:text; color:transparent; font-size:42px; font-weight:800; letter-spacing:2px; margin-bottom:8px; animation:rainbow 8s ease infinite; }
+        .header p { color:#aaa; font-size:14px; letter-spacing:1px; }
+        
+        .stats-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:15px; margin-bottom:25px; }
+        .stat-box { background:rgba(255,255,255,0.03); padding:20px; border-radius:16px; border:1px solid rgba(45,47,62,0.5); transition:all 0.3s; }
+        .stat-box:hover { border-color:var(--primary); transform:translateY(-5px); box-shadow:0 10px 20px rgba(0,255,204,0.1); }
+        .stat-label { font-size:12px; color:#888; text-transform:uppercase; letter-spacing:1px; margin-bottom:8px; display:flex; align-items:center; gap:5px; }
+        .stat-value { font-size:22px; font-weight:700; color:var(--primary); }
+        .stat-value-inr { font-size:14px; color:#aaa; margin-top:5px; }
+        
+        .tabs { display:flex; gap:10px; margin-bottom:25px; background:rgba(0,0,0,0.3); padding:6px; border-radius:16px; }
+        .tab { flex:1; padding:15px; text-align:center; cursor:pointer; border-radius:12px; font-weight:700; font-size:15px; color:#666; transition:all 0.3s; display:flex; align-items:center; justify-content:center; gap:8px; }
+        .tab.active { background:var(--primary); color:#000; box-shadow:0 4px 15px rgba(0,255,204,0.3); }
+        
+        .input-area { background:rgba(0,0,0,0.3); border:1px solid var(--border); border-radius:18px; padding:20px; margin-bottom:20px; transition:all 0.3s; }
+        .input-area:focus-within { border-color:var(--primary); box-shadow:0 0 0 2px rgba(0,255,204,0.1); }
+        .input-header { display:flex; justify-content:space-between; font-size:13px; color:#888; margin-bottom:12px; }
+        input { background:transparent; border:none; color:white; font-size:32px; width:100%; outline:none; font-weight:600; }
+        
+        .calc-box { background:rgba(0,255,204,0.05); border:1px dashed var(--primary); border-radius:16px; padding:20px; font-size:14px; margin-bottom:20px; min-height:100px; }
+        .row { display:flex; justify-content:space-between; margin-bottom:10px; }
+        .empty-row { color:#666; text-align:center; padding:20px; font-style:italic; }
+        
+        .action-btn { width:100%; padding:20px; border-radius:16px; border:none; font-weight:800; font-size:17px; cursor:pointer; transition:all 0.3s; margin-top:10px; text-transform:uppercase; background:var(--gradient); background-size:400% 400%; color:#000; animation:rainbow 8s ease infinite; }
+        .action-btn:hover { transform:translateY(-3px); box-shadow:0 8px 25px rgba(0,255,204,0.4); }
+        .action-btn:disabled { opacity:0.5; cursor:not-allowed; transform:none; }
+        
+        .approval-warning {
+            background: rgba(255,170,0,0.15);
+            border: 1px solid #ffaa00;
+            color: #ffaa00;
+            padding: 12px;
+            border-radius: 12px;
+            margin: 15px 0;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .approval-warning i { font-size: 16px; }
+        .approval-warning.success {
+            background: rgba(0,255,136,0.15);
+            border-color: var(--success);
+            color: var(--success);
+        }
+        
+        #status-msg { font-size:13px; text-align:center; margin-top:15px; color:var(--primary); font-weight:600; min-height:20px; }
+        .ref-box { background:rgba(0,0,0,0.3); padding:20px; border-radius:16px; border:1px solid var(--border); margin-top:25px; transition:all 0.3s; }
+        .ref-box.hidden { display:none; }
+        .ref-box.visible { display:block; }
+        
+        .contract-box { background:rgba(0,0,0,0.3); padding:20px; border-radius:16px; border:1px solid var(--secondary); margin-top:20px; display:flex; align-items:center; gap:15px; }
+        .contract-info { flex:1; }
+        .contract-label { font-size:12px; color:#888; margin-bottom:5px; display:flex; align-items:center; gap:8px; }
+        .contract-address { font-size:14px; color:var(--secondary); font-family:monospace; word-break:break-all; }
+        .copy-btn { background:linear-gradient(90deg, var(--secondary), #7b2cbf); color:white; border:none; border-radius:12px; padding:12px 20px; font-weight:600; font-size:13px; cursor:pointer; transition:all 0.3s; display:flex; align-items:center; gap:8px; white-space:nowrap; }
+        .copy-btn:hover { background:linear-gradient(90deg, #7b2cbf, var(--secondary)); transform:translateY(-2px); box-shadow:0 5px 15px rgba(157,78,221,0.3); }
+        
+        .balance-footer { margin-top:25px; padding-top:20px; border-top:1px solid var(--border); font-size:14px; }
+        .balance-item { display:flex; justify-content:space-between; margin-bottom:10px; padding-bottom:10px; border-bottom:1px solid rgba(255,255,255,0.05); }
+        .balance-item:last-child { border-bottom:none; margin-bottom:0; padding-bottom:0; }
+        .balance-info { display:flex; flex-direction:column; align-items:flex-end; }
+        .balance-inr { font-size:12px; color:#ffaa00; font-weight:600; margin-top:2px; }
+        
+        .menu-card { background:rgba(22,24,33,0.8); backdrop-filter:blur(10px); border-radius:24px; padding:30px; border:1px solid rgba(157,78,221,0.2); box-shadow:0 20px 40px rgba(0,0,0,0.5); }
+        .menu-card h2 { color:var(--secondary); font-size:24px; margin-bottom:25px; text-align:center; }
+        .menu-grid { display:grid; grid-template-columns:1fr; gap:15px; }
+        .menu-btn { background:rgba(255,255,255,0.03); border:1px solid rgba(157,78,221,0.3); border-radius:16px; padding:18px; color:white; font-weight:600; font-size:16px; cursor:pointer; transition:all 0.3s; display:flex; align-items:center; justify-content:flex-start; gap:15px; text-align:left; }
+        .menu-btn i { font-size:20px; color:var(--secondary); }
+        .menu-btn:hover { background:rgba(157,78,221,0.1); border-color:var(--secondary); transform:translateX(5px); }
+        
+        .transfer-panel { background:rgba(22,24,33,0.8); backdrop-filter:blur(10px); border-radius:24px; padding:30px; border:1px solid var(--primary); margin-top:20px; }
+        .transfer-panel h3 { color:var(--primary); margin-bottom:20px; display:flex; align-items:center; gap:10px; }
+        .token-selector { display:flex; gap:10px; margin-bottom:20px; }
+        .token-opt { flex:1; background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:40px; padding:12px; text-align:center; cursor:pointer; transition:all 0.2s; }
+        .token-opt.active { background:var(--primary); color:#000; font-weight:700; border-color:var(--primary); }
+        .addr-row { display:flex; gap:8px; margin:15px 0; align-items:center; background:rgba(0,0,0,0.3); padding:8px 16px; border-radius:40px; }
+        .addr-row input { font-size:14px; padding:8px 0; }
+        .small-copy { background:transparent; border:none; color:var(--primary); cursor:pointer; font-size:18px; }
+        .bal-tag { color:#aaa; font-size:13px; margin-bottom:5px; }
+        .max-btn { color:var(--primary); font-weight:600; cursor:pointer; }
+        .transfer-btn { width:100%; background:linear-gradient(90deg, #00ff88, #00cc66); border:none; border-radius:16px; padding:16px; font-weight:800; color:#000; margin-top:15px; cursor:pointer; }
+        
+        .cooldown-badge { background:rgba(255,170,0,0.15); border-radius:30px; padding:4px 12px; font-size:12px; color:var(--warning); display:inline-flex; align-items:center; gap:5px; margin-left:10px; }
+        .cooldown-danger { color:var(--danger); background:rgba(255,77,77,0.15); }
+        
+        @media (max-width:768px) { .container { padding:15px; } .main-card, .menu-card { padding:20px; } .header h1 { font-size:32px; } .stat-value { font-size:18px; } input { font-size:26px; } .contract-box { flex-direction:column; align-items:stretch; gap:10px; } .copy-btn { width:100%; justify-content:center; } }
+    </style>
+</head>
+<body>
+    <div class="crypto-bg"></div>
+    <div class="crypto-particles" id="cryptoParticles"></div>
+    <div class="rainbow-border"></div>
+    <div class="rainbow-glow"></div>
+    
+    <div class="ticker-container">
+        <div class="ticker-wrapper" id="tickerWrapper"></div>
+    </div>
+    
+    <div class="container">
+        <!-- LEFT PANEL -->
+        <div class="left-panel">
+            <button class="connect-btn" id="connectBtn" onclick="connectWallet()">
+                <i class="fas fa-wallet"></i> <span id="btnText">Connect Wallet</span>
+            </button>
+            
+            <div class="main-card">
+                <div class="header">
+                    <h1>SIGMA SIX</h1>
+                    <p>Stable Algorithm • 5-Level Rewards</p>
+                </div>
+                
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <div class="stat-label"><i class="fas fa-arrow-up"></i> BUY RATE</div>
+                        <div class="stat-value" id="buyRate">--</div>
+                        <div class="stat-value-inr" id="buyRateInr">--</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label"><i class="fas fa-arrow-down"></i> SELL RATE</div>
+                        <div class="stat-value" id="sellRate">--</div>
+                        <div class="stat-value-inr" id="sellRateInr">--</div>
+                    </div>
+                </div>
+                
+                <!-- Cooldown Badges (EXISTING FEATURE) -->
+                <div style="display:flex; gap:15px; justify-content:center; margin-bottom:10px;">
+                    <span id="sellCooldownBadge" class="cooldown-badge"><i class="fas fa-hourglass-half"></i> Sell cooldown: --</span>
+                    <span id="buyCooldownBadge" class="cooldown-badge"><i class="fas fa-calendar-alt"></i> 10 USDT lock: --</span>
+                </div>
+                
+                <!-- Approval Status Badge -->
+                <div id="approvalStatus" class="approval-warning" style="display: none;">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <span id="approvalText">USDT approval required</span>
+                </div>
+                
+                <div class="tabs">
+                    <div class="tab active" onclick="setMode('buy')" id="buyTab">
+                        <i class="fas fa-shopping-cart"></i> BUY
+                    </div>
+                    <div class="tab" onclick="setMode('sell')" id="sellTab">
+                        <i class="fas fa-coins"></i> SELL
+                    </div>
+                </div>
+                
+                <div class="input-area">
+                    <div class="input-header">
+                        <span>Amount in SIG6</span>
+                        <span style="color:var(--primary); cursor:pointer" onclick="maxAmount()">
+                            <i class="fas fa-maximize"></i> MAX
+                        </span>
+                    </div>
+                    <input type="number" id="amount" placeholder="0.00" step="0.01" oninput="calculate()">
+                </div>
+                
+                <div class="calc-box" id="calculationBox">
+                    <div class="row" id="calcTotalRow">
+                        <span id="calcLabel">Total USDT to Pay:</span>
+                        <span id="calcValue" style="color:var(--primary); font-weight:800">0.00 USDT</span>
+                    </div>
+                    <div class="row">
+                        <span>≈ INR:</span>
+                        <span id="calcInr" style="color:#ffaa00">0.00 INR</span>
+                    </div>
+                    <div class="row" id="uplineRow">
+                        <span style="color:#888">Upline:</span>
+                        <span id="uplineAddress" style="font-size:12px">None</span>
+                    </div>
+                </div>
+                
+                <!-- MAIN ACTION BUTTON -->
+                <button class="action-btn" id="actionButton" onclick="executeAction()" disabled>
+                    <i class="fas fa-lock"></i> CONNECT WALLET
+                </button>
+                
+                <div id="statusMessage"></div>
+                
+                <div class="contract-box">
+                    <div class="contract-info">
+                        <div class="contract-label"><i class="fas fa-file-contract"></i> CONTRACT</div>
+                        <div class="contract-address">0x52fD2a4da50d34566224DC65Da4Ba6C29c07A3DC</div>
+                    </div>
+                    <button class="copy-btn" onclick="copyContract()"><i class="fas fa-copy"></i> COPY</button>
+                </div>
+                
+                <div class="ref-box hidden" id="referralBox">
+                    <div class="row">
+                        <span style="color:#888"><i class="fas fa-link"></i> Referral Link</span>
+                        <button onclick="copyReferral()" style="background:var(--primary); border:none; border-radius:10px; padding:8px 15px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:5px">
+                            <i class="fas fa-copy"></i> COPY
+                        </button>
+                    </div>
+                    <input type="text" id="referralLink" readonly style="display:none;">
+                </div>
+                
+                <div class="balance-footer">
+                    <div class="balance-item">
+                        <span><i class="fas fa-dollar-sign"></i> USDT Balance:</span>
+                        <span id="usdtBalance">--</span>
+                    </div>
+                    <div class="balance-item">
+                        <span><i class="fas fa-coins"></i> SIG6 Balance:</span>
+                        <div class="balance-info">
+                            <span id="sigmaBalance">--</span>
+                            <span id="sigmaBalanceInr" class="balance-inr">--</span>
+                        </div>
+                    </div>
+                    <div class="balance-item">
+                        <span><i class="fas fa-gas-pump"></i> POL Balance:</span>
+                        <span id="polBalance">--</span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; margin-top:15px; background:rgba(255,255,255,0.02); padding:12px; border-radius:40px;">
+                        <span style="color:#aaa"><i class="fas fa-id-card"></i> Your Wallet</span>
+                        <span style="font-family:monospace; font-size:13px" id="walletAddress">Not connected</span>
+                        <button onclick="copyWallet()" style="background:none; border:none; color:var(--primary); cursor:pointer">
+                            <i class="fas fa-copy"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- RIGHT PANEL -->
+        <div class="right-panel">
+            <div class="menu-card">
+                <h2><i class="fas fa-bars"></i> MENU</h2>
+                <div class="menu-grid">
+                    <button class="menu-btn" onclick="window.location.href='team.html'"><i class="fas fa-users"></i><div><div>Team</div><div style="font-size:12px; color:#aaa;">Referral network</div></div></button>
+                    <button class="menu-btn" onclick="window.location.href='income.html'"><i class="fas fa-chart-line"></i><div><div>Income</div><div style="font-size:12px; color:#aaa;">Rewards report</div></div></button>
+                    <button class="menu-btn" onclick="window.location.href='buy_sell.html'"><i class="fas fa-exchange-alt"></i><div><div>Trade History</div><div style="font-size:12px; color:#aaa;">Buy/Sell report</div></div></button>
+                    <button class="menu-btn" onclick="window.location.href='transfer.html'"><i class="fas fa-history"></i><div><div>Transfers</div><div style="font-size:12px; color:#aaa;">P2P history</div></div></button>
+                </div>
+            </div>
+            
+            <!-- WALLET TRANSFER PANEL -->
+            <div class="transfer-panel">
+                <h3><i class="fas fa-exchange-alt"></i> WALLET TRANSFER</h3>
+                <div class="token-selector">
+                    <div class="token-opt active" onclick="setTransferToken('SIG6')">SIG6</div>
+                    <div class="token-opt" onclick="setTransferToken('USDT')">USDT</div>
+                    <div class="token-opt" onclick="setTransferToken('POL')">POL</div>
+                </div>
+                <div class="addr-row">
+                    <input type="text" id="recipientAddress" placeholder="0x... recipient">
+                    <button class="small-copy" onclick="pasteAddress()" title="Paste"><i class="fas fa-paste"></i></button>
+                </div>
+                <div class="addr-row" style="justify-content:space-between">
+                    <span class="bal-tag" id="transferBalance">Balance: --</span>
+                    <span class="max-btn" onclick="maxTransfer()">MAX</span>
+                </div>
+                <input type="number" id="transferAmount" placeholder="0.00" style="font-size:28px; padding:10px 0;">
+                <button class="transfer-btn" id="transferButton" onclick="executeTransfer()">
+                    <i class="fas fa-paper-plane"></i> TRANSFER
+                </button>
+                <div style="font-size:12px; margin-top:10px; color:#aaa" id="transferStatus"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ========== CONTRACT CONFIGURATION ==========
+        const SIGMA_ADDRESS = "0x52fD2a4da50d34566224DC65Da4Ba6C29c07A3DC";
+        const USDT_ADDRESS = "0xc2132D05D31c914a87C6611C10748AEb04B58e8F";
+        const CREATOR_WALLET = "0xb579377DDe2C03b2b46B5b12453F4dbAddB06f2E";
+        
+        // ABI
+        const SIGMA_ABI = [
+            "function balanceOf(address) view returns (uint256)",
+            "function buy(uint256 _usdtAmount, address _upline) external",
+            "function sell(uint256 _sigmaAmount) external",
+            "function currentRate() view returns (uint256)",
+            "function getSellRate() view returns (uint256)",
+            "function users(address) view returns (address upline, uint256 referralExpiry, uint256 totalReferralEarned, uint256 lastBuyTimestamp, bool isMigrated, bool hasBought, uint256 directCount)",
+            "function transfer(address to, uint256 value) external returns (bool)",
+            "function approve(address,uint256) external returns (bool)",
+            "function allowance(address,address) view returns (uint256)",
+            "event Bought(address indexed user, uint256 usdtAmount, uint256 sigmaAmount, uint256 rate, uint256 timestamp)",
+            "event Sold(address indexed user, uint256 sigmaAmount, uint256 usdtAmount, uint256 rate, uint256 timestamp)"
+        ];
+
+        // USDT ABI
+        const USDT_ABI = [
+            "function balanceOf(address) view returns (uint256)",
+            "function allowance(address,address) view returns (uint256)",
+            "function approve(address,uint256) external returns (bool)",
+            "function transfer(address,uint256) external returns (bool)"
+        ];
+
+        // State
+        let provider, signer, userAddress;
+        let sigmaContract, usdtContract;
+        let currentMode = 'buy';
+        let buyRate = 0, sellRate = 0;
+        let isConnected = false;
+        let transferToken = 'SIG6';
+        let requiredApproval = 0n;
+        let currentAllowance = 0n;
+        let lastBuyTimestamp = 0;
+        let lastSellTimestamp = 0;
+
+        // INR conversion rate
+        const INR_RATE = 95;
+
+        // Initialize
+        window.onload = async () => {
+            createParticles();
+            setupTicker();
+            handleUplineFromURL();
+            if (window.ethereum) {
+                provider = new ethers.BrowserProvider(window.ethereum);
+                const accounts = await provider.send("eth_accounts", []);
+                if (accounts.length > 0) await connectWallet();
+            }
+            
+            // Auto-refresh every 15 seconds
+            setInterval(() => {
+                if (isConnected) {
+                    loadData();
+                    updateCooldownUI();
+                }
+            }, 15000);
+        };
+
+        function createParticles() {
+            const container = document.getElementById('cryptoParticles');
+            for (let i = 0; i < 30; i++) {
+                const p = document.createElement('div');
+                p.className = 'particle';
+                p.style.left = Math.random() * 100 + '%';
+                p.style.top = Math.random() * 100 + '%';
+                p.style.animationDelay = Math.random() * 20 + 's';
+                container.appendChild(p);
+            }
+        }
+
+        function setupTicker() {
+            const wrapper = document.getElementById('tickerWrapper');
+            const symbols = ['BTC', 'ETH', 'BNB', 'SOL', 'ADA', 'DOT', 'MATIC', 'LINK'];
+            wrapper.innerHTML = '';
+            for (let i = 0; i < 20; i++) {
+                const symbol = symbols[i % symbols.length];
+                const price = (Math.random() * 1000 + 100).toFixed(2);
+                const change = (Math.random() * 10 - 5).toFixed(2);
+                const cls = parseFloat(change) >= 0 ? 'positive' : 'negative';
+                wrapper.innerHTML += `
+                    <div class="ticker-item">
+                        <span class="ticker-symbol">${symbol}</span>
+                        <span class="ticker-price">$${price}</span>
+                        <span class="ticker-change ${cls}">${change}%</span>
+                    </div>
+                `;
+            }
+        }
+
+        function handleUplineFromURL() {
+            const params = new URLSearchParams(window.location.search);
+            const ref = params.get('ref');
+            if (ref && ethers.isAddress(ref)) {
+                localStorage.setItem('sigma_referrer', ref);
+            }
+            const storedRef = localStorage.getItem('sigma_referrer') || CREATOR_WALLET;
+            document.getElementById('uplineAddress').textContent = 
+                storedRef.slice(0,8) + '...' + storedRef.slice(-6);
+        }
+
+        // ========== WALLET CONNECTION ==========
+        async function connectWallet() {
+            if (!window.ethereum) {
+                alert("MetaMask not installed!");
+                window.open("https://metamask.io/download/", "_blank");
+                return;
+            }
+            
+            try {
+                provider = new ethers.BrowserProvider(window.ethereum);
+                const accounts = await provider.send("eth_requestAccounts", []);
+                userAddress = accounts[0].toLowerCase();
+                signer = await provider.getSigner();
+                
+                sigmaContract = new ethers.Contract(SIGMA_ADDRESS, SIGMA_ABI, signer);
+                usdtContract = new ethers.Contract(USDT_ADDRESS, USDT_ABI, signer);
+                
+                isConnected = true;
+                
+                document.getElementById('connectBtn').classList.add('connected');
+                document.getElementById('btnText').textContent = 
+                    userAddress.slice(0,6) + '...' + userAddress.slice(-4);
+                document.getElementById('walletAddress').textContent = 
+                    userAddress.slice(0,8) + '...' + userAddress.slice(-6);
+                
+                await loadData();
+                
+                window.ethereum.on('accountsChanged', handleAccountsChanged);
+                window.ethereum.on('chainChanged', () => window.location.reload());
+                
+            } catch (error) {
+                console.error(error);
+                alert("Connection failed");
+            }
+        }
+
+        async function handleAccountsChanged(accounts) {
+            if (accounts.length > 0) {
+                userAddress = accounts[0].toLowerCase();
+                document.getElementById('btnText').textContent = 
+                    userAddress.slice(0,6) + '...' + userAddress.slice(-4);
+                await loadData();
+            } else {
+                disconnectWallet();
+            }
+        }
+
+        function disconnectWallet() {
+            isConnected = false;
+            document.getElementById('connectBtn').classList.remove('connected');
+            document.getElementById('btnText').textContent = 'Connect Wallet';
+            document.getElementById('actionButton').disabled = true;
+            document.getElementById('actionButton').innerHTML = '<i class="fas fa-lock"></i> CONNECT WALLET';
+            
+            // Clear balances
+            document.getElementById('usdtBalance').textContent = '--';
+            document.getElementById('sigmaBalance').textContent = '--';
+            document.getElementById('sigmaBalanceInr').textContent = '--';
+            document.getElementById('polBalance').textContent = '--';
+            document.getElementById('buyRate').textContent = '--';
+            document.getElementById('sellRate').textContent = '--';
+            document.getElementById('buyRateInr').textContent = '--';
+            document.getElementById('sellRateInr').textContent = '--';
+        }
+
+        // ========== LOAD DATA ==========
+        async function loadData() {
+            if (!isConnected || !userAddress) return;
+            
+            try {
+                // Get rates and balances
+                const [rate, sRate, sigmaBal, usdtBal, polBal, userStruct] = await Promise.all([
+                    sigmaContract.currentRate(),
+                    sigmaContract.getSellRate(),
+                    sigmaContract.balanceOf(userAddress),
+                    usdtContract.balanceOf(userAddress),
+                    provider.getBalance(userAddress),
+                    sigmaContract.users(userAddress).catch(() => null)
+                ]);
+                
+                buyRate = parseFloat(ethers.formatUnits(rate, 6));
+                sellRate = parseFloat(ethers.formatUnits(sRate, 6));
+                
+                // Store last buy timestamp for cooldown
+                if (userStruct) {
+                    lastBuyTimestamp = Number(userStruct.lastBuyTimestamp);
+                }
+                
+                // Update rate displays
+                document.getElementById('buyRate').textContent = buyRate.toFixed(4) + ' USDT';
+                document.getElementById('sellRate').textContent = sellRate.toFixed(4) + ' USDT';
+                document.getElementById('buyRateInr').textContent = '≈ ₹' + (buyRate * INR_RATE).toFixed(2);
+                document.getElementById('sellRateInr').textContent = '≈ ₹' + (sellRate * INR_RATE).toFixed(2);
+                
+                // Update balances
+                const usdtBalanceNum = parseFloat(ethers.formatUnits(usdtBal, 6));
+                const sigmaBalanceNum = parseFloat(ethers.formatEther(sigmaBal));
+                const polBalanceNum = parseFloat(ethers.formatEther(polBal));
+                
+                document.getElementById('usdtBalance').textContent = usdtBalanceNum.toFixed(2) + ' USDT';
+                document.getElementById('sigmaBalance').textContent = sigmaBalanceNum.toFixed(2) + ' SIG6';
+                
+                // INR value for SIG6
+                const sigmaInrValue = sigmaBalanceNum * sellRate * INR_RATE;
+                document.getElementById('sigmaBalanceInr').textContent = '≈ ₹' + sigmaInrValue.toFixed(2);
+                
+                document.getElementById('polBalance').textContent = polBalanceNum.toFixed(4) + ' POL';
+                
+                // Show referral link if user has bought
+                if (userStruct && userStruct.hasBought) {
+                    document.getElementById('referralBox').classList.remove('hidden');
+                    document.getElementById('referralBox').classList.add('visible');
+                    const link = window.location.origin + window.location.pathname + '?ref=' + userAddress;
+                    document.getElementById('referralLink').value = link;
+                }
+                
+                // Update cooldown UI
+                updateCooldownUI();
+                
+                // Check allowance for current amount
+                await checkAllowance();
+                
+            } catch (error) {
+                console.error("Load error:", error);
+            }
+        }
+
+        // ========== COOLDOWN UI (EXISTING FEATURE) ==========
+        function updateCooldownUI() {
+            const now = Math.floor(Date.now() / 1000);
+            
+            // 3-minute sell cooldown
+            const sellDiff = now - (window._lastSellTime || 0);
+            const sellRemaining = Math.max(0, 180 - sellDiff);
+            const sellBadge = document.getElementById('sellCooldownBadge');
+            
+            if (sellRemaining > 0) {
+                const mins = Math.floor(sellRemaining / 60);
+                const secs = sellRemaining % 60;
+                sellBadge.innerHTML = `<i class="fas fa-hourglass-half"></i> Sell cooldown: ${mins}m ${secs}s`;
+            } else {
+                sellBadge.innerHTML = `<i class="fas fa-check-circle" style="color:var(--success)"></i> Sell ready`;
+            }
+
+            // 30-day buy lock
+            const buyDiff = now - lastBuyTimestamp;
+            const thirtyDays = 30 * 24 * 3600;
+            const buyBadge = document.getElementById('buyCooldownBadge');
+            
+            if (lastBuyTimestamp === 0) {
+                buyBadge.innerHTML = `<i class="fas fa-calendar-alt"></i> No buy yet`;
+            } else if (buyDiff < thirtyDays) {
+                const daysRem = Math.ceil((thirtyDays - buyDiff) / 86400);
+                buyBadge.className = 'cooldown-badge cooldown-danger';
+                buyBadge.innerHTML = `<i class="fas fa-exclamation-triangle"></i> 10 USDT lock: ${daysRem}d left`;
+            } else {
+                buyBadge.className = 'cooldown-badge';
+                buyBadge.innerHTML = `<i class="fas fa-check-circle" style="color:var(--success)"></i> 30d lock passed`;
+            }
+        }
+
+        // ========== CHECK ALLOWANCE (MANUAL APPROVAL) ==========
+        async function checkAllowance() {
+            if (!isConnected || !userAddress || currentMode !== 'buy') return;
+            
+            const amount = parseFloat(document.getElementById('amount').value);
+            if (isNaN(amount) || amount <= 0) {
+                document.getElementById('actionButton').disabled = true;
+                document.getElementById('actionButton').innerHTML = '<i class="fas fa-lock"></i> ENTER AMOUNT';
+                document.getElementById('approvalStatus').style.display = 'none';
+                return;
+            }
+            
+            try {
+                // Calculate required USDT
+                const sigmaWei = ethers.parseEther(amount.toString());
+                const rateWei = ethers.parseUnits(buyRate.toFixed(6), 6);
+                const totalUsdtWei = (sigmaWei * rateWei) / 10n**18n;
+                const buyTax = totalUsdtWei / 100n; // 1% tax
+                requiredApproval = totalUsdtWei + buyTax;
+                
+                // Get current allowance
+                const allowance = await usdtContract.allowance(userAddress, SIGMA_ADDRESS);
+                currentAllowance = allowance;
+                
+                const requiredNum = parseFloat(ethers.formatUnits(requiredApproval, 6));
+                const allowanceNum = parseFloat(ethers.formatUnits(allowance, 6));
+                
+                const approvalDiv = document.getElementById('approvalStatus');
+                const approvalText = document.getElementById('approvalText');
+                const actionBtn = document.getElementById('actionButton');
+                
+                if (allowanceNum < requiredNum) {
+                    // NOT APPROVED - Show warning and set button to APPROVE
+                    approvalDiv.style.display = 'flex';
+                    approvalDiv.className = 'approval-warning';
+                    approvalText.innerHTML = `⚠️ USDT approval required (${allowanceNum.toFixed(2)} / ${requiredNum.toFixed(2)})`;
+                    
+                    actionBtn.disabled = false;
+                    actionBtn.innerHTML = '<i class="fas fa-check-circle"></i> APPROVE USDT';
+                } else {
+                    // APPROVED - Show success and set button to BUY
+                    approvalDiv.style.display = 'flex';
+                    approvalDiv.className = 'approval-warning success';
+                    approvalText.innerHTML = `✅ USDT approved (${allowanceNum.toFixed(2)} USDT)`;
+                    
+                    actionBtn.disabled = false;
+                    actionBtn.innerHTML = '<i class="fas fa-shopping-cart"></i> BUY SIGMA';
+                }
+                
+            } catch (error) {
+                console.error("Allowance check error:", error);
+            }
+        }
+
+        // ========== CALCULATE ==========
+        function calculate() {
+            if (!isConnected) return;
+            
+            const amount = parseFloat(document.getElementById('amount').value);
+            if (isNaN(amount) || amount <= 0) {
+                document.getElementById('calculationBox').innerHTML = `
+                    <div class="row" id="calcTotalRow">
+                        <span id="calcLabel">Total USDT to Pay:</span>
+                        <span id="calcValue" style="color:var(--primary); font-weight:800">0.00 USDT</span>
+                    </div>
+                    <div class="row">
+                        <span>≈ INR:</span>
+                        <span id="calcInr" style="color:#ffaa00">0.00 INR</span>
+                    </div>
+                    <div class="row" id="uplineRow">
+                        <span style="color:#888">Upline:</span>
+                        <span id="uplineAddress" style="font-size:12px">None</span>
+                    </div>
+                `;
+                return;
+            }
+            
+            if (currentMode === 'buy') {
+                const totalUsdt = amount * buyRate * 1.01; // +1% tax
+                document.getElementById('calcLabel').textContent = 'Total USDT to Pay:';
+                document.getElementById('calcValue').textContent = totalUsdt.toFixed(2) + ' USDT';
+                document.getElementById('calcInr').textContent = '₹' + (totalUsdt * INR_RATE).toFixed(2);
+            } else {
+                const totalUsdt = amount * sellRate;
+                document.getElementById('calcLabel').textContent = 'Total USDT to Receive:';
+                document.getElementById('calcValue').textContent = totalUsdt.toFixed(2) + ' USDT';
+                document.getElementById('calcInr').textContent = '₹' + (totalUsdt * INR_RATE).toFixed(2);
+            }
+            
+            // Check allowance for buy mode
+            if (currentMode === 'buy') {
+                checkAllowance();
+            } else {
+                // For sell mode, just enable button
+                document.getElementById('actionButton').disabled = false;
+                document.getElementById('actionButton').innerHTML = '<i class="fas fa-coins"></i> SELL SIGMA';
+                document.getElementById('approvalStatus').style.display = 'none';
+            }
+        }
+
+        // ========== SET MODE ==========
+        function setMode(mode) {
+            currentMode = mode;
+            document.getElementById('buyTab').className = mode === 'buy' ? 'tab active' : 'tab';
+            document.getElementById('sellTab').className = mode === 'sell' ? 'tab active' : 'tab';
+            
+            if (mode === 'buy') {
+                if (isConnected) checkAllowance();
+                else {
+                    document.getElementById('actionButton').innerHTML = '<i class="fas fa-lock"></i> CONNECT WALLET';
+                }
+            } else {
+                document.getElementById('actionButton').innerHTML = '<i class="fas fa-coins"></i> SELL SIGMA';
+                document.getElementById('approvalStatus').style.display = 'none';
+            }
+            
+            calculate();
+        }
+
+        // ========== EXECUTE ACTION (APPROVE OR BUY/SELL) ==========
+        async function executeAction() {
+            if (!isConnected) {
+                connectWallet();
+                return;
+            }
+            
+            const amount = parseFloat(document.getElementById('amount').value);
+            if (isNaN(amount) || amount <= 0) {
+                alert("Enter valid amount");
+                return;
+            }
+            
+            const btn = document.getElementById('actionButton');
+            const msg = document.getElementById('statusMessage');
+            
+            try {
+                if (currentMode === 'buy') {
+                    const allowanceNum = parseFloat(ethers.formatUnits(currentAllowance, 6));
+                    const requiredNum = parseFloat(ethers.formatUnits(requiredApproval, 6));
+                    
+                    if (allowanceNum < requiredNum) {
+                        // MANUAL APPROVE USDT - MetaMask popup aayega
+                        msg.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Please confirm in MetaMask...';
+                        btn.disabled = true;
+                        
+                        console.log("Approving USDT:", requiredApproval.toString());
+                        const tx = await usdtContract.approve(SIGMA_ADDRESS, requiredApproval);
+                        
+                        msg.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Waiting for confirmation...';
+                        await tx.wait();
+                        
+                        msg.innerHTML = '<i class="fas fa-check-circle" style="color:var(--success)"></i> USDT Approved!';
+                        
+                        // Update allowance
+                        currentAllowance = requiredApproval;
+                        await checkAllowance();
+                        
+                    } else {
+                        // BUY SIGMA
+                        msg.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Please confirm in MetaMask...';
+                        btn.disabled = true;
+                        
+                        const upline = localStorage.getItem('sigma_referrer') || CREATOR_WALLET;
+                        console.log("Buying SIGMA with USDT:", requiredApproval.toString(), "Upline:", upline);
+                        
+                        const tx = await sigmaContract.buy(requiredApproval, upline);
+                        
+                        msg.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Waiting for confirmation...';
+                        await tx.wait();
+                        
+                        msg.innerHTML = '<i class="fas fa-check-circle" style="color:var(--success)"></i> Purchase Successful!';
+                        
+                        // Refresh data
+                        setTimeout(() => {
+                            loadData();
+                            document.getElementById('amount').value = '';
+                            calculate();
+                        }, 2000);
+                    }
+                } else {
+                    // SELL SIGMA
+                    // Check 3-minute cooldown
+                    const now = Math.floor(Date.now() / 1000);
+                    if (window._lastSellTime && (now - window._lastSellTime) < 180) {
+                        alert(`Please wait ${180 - (now - window._lastSellTime)} seconds before selling again`);
+                        return;
+                    }
+                    
+                    msg.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Please confirm in MetaMask...';
+                    btn.disabled = true;
+                    
+                    const sigmaWei = ethers.parseEther(amount.toString());
+                    console.log("Selling SIGMA:", sigmaWei.toString());
+                    
+                    const tx = await sigmaContract.sell(sigmaWei);
+                    
+                    msg.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Waiting for confirmation...';
+                    await tx.wait();
+                    
+                    window._lastSellTime = Math.floor(Date.now() / 1000);
+                    msg.innerHTML = '<i class="fas fa-check-circle" style="color:var(--success)"></i> Sale Successful!';
+                    
+                    setTimeout(() => {
+                        loadData();
+                        document.getElementById('amount').value = '';
+                        calculate();
+                    }, 2000);
+                }
+            } catch (error) {
+                console.error("Transaction error:", error);
+                
+                // Better error message
+                let errorMsg = error.message || "Transaction failed";
+                if (errorMsg.includes("execution reverted")) {
+                    errorMsg = "❌ Contract call failed. Possible reasons:\n• Creator wallet cannot buy\n• Insufficient balance\n• Contract restrictions";
+                } else if (errorMsg.includes("user rejected")) {
+                    errorMsg = "❌ Transaction rejected in MetaMask";
+                }
+                
+                msg.innerHTML = '<i class="fas fa-exclamation-triangle" style="color:var(--danger)"></i> ' + errorMsg;
+                btn.disabled = false;
+            }
+        }
+
+        // ========== MAX AMOUNT ==========
+        async function maxAmount() {
+            if (!isConnected) {
+                connectWallet();
+                return;
+            }
+            
+            if (currentMode === 'buy') {
+                const usdtBal = await usdtContract.balanceOf(userAddress);
+                const usdtNum = parseFloat(ethers.formatUnits(usdtBal, 6));
+                const maxSigma = usdtNum / (buyRate * 1.01);
+                document.getElementById('amount').value = maxSigma.toFixed(2);
+            } else {
+                const sigmaBal = await sigmaContract.balanceOf(userAddress);
+                document.getElementById('amount').value = parseFloat(ethers.formatEther(sigmaBal)).toFixed(2);
+            }
+            
+            calculate();
+        }
+
+        // ========== TRANSFER FUNCTIONS ==========
+        function setTransferToken(token) {
+            transferToken = token;
+            document.querySelectorAll('.token-opt').forEach(el => el.classList.remove('active'));
+            event.target.classList.add('active');
+            updateTransferBalance();
+        }
+
+        async function updateTransferBalance() {
+            if (!isConnected) return;
+            
+            let balance = 0;
+            if (transferToken === 'SIG6') {
+                const bal = await sigmaContract.balanceOf(userAddress);
+                balance = parseFloat(ethers.formatEther(bal));
+            } else if (transferToken === 'USDT') {
+                const bal = await usdtContract.balanceOf(userAddress);
+                balance = parseFloat(ethers.formatUnits(bal, 6));
+            } else {
+                const bal = await provider.getBalance(userAddress);
+                balance = parseFloat(ethers.formatEther(bal));
+            }
+            
+            document.getElementById('transferBalance').textContent = 
+                `Balance: ${balance.toFixed(4)} ${transferToken}`;
+        }
+
+        function maxTransfer() {
+            const balText = document.getElementById('transferBalance').textContent;
+            const match = balText.match(/Balance: ([\d.]+)/);
+            if (match) {
+                document.getElementById('transferAmount').value = match[1];
+            }
+        }
+
+        function pasteAddress() {
+            navigator.clipboard.readText().then(text => {
+                document.getElementById('recipientAddress').value = text;
+            });
+        }
+
+        async function executeTransfer() {
+            if (!isConnected) {
+                connectWallet();
+                return;
+            }
+            
+            const to = document.getElementById('recipientAddress').value.trim();
+            if (!ethers.isAddress(to)) {
+                document.getElementById('transferStatus').textContent = 'Invalid address';
+                return;
+            }
+            
+            const amount = parseFloat(document.getElementById('transferAmount').value);
+            if (isNaN(amount) || amount <= 0) {
+                document.getElementById('transferStatus').textContent = 'Invalid amount';
+                return;
+            }
+            
+            const btn = document.getElementById('transferButton');
+            btn.disabled = true;
+            document.getElementById('transferStatus').innerHTML = '<i class="fas fa-spinner fa-spin"></i> Transferring...';
+            
+            try {
+                if (transferToken === 'SIG6') {
+                    const wei = ethers.parseEther(amount.toString());
+                    const tx = await sigmaContract.transfer(to, wei);
+                    await tx.wait();
+                } else if (transferToken === 'USDT') {
+                    const usdt = ethers.parseUnits(amount.toString(), 6);
+                    const tx = await usdtContract.transfer(to, usdt);
+                    await tx.wait();
+                } else {
+                    const wei = ethers.parseEther(amount.toString());
+                    const tx = await signer.sendTransaction({ to, value: wei });
+                    await tx.wait();
+                }
+                
+                document.getElementById('transferStatus').innerHTML = 
+                    '<i class="fas fa-check-circle" style="color:var(--success)"></i> Transfer successful!';
+                
+                setTimeout(() => {
+                    document.getElementById('transferStatus').innerHTML = '';
+                    document.getElementById('transferAmount').value = '';
+                    document.getElementById('recipientAddress').value = '';
+                    updateTransferBalance();
+                }, 3000);
+                
+            } catch (error) {
+                document.getElementById('transferStatus').innerHTML = 
+                    '<i class="fas fa-exclamation-triangle" style="color:var(--danger)"></i> Transfer failed';
+                console.error(error);
+            } finally {
+                btn.disabled = false;
+            }
+        }
+
+        // ========== HELPER FUNCTIONS ==========
+        function copyContract() {
+            navigator.clipboard.writeText(SIGMA_ADDRESS);
+            alert("Contract address copied!");
+        }
+
+        function copyReferral() {
+            const link = document.getElementById('referralLink');
+            link.select();
+            navigator.clipboard.writeText(link.value);
+            alert("Referral link copied!");
+        }
+
+        function copyWallet() {
+            if (userAddress) {
+                navigator.clipboard.writeText(userAddress);
+                alert("Wallet address copied!");
+            }
+        }
+    </script>
+</body>
+</html>
