@@ -190,6 +190,7 @@
         
         .cooldown-badge { background:rgba(255,170,0,0.15); border-radius:30px; padding:4px 12px; font-size:12px; color:var(--warning); display:inline-flex; align-items:center; gap:5px; margin-left:10px; }
         .cooldown-danger { color:var(--danger); background:rgba(255,77,77,0.15); }
+        .min-badge { background:rgba(0,255,204,0.15); border-radius:30px; padding:4px 12px; font-size:12px; color:var(--primary); display:inline-flex; align-items:center; gap:5px; margin-left:10px; }
         
         #statusMessage { font-size:13px; text-align:center; margin-top:15px; min-height:20px; color:var(--primary); font-weight:600; }
         .ref-box { background:rgba(0,0,0,0.3); padding:20px; border-radius:16px; border:1px solid var(--border); margin-top:25px; }
@@ -234,10 +235,11 @@
                     </div>
                 </div>
                 
-                <!-- Cooldown Badges -->
-                <div style="display:flex; gap:15px; justify-content:center; margin-bottom:10px;">
+                <!-- Badges -->
+                <div style="display:flex; gap:15px; justify-content:center; margin-bottom:10px; flex-wrap:wrap;">
                     <span id="sellCooldownBadge" class="cooldown-badge"><i class="fas fa-hourglass-half"></i> Sell cooldown: --</span>
                     <span id="buyCooldownBadge" class="cooldown-badge"><i class="fas fa-calendar-alt"></i> 30-day lock: --</span>
+                    <span id="minBuyBadge" class="min-badge"><i class="fas fa-info-circle"></i> Min Buy: 1 USDT</span>
                 </div>
                 
                 <!-- Approval Steps -->
@@ -302,8 +304,8 @@
                 
                 <div class="contract-box">
                     <div class="contract-info">
-                        <div class="contract-label"><i class="fas fa-file-contract"></i> CONTRACT</div>
-                        <div class="contract-address">0x52fD2a4da50d34566224DC65Da4Ba6C29c07A3DC</div>
+                        <div class="contract-label"><i class="fas fa-file-contract"></i> CONTRACT (NEW)</div>
+                        <div class="contract-address">0x437aD92455210c835Fbcee741037861379B97bc2</div>
                     </div>
                     <button class="copy-btn" onclick="copyContract()"><i class="fas fa-copy"></i> COPY</button>
                 </div>
@@ -383,12 +385,12 @@
     </div>
 
     <script>
-        // ========== CONTRACT CONFIGURATION ==========
-        const SIGMA_ADDRESS = "0x52fD2a4da50d34566224DC65Da4Ba6C29c07A3DC";
+        // ========== CONTRACT CONFIGURATION (UPDATED) ==========
+        const SIGMA_ADDRESS = "0x437aD92455210c835Fbcee741037861379B97bc2"; // NEW CONTRACT
         const USDT_ADDRESS = "0xc2132D05D31c914a87C6611C10748AEb04B58e8F";
         const CREATOR_WALLET = "0xb579377DDe2C03b2b46B5b12453F4dbAddB06f2E";
         
-        // ABI
+        // ABI from the new contract
         const SIGMA_ABI = [
             "function balanceOf(address) view returns (uint256)",
             "function buy(uint256 _usdtAmount, address _upline) external",
@@ -396,7 +398,8 @@
             "function currentRate() view returns (uint256)",
             "function getSellRate() view returns (uint256)",
             "function users(address) view returns (address upline, uint256 referralExpiry, uint256 totalReferralEarned, uint256 lastBuyTimestamp, bool isMigrated, bool hasBought, uint256 directCount)",
-            "function transfer(address to, uint256 value) external returns (bool)"
+            "function transfer(address to, uint256 value) external returns (bool)",
+            "function MIN_FOR_REFERRAL() view returns (uint256)"
         ];
 
         const USDT_ABI = [
@@ -418,8 +421,10 @@
         let cooldownInterval;
         let currentUSDTNeeded = 0;
         let isApproved = false;
+        let minForReferral = 0;
 
         const INR_RATE = 95;
+        const MIN_BUY_USDT = 1; // Contract requires minimum 1 USDT
 
         window.onload = async () => {
             createParticles();
@@ -716,6 +721,16 @@
                     return;
                 }
                 
+                // Check minimum buy amount (1 USDT)
+                if (usdtWithTax < MIN_BUY_USDT) {
+                    document.getElementById('actionButton').disabled = true;
+                    document.getElementById('actionButton').innerHTML = '<i class="fas fa-exclamation-triangle"></i> MIN 1 USDT REQUIRED';
+                    document.getElementById('approveBtn').style.display = 'none';
+                    document.getElementById('approvalSteps').style.display = 'none';
+                    document.getElementById('statusMessage').innerHTML = `Minimum buy is 1 USDT. You need at least ${(MIN_BUY_USDT / (buyRate * 1.01)).toFixed(2)} SIG6`;
+                    return;
+                }
+                
                 // Check USDT balance
                 const usdtBal = await usdtContract.balanceOf(userAddress);
                 const usdtBalNum = parseFloat(ethers.formatUnits(usdtBal, 6));
@@ -782,28 +797,25 @@
                 console.log("Allowance Check:", { needed: usdtNeeded, current: allowanceNum });
                 
                 if (allowanceNum < usdtNeeded - 0.000001) {
-                    // Need approval - Show approve button and steps
+                    // Need approval
                     isApproved = false;
                     document.getElementById('approvalSteps').style.display = 'block';
                     document.getElementById('approveBtn').style.display = 'block';
                     document.getElementById('actionButton').disabled = true;
                     
-                    // Update steps UI
                     document.getElementById('step1').className = 'step active';
                     document.getElementById('step1Status').innerHTML = 'Required: ' + usdtNeeded.toFixed(2) + ' USDT';
                     document.getElementById('step2').className = 'step';
                     document.getElementById('step2Status').innerHTML = 'Locked';
                     
                     document.getElementById('actionButton').innerHTML = '<i class="fas fa-lock"></i> APPROVE FIRST';
-                    
                     document.getElementById('statusMessage').innerHTML = '';
                 } else {
-                    // Already approved - Show buy button
+                    // Already approved
                     isApproved = true;
                     document.getElementById('approvalSteps').style.display = 'block';
                     document.getElementById('approveBtn').style.display = 'none';
                     
-                    // Update steps UI
                     document.getElementById('step1').className = 'step completed';
                     document.getElementById('step1Status').innerHTML = 'Approved: ' + allowanceNum.toFixed(2) + ' USDT';
                     document.getElementById('step2').className = 'step active';
@@ -811,7 +823,6 @@
                     
                     document.getElementById('actionButton').disabled = false;
                     document.getElementById('actionButton').innerHTML = '<i class="fas fa-shopping-cart"></i> BUY SIGMA';
-                    
                     document.getElementById('statusMessage').innerHTML = '';
                 }
             } catch (error) {
@@ -819,7 +830,6 @@
             }
         }
 
-        // ========== APPROVE USDT FIRST ==========
         async function approveUSDT() {
             if (!isConnected) return;
             
@@ -836,7 +846,6 @@
                 btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> APPROVING...';
                 msg.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Please confirm in MetaMask...';
                 
-                // Call usdt.approve(contractAddress, amount)
                 const tx = await usdtContract.approve(SIGMA_ADDRESS, usdtWei);
                 
                 msg.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Waiting for confirmation...';
@@ -846,7 +855,6 @@
                 
                 msg.innerHTML = '<i class="fas fa-check-circle" style="color:var(--success)"></i> USDT Approved Successfully!';
                 
-                // Update UI
                 document.getElementById('step1').className = 'step completed';
                 document.getElementById('step1Status').innerHTML = 'Approved: ' + currentUSDTNeeded.toFixed(2) + ' USDT';
                 document.getElementById('step2').className = 'step active';
@@ -915,6 +923,13 @@
                     }
                     
                     const usdtWithTax = amount * buyRate * 1.01;
+                    
+                    // Double-check minimum buy
+                    if (usdtWithTax < MIN_BUY_USDT) {
+                        msg.innerHTML = `<i class="fas fa-exclamation-triangle" style="color:var(--danger)"></i> Minimum buy is 1 USDT`;
+                        return;
+                    }
+                    
                     const usdtWei = ethers.parseUnits(usdtWithTax.toFixed(6), 6);
                     
                     console.log("Buying with USDT:", usdtWei.toString());
@@ -924,7 +939,6 @@
                     
                     const upline = localStorage.getItem('sigma_referrer') || CREATOR_WALLET;
                     
-                    // Call buy function after approval
                     const tx = await sigmaContract.buy(usdtWei, upline);
                     
                     msg.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Waiting for confirmation...';
@@ -934,7 +948,6 @@
                     
                     msg.innerHTML = '<i class="fas fa-check-circle" style="color:var(--success)"></i> Purchase Successful!';
                     
-                    // Update steps
                     document.getElementById('step2').className = 'step completed';
                     document.getElementById('step2Status').innerHTML = 'Completed';
                     
@@ -986,6 +999,8 @@
                     errorMsg = "Transaction rejected";
                 } else if (error.message.includes("insufficient funds")) {
                     errorMsg = "Insufficient POL for gas";
+                } else if (error.message.includes("Min buy")) {
+                    errorMsg = "Minimum buy is 1 USDT";
                 }
                 
                 msg.innerHTML = `<i class="fas fa-exclamation-triangle" style="color:var(--danger)"></i> ❌ ${errorMsg}`;
@@ -1110,7 +1125,7 @@
 
         function copyContract() {
             navigator.clipboard.writeText(SIGMA_ADDRESS);
-            alert("Contract address copied!");
+            alert("New contract address copied!");
         }
 
         function copyReferral() {
