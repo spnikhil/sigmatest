@@ -170,17 +170,10 @@
             <div class="table-container">
                 <table class="desktop-table" id="ico-table">
                     <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Purchase Date</th>
-                            <th>USDT Amount</th>
-                            <th>Base SIG6</th>
-                            <th>Bonus (10%)</th>
-                            <th>Total SIG6</th>
-                        </tr>
+                        <tr><th>#</th><th>Purchase Date</th><th>USDT Amount</th><th>Base SIG6</th><th>Bonus (10%)</th><th>Total SIG6</th></tr>
                     </thead>
                     <tbody id="ico-body-desktop"></tbody>
-                </table>
+                 </table>
                 <div class="mobile-cards" id="ico-body-mobile"></div>
             </div>
         </div>
@@ -190,16 +183,7 @@
             <h2 class="card-title"><i class="fas fa-users"></i> Team Referral</h2>
             <div class="table-container">
                 <table class="desktop-table" id="referral-table">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>From Wallet</th>
-                            <th>Level</th>
-                            <th>Percentage</th>
-                            <th>Amount (SIG6)</th>
-                            <th>Date</th>
-                        </tr>
-                    </thead>
+                    <thead><tr><th>#</th><th>From Wallet</th><th>Level</th><th>Percentage</th><th>Amount (SIG6)</th><th>Date</th></tr></thead>
                     <tbody id="referral-body-desktop"></tbody>
                 </table>
                 <div class="mobile-cards" id="referral-body-mobile"></div>
@@ -211,16 +195,7 @@
             <h2 class="card-title"><i class="fas fa-exclamation-triangle"></i> Lapsed Income</h2>
             <div class="table-container">
                 <table class="desktop-table" id="lapsed-table">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>From Wallet</th>
-                            <th>Level</th>
-                            <th>Amount (SIG6)</th>
-                            <th>Reason</th>
-                            <th>Date</th>
-                        </tr>
-                    </thead>
+                    <thead><tr><th>#</th><th>From Wallet</th><th>Level</th><th>Amount (SIG6)</th><th>Reason</th><th>Date</th></tr></thead>
                     <tbody id="lapsed-body-desktop"></tbody>
                 </table>
                 <div class="mobile-cards" id="lapsed-body-mobile"></div>
@@ -229,19 +204,15 @@
     </div>
 
     <script>
-        // Contract Configuration
-        const SIGMA_CONTRACT_ADDRESS = "0x068Aaba73Fd754F21140E2F13DA177ce7251A299";
+        // ========== UPDATED CONTRACT ADDRESS & ABI ==========
+        const SIGMA_CONTRACT_ADDRESS = "0x39D585521Ca149B2cD9d63e0B8A433Ea9F873FEc";
+        const sigmaABI = [{"inputs":[{"internalType":"uint256","name":"_amount","type":"uint256"}],"name":"addTreasuryUSDT","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_upline","type":"address"},{"internalType":"uint256","name":"_usdtAmount","type":"uint256"}],"name":"buySigma","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_usdt","type":"address"}],"stateMutability":"nonpayable","type":"constructor"},{"inputs":[],"name":"ReentrancyGuardReentrantCall","type":"error"},{"inputs":[{"internalType":"address","name":"token","type":"address"}],"name":"SafeERC20FailedOperation","type":"error"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":false,"internalType":"uint256","name":"usdtAmount","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"tokensMinted","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"currentRate","type":"uint256"}],"name":"Buy","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"}],"name":"ICOBonusPaid","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"},{"indexed":false,"internalType":"string","name":"reason","type":"string"}],"name":"IncomeLapsed","type":"event"},{"inputs":[{"internalType":"address","name":"_user","type":"address"},{"internalType":"address","name":"_upline","type":"address"},{"internalType":"uint256","name":"_balance","type":"uint256"}],"name":"migrateUser","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_to","type":"address"},{"internalType":"uint256","name":"_amount","type":"uint256"}],"name":"mintFreeSigma","outputs":[],"stateMutability":"nonpayable","type":"function"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"from","type":"address"},{"indexed":true,"internalType":"address","name":"to","type":"address"},{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"level","type":"uint256"}],"name":"ReferralPaid","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":false,"internalType":"uint256","name":"tokensBurned","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"usdtReceived","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"currentRate","type":"uint256"}],"name":"Sell","type":"event"},{"inputs":[{"internalType":"uint256","name":"_tokenAmount","type":"uint256"}],"name":"sellSigma","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_newCreator","type":"address"}],"name":"setCreator","outputs":[],"stateMutability":"nonpayable","type":"function"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":true,"internalType":"address","name":"upline","type":"address"},{"indexed":false,"internalType":"uint256","name":"balance","type":"uint256"}],"name":"UserMigrated","type":"event"},{"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"balanceOf","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"baseRate","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"COOLDOWN_TIME","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"creator","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"creatorWallet","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"decimals","outputs":[{"internalType":"uint8","name":"","type":"uint8"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"","type":"address"},{"internalType":"uint256","name":"","type":"uint256"}],"name":"directReferrals","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"getCurrentBuyRate","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"getCurrentSellRate","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_user","type":"address"}],"name":"getDownlines","outputs":[{"internalType":"address[]","name":"","type":"address[]"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"hasBoughtBefore","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"increment","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_user","type":"address"}],"name":"isUserActive","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"lastBuyTimestamp","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"lastSellTimestamp","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"MAX_SELL_LIMIT","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"MIN_HOLDING_USDT","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"name","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"owner","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"stats","outputs":[{"internalType":"uint256","name":"icoBonus","type":"uint256"},{"internalType":"uint256","name":"referralIncome","type":"uint256"},{"internalType":"uint256","name":"lapsedIncome","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"symbol","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"totalSupply","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"upline","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"usdtToken","outputs":[{"internalType":"contract IERC20","name":"","type":"address"}],"stateMutability":"view","type":"function"}];
+        
         let provider, userAddress, sigmaContract, signer;
         let allReferralEvents = [];
         let allLapsedEvents = [];
-        let allBoughtEvents = [];
+        let allBuyEvents = [];
         
-        // Correct referral percentages from contract
-        const levelPercent = [0, 10, 4, 3, 2, 1, 0.5, 0.5, 0.5, 0.5, 0.5];
-        
-        // Complete ABI
-        const sigmaABI = [{"inputs":[{"internalType":"address","name":"_usdt","type":"address"},{"internalType":"address","name":"_creator","type":"address"}],"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"owner","type":"address"},{"indexed":true,"internalType":"address","name":"spender","type":"address"},{"indexed":false,"internalType":"uint256","name":"value","type":"uint256"}],"name":"Approval","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":false,"internalType":"uint256","name":"usdtAmount","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"sigmaAmount","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"rate","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"timestamp","type":"uint256"}],"name":"Bought","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"from","type":"address"},{"indexed":true,"internalType":"address","name":"to","type":"address"},{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"level","type":"uint256"},{"indexed":false,"internalType":"string","name":"reason","type":"string"},{"indexed":false,"internalType":"uint256","name":"timestamp","type":"uint256"}],"name":"IncomeLapsed","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"previousOwner","type":"address"},{"indexed":true,"internalType":"address","name":"newOwner","type":"address"}],"name":"OwnershipTransferred","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"from","type":"address"},{"indexed":true,"internalType":"address","name":"to","type":"address"},{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"level","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"timestamp","type":"uint256"}],"name":"ReferralPaid","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":false,"internalType":"uint256","name":"sigmaAmount","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"usdtAmount","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"rate","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"timestamp","type":"uint256"}],"name":"Sold","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"from","type":"address"},{"indexed":true,"internalType":"address","name":"to","type":"address"},{"indexed":false,"internalType":"uint256","name":"value","type":"uint256"}],"name":"Transfer","type":"event"},{"inputs":[],"name":"BASE_RATE","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"INCREMENT","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"MAX_SIGMA_BUY","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"MIN_FOR_RENEWAL","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"MIN_HOLD_VALUE","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_user","type":"address"},{"internalType":"address","name":"_upline","type":"address"}],"name":"adminSetUpline","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"owner","type":"address"},{"internalType":"address","name":"spender","type":"address"}],"name":"allowance","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"value","type":"uint256"}],"name":"approve","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"ath","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"atl","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"account","type":"address"}],"name":"balanceOf","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"_usdtAmount","type":"uint256"},{"internalType":"address","name":"_upline","type":"address"}],"name":"buy","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"creatorWallet","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"currentRate","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"dailyHistory","outputs":[{"internalType":"uint256","name":"open","type":"uint256"},{"internalType":"uint256","name":"high","type":"uint256"},{"internalType":"uint256","name":"low","type":"uint256"},{"internalType":"uint256","name":"close","type":"uint256"},{"internalType":"uint256","name":"timestamp","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"decimals","outputs":[{"internalType":"uint8","name":"","type":"uint8"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"getSellRate","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_upline","type":"address"},{"internalType":"uint256","name":"_level","type":"uint256"}],"name":"isLevelUnlocked","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"lastHistoryDay","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"levelRewards","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"name","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"owner","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_to","type":"address"},{"internalType":"uint256","name":"_amount","type":"uint256"}],"name":"p2pTransfer","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"renounceOwnership","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_sigmaAmount","type":"uint256"}],"name":"sell","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"symbol","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"totalSupply","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"value","type":"uint256"}],"name":"transfer","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"from","type":"address"},{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"value","type":"uint256"}],"name":"transferFrom","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"usdt","outputs":[{"internalType":"contract IERC20","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"users","outputs":[{"internalType":"address","name":"upline","type":"address"},{"internalType":"uint256","name":"referralExpiry","type":"uint256"},{"internalType":"uint256","name":"totalReferralEarned","type":"uint256"},{"internalType":"uint256","name":"lastBuyTimestamp","type":"uint256"},{"internalType":"uint256","name":"lastActionBlock","type":"uint256"},{"internalType":"uint256","name":"qualifiedDirectsCount","type":"uint256"},{"internalType":"bool","name":"hasBought","type":"bool"},{"internalType":"bool","name":"isInitialized","type":"bool"},{"internalType":"bool","name":"isCurrentlyQualified","type":"bool"}],"stateMutability":"view","type":"function"}];
-
         // Helper Functions
         async function checkChain() { 
             if(!provider) return false; 
@@ -309,114 +280,96 @@
             document.getElementById('ico-body-desktop').innerHTML = `<tr><td colspan="6" class="loading"><i class="fas fa-spinner fa-spin"></i> Loading ICO data...</td></tr>`;
             document.getElementById('referral-body-desktop').innerHTML = `<tr><td colspan="6" class="loading"><i class="fas fa-spinner fa-spin"></i> Loading referral data...</td></tr>`;
             document.getElementById('lapsed-body-desktop').innerHTML = `<tr><td colspan="6" class="loading"><i class="fas fa-spinner fa-spin"></i> Loading lapsed data...</td></tr>`;
-            
             document.getElementById('ico-body-mobile').innerHTML = `<div class="loading"><i class="fas fa-spinner fa-spin"></i> Loading...</div>`;
             document.getElementById('referral-body-mobile').innerHTML = `<div class="loading"><i class="fas fa-spinner fa-spin"></i> Loading...</div>`;
             document.getElementById('lapsed-body-mobile').innerHTML = `<div class="loading"><i class="fas fa-spinner fa-spin"></i> Loading...</div>`;
             
             try{
                 const currentBlock = await provider.getBlockNumber();
-                const fromBlock = Math.max(0, currentBlock - 3000000); 
+                const fromBlock = Math.max(0, currentBlock - 3500000); 
                 
-                // Fetch ReferralPaid events
+                // ReferralPaid events (to: userAddress)
                 const referralFilter = sigmaContract.filters.ReferralPaid(null, userAddress);
                 const refEvents = await sigmaContract.queryFilter(referralFilter, fromBlock, currentBlock);
                 
-                // Fetch Bought events
-                const boughtFilter = sigmaContract.filters.Bought(userAddress);
-                const boughtEvents = await sigmaContract.queryFilter(boughtFilter, fromBlock, currentBlock);
+                // Buy events (user: userAddress)
+                const buyFilter = sigmaContract.filters.Buy(userAddress);
+                const buyEvents = await sigmaContract.queryFilter(buyFilter, fromBlock, currentBlock);
                 
-                // Fetch Lapsed events
-                const lapsedFilter = sigmaContract.filters.IncomeLapsed(null, userAddress);
+                // IncomeLapsed events (user: userAddress)
+                const lapsedFilter = sigmaContract.filters.IncomeLapsed(userAddress);
                 const lapEvents = await sigmaContract.queryFilter(lapsedFilter, fromBlock, currentBlock);
                 
                 allReferralEvents = refEvents;
-                allBoughtEvents = boughtEvents;
+                allBuyEvents = buyEvents;
                 allLapsedEvents = lapEvents;
                 
-                // Display data - ICO shows ONLY first purchase
-                displayICOData(allBoughtEvents);
+                displayICOData(allBuyEvents);
                 displayReferralData(allReferralEvents);
                 displayLapsedData(allLapsedEvents);
-                updateStats(allReferralEvents, allBoughtEvents, allLapsedEvents);
+                updateStats(allReferralEvents, allBuyEvents, allLapsedEvents);
             } catch(error){
                 console.error(error);
                 document.getElementById('ico-body-desktop').innerHTML = `<tr><td colspan="6" class="no-data">Error: ${error.message}</td></tr>`;
             }
         }
 
+        // ICO: only first purchase (with 10% bonus assumption)
         function displayICOData(events){
             const desktop = document.getElementById('ico-body-desktop');
             const mobile = document.getElementById('ico-body-mobile');
-            
             if(!events.length){ 
                 desktop.innerHTML = `<tr><td colspan="6" class="no-data">No purchases found</td></tr>`;
                 mobile.innerHTML = `<div class="no-data">No purchases found</div>`;
                 return;
             }
-            
-            // Sort by timestamp (oldest first to find first purchase)
             events.sort((a,b) => Number(a.args.timestamp) - Number(b.args.timestamp));
-            
-            // Take ONLY the first purchase
-            const firstPurchase = events[0];
-            
-            let args = firstPurchase.args;
-            let usdtAmount = parseFloat(ethers.formatUnits(args.usdtAmount, 6));
-            let sigmaAmount = parseFloat(ethers.formatUnits(args.sigmaAmount, 18));
-            let ts = Number(args.timestamp);
+            const first = events[0];
+            const usdtAmount = parseFloat(ethers.formatUnits(first.args.usdtAmount, 6));
+            let totalTokens = parseFloat(ethers.formatUnits(first.args.tokensMinted, 18));
+            let baseAmount = totalTokens * 100 / 110;
+            let bonusAmount = totalTokens - baseAmount;
+            let ts = Number(first.args.timestamp);
             let dateStr = new Date(ts * 1000).toLocaleDateString('en-IN');
             let timeStr = new Date(ts * 1000).toLocaleTimeString('en-IN');
             
-            // Calculate base amount and bonus (10% on first purchase)
-            let baseAmount = sigmaAmount * 100 / 110;
-            let bonusAmount = sigmaAmount - baseAmount;
-            
-            let html = `<tr>
+            desktop.innerHTML = `<tr>
                 <td>1</td>
                 <td>${dateStr}<br><small>${timeStr}</small></td>
                 <td>$${usdtAmount.toFixed(2)} USDT</td>
                 <td>${baseAmount.toFixed(4)} SIG6</td>
                 <td class="amount-positive">+${bonusAmount.toFixed(4)} SIG6</td>
-                <td class="amount-positive">${sigmaAmount.toFixed(4)} SIG6</td>
+                <td class="amount-positive">${totalTokens.toFixed(4)} SIG6</td>
             </tr>`;
-            
-            let mobileHtml = `<div class="mobile-card">
+            mobile.innerHTML = `<div class="mobile-card">
                 <div class="mobile-card-header"><span class="mobile-card-title">First Purchase (with 10% Bonus)</span></div>
                 <div class="mobile-card-row"><span class="mobile-card-label">Date</span><span class="mobile-card-value">${dateStr} ${timeStr}</span></div>
                 <div class="mobile-card-row"><span class="mobile-card-label">USDT</span><span class="mobile-card-value">$${usdtAmount.toFixed(2)}</span></div>
                 <div class="mobile-card-row"><span class="mobile-card-label">Base SIG6</span><span class="mobile-card-value">${baseAmount.toFixed(4)}</span></div>
                 <div class="mobile-card-row"><span class="mobile-card-label">Bonus (10%)</span><span class="mobile-card-value mobile-amount positive">+${bonusAmount.toFixed(4)}</span></div>
-                <div class="mobile-card-row"><span class="mobile-card-label">Total</span><span class="mobile-card-value mobile-amount positive">${sigmaAmount.toFixed(4)} SIG6</span></div>
+                <div class="mobile-card-row"><span class="mobile-card-label">Total</span><span class="mobile-card-value mobile-amount positive">${totalTokens.toFixed(4)} SIG6</span></div>
             </div>`;
-            
-            desktop.innerHTML = html;
-            mobile.innerHTML = mobileHtml;
         }
 
         function displayReferralData(events){
             const desktop = document.getElementById('referral-body-desktop');
             const mobile = document.getElementById('referral-body-mobile');
-            
             if(!events.length){ 
                 desktop.innerHTML = `<tr><td colspan="6" class="no-data">No referral income received yet</td></tr>`;
                 mobile.innerHTML = `<div class="no-data">No referral income received yet</div>`;
                 return;
             }
-            
             events.sort((a,b) => Number(b.args.timestamp) - Number(a.args.timestamp));
             let html = '', mobileHtml = '';
-            
             events.forEach((ev, i) => {
                 let args = ev.args;
                 let from = args.from;
                 let level = Number(args.level);
                 let amount = parseFloat(ethers.formatUnits(args.amount, 18));
-                let percent = (level >= 1 && level <= 10) ? levelPercent[level] : 0;
                 let ts = Number(args.timestamp);
                 let dateStr = new Date(ts * 1000).toLocaleDateString('en-IN');
                 let fromShort = from.slice(0,6) + '...' + from.slice(-4);
-                
+                let percent = (level === 1 ? 10 : level === 2 ? 4 : level === 3 ? 3 : level === 4 ? 2 : level === 5 ? 1 : level === 6 ? 0.5 : level === 7 ? 0.5 : level === 8 ? 0.5 : level === 9 ? 0.5 : level === 10 ? 0.5 : 0);
                 html += `<tr>
                     <td>${i+1}</td>
                     <td><div class="wallet-address" onclick="copyToClipboard('${from}')"><i class="fas fa-copy"></i> ${fromShort}</div></td>
@@ -425,7 +378,6 @@
                     <td class="amount-positive">${amount.toFixed(4)} SIG6</td>
                     <td>${dateStr}</td>
                 </tr>`;
-                
                 mobileHtml += `<div class="mobile-card">
                     <div class="mobile-card-header"><span class="mobile-card-title">Level ${level}</span><span class="percent-badge">${percent}%</span></div>
                     <div class="mobile-card-row"><span class="mobile-card-label">From</span><span class="mobile-card-value"><span class="mobile-wallet-address" onclick="copyToClipboard('${from}')"><i class="fas fa-copy"></i> ${fromShort}</span></span></div>
@@ -433,7 +385,6 @@
                     <div class="mobile-card-row"><span class="mobile-card-label">Date</span><span class="mobile-card-value">${dateStr}</span></div>
                 </div>`;
             });
-            
             desktop.innerHTML = html;
             mobile.innerHTML = mobileHtml;
         }
@@ -441,74 +392,55 @@
         function displayLapsedData(events){
             const desktop = document.getElementById('lapsed-body-desktop');
             const mobile = document.getElementById('lapsed-body-mobile');
-            
             if(!events.length){
                 desktop.innerHTML = `<tr><td colspan="6" class="no-data">No lapsed income</td></tr>`;
                 mobile.innerHTML = `<div class="no-data">No lapsed income</div>`;
                 return;
             }
-            
             events.sort((a,b) => Number(b.args.timestamp) - Number(a.args.timestamp));
             let html = '', mobileHtml = '';
-            
             events.forEach((ev, i) => {
                 let args = ev.args;
-                let from = args.from;
-                let level = Number(args.level);
+                let from = args.user;
                 let amount = parseFloat(ethers.formatUnits(args.amount, 18));
-                let reason = args.reason || "Unknown";
+                let reason = args.reason || "Expired";
                 let ts = Number(args.timestamp);
                 let date = new Date(ts * 1000).toLocaleDateString('en-IN');
-                let fromShort = from.slice(0,6) + '...' + from.slice(-4);
-                let reasonShort = reason.length > 25 ? reason.slice(0,25) + '...' : reason;
-                
+                let fromShort = from ? (from.slice(0,6) + '...' + from.slice(-4)) : 'system';
                 html += `<tr>
                     <td>${i+1}</td>
                     <td><div class="wallet-address" onclick="copyToClipboard('${from}')"><i class="fas fa-copy"></i> ${fromShort}</div></td>
-                    <td>Level ${level}</td>
+                    <td>-</td>
                     <td class="amount-negative">${amount.toFixed(4)} SIG6</td>
-                    <td><span class="reason-badge" title="${reason}">${reasonShort}</span></td>
+                    <td><span class="reason-badge">${reason.length>30?reason.slice(0,30)+'...':reason}</span></td>
                     <td>${date}</td>
                 </tr>`;
-                
                 mobileHtml += `<div class="mobile-card">
-                    <div class="mobile-card-header"><span class="mobile-card-title">Level ${level}</span></div>
+                    <div class="mobile-card-header"><span class="mobile-card-title">Lapsed</span></div>
                     <div class="mobile-card-row"><span class="mobile-card-label">From</span><span class="mobile-card-value"><span class="mobile-wallet-address" onclick="copyToClipboard('${from}')"><i class="fas fa-copy"></i> ${fromShort}</span></span></div>
                     <div class="mobile-card-row"><span class="mobile-card-label">Amount</span><span class="mobile-card-value mobile-amount negative">${amount.toFixed(4)} SIG6</span></div>
-                    <div class="mobile-card-row"><span class="mobile-card-label">Reason</span><span class="mobile-card-value">${reasonShort}</span></div>
+                    <div class="mobile-card-row"><span class="mobile-card-label">Reason</span><span class="mobile-card-value">${reason}</span></div>
                     <div class="mobile-card-row"><span class="mobile-card-label">Date</span><span class="mobile-card-value">${date}</span></div>
                 </div>`;
             });
-            
             desktop.innerHTML = html;
             mobile.innerHTML = mobileHtml;
         }
 
-        function updateStats(refEvents, icoEvents, lapEvents){
+        function updateStats(refEvents, buyEvents, lapEvents){
             let totalReferral = 0;
             let totalICO = 0;
             let totalLapsed = 0;
-            
-            refEvents.forEach(e => { 
-                totalReferral += parseFloat(ethers.formatUnits(e.args.amount, 18)); 
-            });
-            
-            // Only count first purchase for ICO total
-            if (icoEvents.length > 0) {
-                // Sort to get first purchase
-                icoEvents.sort((a,b) => Number(a.args.timestamp) - Number(b.args.timestamp));
-                totalICO += parseFloat(ethers.formatUnits(icoEvents[0].args.sigmaAmount, 18));
+            refEvents.forEach(e => { totalReferral += parseFloat(ethers.formatUnits(e.args.amount, 18)); });
+            if(buyEvents.length > 0) {
+                buyEvents.sort((a,b) => Number(a.args.timestamp) - Number(b.args.timestamp));
+                totalICO += parseFloat(ethers.formatUnits(buyEvents[0].args.tokensMinted, 18));
             }
-            
-            lapEvents.forEach(e => { 
-                totalLapsed += parseFloat(ethers.formatUnits(e.args.amount, 18)); 
-            });
-            
+            lapEvents.forEach(e => { totalLapsed += parseFloat(ethers.formatUnits(e.args.amount, 18)); });
             let totalIncome = totalReferral + totalICO;
-            
             document.getElementById('total-sig6').innerText = totalIncome.toFixed(4) + " SIG6";
             document.getElementById('lapsed-income').innerText = totalLapsed.toFixed(4) + " SIG6";
-            document.getElementById('total-transactions').innerText = refEvents.length + (icoEvents.length > 0 ? 1 : 0) + lapEvents.length;
+            document.getElementById('total-transactions').innerText = refEvents.length + (buyEvents.length>0?1:0) + lapEvents.length;
         }
 
         function applyFilters(){
@@ -516,46 +448,31 @@
             const end = document.getElementById('endDate').value;
             const type = document.getElementById('incomeType').value;
             const search = document.getElementById('searchWallet').value.toLowerCase().trim();
-            
             let filteredRef = [...allReferralEvents];
-            let filteredIco = [...allBoughtEvents];
+            let filteredIco = [...allBuyEvents];
             let filteredLap = [...allLapsedEvents];
-            
             const toTimestamp = (d) => d ? Math.floor(new Date(d).getTime()/1000) : null;
             const st = toTimestamp(start);
             const et = end ? Math.floor(new Date(end).getTime()/1000) + 86400 : null;
-            
             if(st){ 
-                filteredRef = filteredRef.filter(e => Number(e.args.timestamp) >= st); 
-                filteredIco = filteredIco.filter(e => Number(e.args.timestamp) >= st); 
-                filteredLap = filteredLap.filter(e => Number(e.args.timestamp) >= st); 
+                filteredRef = filteredRef.filter(e => Number(e.args.timestamp) >= st);
+                filteredIco = filteredIco.filter(e => Number(e.args.timestamp) >= st);
+                filteredLap = filteredLap.filter(e => Number(e.args.timestamp) >= st);
             }
             if(et){ 
-                filteredRef = filteredRef.filter(e => Number(e.args.timestamp) <= et); 
-                filteredIco = filteredIco.filter(e => Number(e.args.timestamp) <= et); 
-                filteredLap = filteredLap.filter(e => Number(e.args.timestamp) <= et); 
+                filteredRef = filteredRef.filter(e => Number(e.args.timestamp) <= et);
+                filteredIco = filteredIco.filter(e => Number(e.args.timestamp) <= et);
+                filteredLap = filteredLap.filter(e => Number(e.args.timestamp) <= et);
             }
-            
             if(type !== 'all'){
-                if(type === 'lapsed') { 
-                    filteredRef = []; 
-                    filteredIco = []; 
-                }
-                else if(type === 'REFERRAL') { 
-                    filteredIco = []; 
-                    filteredLap = []; 
-                }
-                else if(type === 'ICO') { 
-                    filteredRef = []; 
-                    filteredLap = []; 
-                }
+                if(type === 'lapsed') { filteredRef = []; filteredIco = []; }
+                else if(type === 'REFERRAL') { filteredIco = []; filteredLap = []; }
+                else if(type === 'ICO') { filteredRef = []; filteredLap = []; }
             }
-            
             if(search){
                 filteredRef = filteredRef.filter(e => e.args.from.toLowerCase().includes(search));
-                filteredLap = filteredLap.filter(e => e.args.from.toLowerCase().includes(search));
+                filteredLap = filteredLap.filter(e => e.args.user.toLowerCase().includes(search));
             }
-            
             displayReferralData(filteredRef);
             displayICOData(filteredIco);
             displayLapsedData(filteredLap);
@@ -568,24 +485,21 @@
             document.getElementById('incomeType').value = 'all'; 
             document.getElementById('searchWallet').value = '';
             displayReferralData(allReferralEvents);
-            displayICOData(allBoughtEvents);
+            displayICOData(allBuyEvents);
             displayLapsedData(allLapsedEvents);
-            updateStats(allReferralEvents, allBoughtEvents, allLapsedEvents);
+            updateStats(allReferralEvents, allBuyEvents, allLapsedEvents);
         }
 
         function copyToClipboard(t){ 
             navigator.clipboard.writeText(t).then(() => alert("Address copied!")); 
         }
 
-        // Initialize on page load
         window.onload = function(){
             const end = new Date(); 
             const start = new Date(); 
             start.setDate(start.getDate() - 30);
             document.getElementById('startDate').valueAsDate = start; 
             document.getElementById('endDate').valueAsDate = end;
-            
-            // Auto-connect if previously connected
             if(localStorage.getItem('sigma_wallet_connected') === 'true' && window.ethereum){
                 provider = new ethers.BrowserProvider(window.ethereum);
                 provider.send("eth_accounts",[]).then(accs => { 
