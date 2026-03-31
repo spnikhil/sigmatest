@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
     <title>SIGMA SIX | Income Report</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.umd.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -18,1729 +18,587 @@
             --success: #00ff88;
             --warning: #ffaa00;
             --danger: #ff4d4d;
-            --lapsed: #ff6b6b;
-            --ico: #00ffcc;
-            --referral: #9d4edd;
             --gradient: linear-gradient(90deg, #00ffcc, #9d4edd, #ff2a6d, #00ffcc);
-            --level1: #00ffcc;
-            --level2: #00d4ff;
-            --level3: #9d4edd;
-            --level4: #ff6b9d;
-            --level5: #ffaa00;
-            --level6: #ff8c00;
-            --level7: #ff5e3a;
-            --level8: #ff2a6d;
-            --level9: #d44eff;
-            --level10: #aa55ff;
         }
-        * { margin:0; padding:0; box-sizing:border-box; }
-        body {
-            background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif;
-            min-height: 100vh; overflow-x: hidden; position: relative;
-        }
-        .crypto-bg { position:fixed; top:0; left:0; width:100%; height:100%; z-index:-2;
-            background: linear-gradient(90deg, rgba(0,255,204,0.03) 1px,transparent 1px) 0 0 /50px 50px,
-                        linear-gradient(0deg, rgba(157,78,221,0.03) 1px,transparent 1px) 0 0 /50px 50px;
-            animation: bgMove 20s linear infinite;
-        }
-        @keyframes bgMove { 0% { background-position:0 0,0 0; } 100% { background-position:100px 100px,100px 100px; } }
-        .rainbow-border { position:fixed; top:0; left:0; width:100%; height:4px; background:var(--gradient); background-size:400% 400%; animation:rainbow 8s ease infinite; z-index:1000; }
-        @keyframes rainbow { 0% { background-position:0% 50%; } 50% { background-position:100% 50%; } 100% { background-position:0% 50%; } }
-        .bg-glow { position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); width:1200px; height:1200px; background:radial-gradient(circle, rgba(157,78,221,0.15) 0%, rgba(0,255,204,0.1) 25%, transparent 70%); z-index:-2; }
-        .container { max-width:1400px; margin:0 auto; padding:20px; position:relative; z-index:1; }
-        
-        /* ===== MOBILE-FRIENDLY CONNECT BUTTON ===== */
-        .connect-btn {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
-            color: #000;
-            border: none;
-            border-radius: 15px;
-            padding: 12px 25px;
-            font-weight: 800;
-            font-size: 14px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            box-shadow: 0 4px 20px rgba(0,255,204,0.3);
-            z-index: 1001;
-            transition: all 0.3s;
-        }
-        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background-color: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; min-height: 100vh; overflow-x: hidden; position: relative; }
+        .rainbow-border { position: fixed; top: 0; left: 0; width: 100%; height: 4px; background: var(--gradient); background-size: 400% 400%; animation: rainbow 8s ease infinite; z-index: 1000; }
+        .crypto-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; opacity: 0.15; background: radial-gradient(circle at 20% 30%, rgba(0, 255, 204, 0.2) 0%, transparent 40%), radial-gradient(circle at 80% 70%, rgba(157, 78, 221, 0.2) 0%, transparent 40%), radial-gradient(circle at 40% 80%, rgba(255, 42, 109, 0.15) 0%, transparent 40%); }
+        .floating-icons { position: fixed; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
+        .floating-icon { position: absolute; font-size: 20px; color: rgba(0, 255, 204, 0.3); animation: float 20s infinite linear; }
+        .floating-icon:nth-child(1) { top: 10%; left: 5%; animation-delay: 0s; }
+        .floating-icon:nth-child(2) { top: 20%; left: 85%; animation-delay: 2s; color: rgba(157, 78, 221, 0.3); }
+        .floating-icon:nth-child(3) { top: 40%; left: 15%; animation-delay: 4s; color: rgba(255, 42, 109, 0.3); }
+        .floating-icon:nth-child(4) { top: 60%; left: 90%; animation-delay: 6s; }
+        .floating-icon:nth-child(5) { top: 80%; left: 10%; animation-delay: 8s; color: rgba(157, 78, 221, 0.3); }
+        .floating-icon:nth-child(6) { top: 30%; left: 70%; animation-delay: 10s; }
+        .floating-icon:nth-child(7) { top: 70%; left: 50%; animation-delay: 12s; color: rgba(255, 42, 109, 0.3); }
+        @keyframes rainbow { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        @keyframes float { 0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.3; } 25% { transform: translateY(-20px) rotate(90deg); opacity: 0.6; } 50% { transform: translateY(0) rotate(180deg); opacity: 0.3; } 75% { transform: translateY(20px) rotate(270deg); opacity: 0.6; } }
+        .container { max-width: 1200px; margin: 0 auto; padding: 15px; position: relative; z-index: 1; }
+        .header { text-align: center; margin-bottom: 30px; padding-top: 20px; }
+        .header h1 { background: var(--gradient); background-size: 400% 400%; -webkit-background-clip: text; background-clip: text; color: transparent; font-size: clamp(28px, 5vw, 42px); font-weight: 800; letter-spacing: 2px; margin-bottom: 10px; animation: rainbow 8s ease infinite; line-height: 1.2; }
+        .header p { color: #aaa; font-size: clamp(14px, 3vw, 16px); letter-spacing: 1px; }
+        .connect-btn { position: fixed; top: 10px; right: 10px; background: linear-gradient(90deg, var(--primary), var(--secondary)); color: #000; border: none; border-radius: 12px; padding: 10px 20px; font-weight: 800; font-size: clamp(12px, 3vw, 14px); cursor: pointer; transition: all 0.3s; display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 20px rgba(0, 255, 204, 0.3); z-index: 1001; white-space: nowrap; max-width: 200px; }
+        .connect-btn:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0, 255, 204, 0.5); }
+        .connect-btn.connected { background: rgba(0, 255, 204, 0.1); color: var(--primary); border: 1px solid var(--primary); }
+        .chain-warning { position: fixed; top: 80px; right: 15px; background: rgba(255, 170, 0, 0.1); border: 1px solid var(--warning); border-radius: 12px; padding: 10px 15px; color: var(--warning); font-size: 13px; display: none; z-index: 1000; }
+        .chain-warning.show { display: block; }
+        .filters-section { background: rgba(22, 24, 33, 0.85); backdrop-filter: blur(10px); border-radius: 20px; padding: 15px; border: 1px solid rgba(157, 78, 221, 0.2); margin-bottom: 20px; }
+        .filters-title { color: var(--secondary); font-size: clamp(16px, 4vw, 20px); margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
+        .filter-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-end; }
+        .filter-group { flex: 1; min-width: 200px; }
+        .filter-label { color: #aaa; font-size: clamp(12px, 3vw, 14px); margin-bottom: 5px; display: block; }
+        .date-input, .type-select, .search-input { width: 100%; padding: 10px 15px; background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(157, 78, 221, 0.3); border-radius: 10px; color: white; font-size: 14px; }
+        .date-input:focus, .type-select:focus, .search-input:focus { outline: none; border-color: var(--primary); }
+        .apply-btn { background: linear-gradient(90deg, var(--secondary), #7b2cbf); color: white; border: none; border-radius: 10px; padding: 10px 20px; font-weight: 600; font-size: clamp(12px, 3vw, 14px); cursor: pointer; transition: all 0.3s; display: flex; align-items: center; gap: 8px; white-space: nowrap; margin-top: 20px; }
+        .apply-btn:hover { background: linear-gradient(90deg, #7b2cbf, var(--secondary)); transform: translateY(-2px); }
+        .reset-btn { background: rgba(255, 77, 77, 0.1); color: var(--danger); border: 1px solid var(--danger); border-radius: 10px; padding: 10px 20px; font-weight: 600; font-size: clamp(12px, 3vw, 14px); cursor: pointer; transition: all 0.3s; display: flex; align-items: center; gap: 8px; white-space: nowrap; margin-top: 20px; }
+        .reset-btn:hover { background: rgba(255, 77, 77, 0.2); transform: translateY(-2px); }
+        .main-card { background: rgba(22, 24, 33, 0.85); backdrop-filter: blur(10px); border-radius: 20px; padding: 20px; border: 1px solid rgba(0, 255, 204, 0.2); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); margin-bottom: 20px; position: relative; overflow: hidden; }
+        .main-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: var(--gradient); background-size: 400% 400%; animation: rainbow 8s ease infinite; }
+        .card-title { color: var(--primary); font-size: clamp(18px, 4vw, 24px); margin-bottom: 20px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+        .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-bottom: 20px; }
+        .stat-box { background: rgba(255, 255, 255, 0.03); padding: 15px; border-radius: 12px; border: 1px solid rgba(45, 47, 62, 0.5); text-align: center; transition: all 0.3s; }
+        .stat-box:hover { border-color: var(--primary); transform: translateY(-3px); }
+        .stat-label { font-size: clamp(12px, 3vw, 14px); color: #888; margin-bottom: 8px; display: flex; align-items: center; justify-content: center; gap: 6px; flex-wrap: wrap; }
+        .stat-value { font-size: clamp(20px, 4vw, 28px); font-weight: 700; color: var(--primary); word-break: break-word; }
+        .stat-value.positive { color: var(--success); }
+        .stat-value.negative { color: var(--danger); }
+        .table-container { overflow-x: hidden; border-radius: 12px; border: 1px solid var(--border); background: rgba(0, 0, 0, 0.2); }
+        .desktop-table { display: table; width: 100%; border-collapse: collapse; }
+        .mobile-cards { display: none; }
+        .mobile-card { background: rgba(255, 255, 255, 0.02); border-radius: 16px; padding: 15px; margin-bottom: 12px; border: 1px solid rgba(0, 255, 204, 0.1); position: relative; overflow: hidden; }
+        .mobile-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: var(--gradient); background-size: 400% 400%; animation: rainbow 8s ease infinite; }
+        .mobile-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
+        .mobile-card-title { font-size: 16px; font-weight: 700; color: var(--primary); display: flex; align-items: center; gap: 6px; }
+        .mobile-card-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+        .mobile-card-row:last-child { border-bottom: none; }
+        .mobile-card-label { font-size: 12px; color: #888; display: flex; align-items: center; gap: 5px; }
+        .mobile-card-value { font-size: 13px; font-weight: 600; text-align: right; }
+        .mobile-wallet-address { font-family: monospace; background: rgba(0, 255, 204, 0.1); padding: 4px 8px; border-radius: 6px; font-size: 11px; display: inline-block; cursor: pointer; transition: all 0.2s; }
+        .mobile-wallet-address:hover { background: rgba(0, 255, 204, 0.2); transform: scale(1.05); }
+        .mobile-amount { font-weight: 700; display: flex; align-items: center; gap: 5px; }
+        .mobile-amount.positive { color: var(--success); }
+        .mobile-amount.negative { color: var(--danger); }
+        th { background: rgba(157, 78, 221, 0.1); color: var(--secondary); padding: 12px 10px; text-align: left; font-weight: 700; font-size: clamp(11px, 2.5vw, 14px); text-transform: uppercase; letter-spacing: 1px; white-space: nowrap; }
+        td { padding: 12px 10px; border-bottom: 1px solid rgba(45, 47, 62, 0.5); font-size: clamp(12px, 3vw, 14px); vertical-align: top; }
+        tr:hover { background: rgba(255, 255, 255, 0.03); }
+        .status-badge { padding: 4px 8px; border-radius: 16px; font-size: clamp(10px, 2.5vw, 12px); font-weight: 600; display: inline-block; }
+        .status-active { background: rgba(0, 255, 136, 0.1); color: var(--success); border:1px solid rgba(0,255,136,0.2); }
+        .status-lapsed { background: rgba(255, 77, 77, 0.1); color: var(--danger); border:1px solid rgba(255,77,77,0.2); }
+        .status-ico { background: rgba(255, 170, 0, 0.1); color: #ffaa00; border:1px solid rgba(255,170,0,0.2); }
+        .amount-positive { color: var(--success); font-weight: 700; }
+        .amount-negative { color: var(--danger); font-weight: 700; }
+        .loading { text-align: center; padding: 30px 20px; color: var(--primary); }
+        .no-data { text-align: center; padding: 30px 20px; color: #888; }
+        .back-btn { display: inline-flex; align-items: center; gap: 8px; color: var(--primary); text-decoration: none; font-weight: 600; margin-bottom: 15px; padding: 8px 16px; border-radius: 10px; background: rgba(0, 255, 204, 0.1); border: 1px solid rgba(0, 255, 204, 0.3); transition: all 0.3s; font-size: clamp(12px, 3vw, 14px); }
+        .back-btn:hover { background: rgba(0, 255, 204, 0.2); transform: translateX(-5px); }
+        .refresh-btn { background: linear-gradient(90deg, var(--secondary), #7b2cbf); color: white; border: none; border-radius: 10px; padding: 10px 16px; font-weight: 600; font-size: clamp(12px, 3vw, 14px); cursor: pointer; transition: all 0.3s; display: flex; align-items: center; gap: 6px; white-space: nowrap; }
+        .refresh-btn:hover { background: linear-gradient(90deg, #7b2cbf, var(--secondary)); transform: translateY(-2px); }
+        .header-actions { display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px; }
+        @media (min-width: 480px) { .header-actions { flex-direction: row; justify-content: space-between; align-items: center; } }
+        .wallet-address { font-family: monospace; font-size: 11px; background: rgba(0, 255, 204, 0.1); padding: 6px 10px; border-radius: 8px; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; color: var(--primary); border: 1px solid rgba(0, 255, 204, 0.2); transition: all 0.2s; }
+        .wallet-address:hover { background: rgba(0, 255, 204, 0.2); border-color: var(--primary); transform: translateY(-2px); }
+        .filter-buttons { display: flex; gap: 10px; flex-wrap: wrap; }
+        .reason-badge { display: inline-block; padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: 600; background: rgba(255, 255, 255, 0.05); }
+        .level-badge { background: rgba(157,78,221,0.15); color: var(--secondary); padding:2px 8px; border-radius:30px; font-size:11px; margin-left:5px; }
+        .percent-badge { background: rgba(0,255,204,0.1); color: var(--primary); padding:2px 6px; border-radius:20px; font-size:10px; margin-left:4px; }
         @media (max-width: 768px) {
-            .connect-btn {
-                position: relative;
-                top: auto;
-                right: auto;
-                margin: 0 auto 20px;
-                width: fit-content;
-            }
+            .container { padding: 10px; }
+            .connect-btn { position: relative; top: auto; right: auto; margin: 0 auto 15px auto; width: 100%; max-width: 100%; justify-content: center; }
+            .desktop-table { display: none; }
+            .mobile-cards { display: block; }
+            .stats-row { grid-template-columns: 1fr; }
         }
-        
-        .connect-btn.connected { background:rgba(0,255,204,0.1); color:var(--primary); border:1px solid var(--primary); }
-        
-        .back-btn { 
-            display: inline-flex; 
-            align-items: center; 
-            gap: 10px; 
-            color: var(--primary); 
-            text-decoration: none; 
-            font-weight: 600; 
-            margin-bottom: 20px; 
-            padding: 10px 20px; 
-            border-radius: 12px; 
-            background: rgba(0,255,204,0.1); 
-            border: 1px solid rgba(0,255,204,0.3);
-            transition: all 0.3s;
-        }
-        
-        .back-btn:hover {
-            background: rgba(0,255,204,0.2);
-            transform: translateX(-5px);
-        }
-        
-        .header { text-align:center; margin-bottom:30px; }
-        .header h1 { 
-            background: var(--gradient); 
-            -webkit-background-clip: text; 
-            background-clip: text; 
-            color: transparent; 
-            font-size: 48px; 
-            font-weight: 800; 
-            margin-bottom: 10px; 
-            animation: rainbow 8s ease infinite;
-            text-transform: lowercase;
-        }
-        .header h1::first-letter {
-            text-transform: uppercase;
-        }
-        
-        @media (max-width: 768px) {
-            .header h1 {
-                font-size: 32px;
-            }
-        }
-        
-        .header p { color:#aaa; font-size:16px; }
-        
-        /* ===== MOBILE-FRIENDLY STATS GRID ===== */
-        .stats-container { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); 
-            gap: 20px; 
-            margin-bottom: 30px; 
-        }
-        
-        @media (max-width: 768px) {
-            .stats-container {
-                grid-template-columns: 1fr;
-                gap: 15px;
-            }
-        }
-        
-        .stat-card { 
-            background: rgba(22,24,33,0.7); 
-            backdrop-filter: blur(10px); 
-            border-radius: 20px; 
-            padding: 25px; 
-            border: 1px solid rgba(0,255,204,0.1); 
-            position: relative; 
-            overflow: hidden; 
-            transition: all 0.3s;
-        }
-        
-        .stat-card:hover {
-            transform: translateY(-5px);
-            border-color: var(--primary);
-            box-shadow: 0 10px 20px rgba(0,255,204,0.1);
-        }
-        
-        .stat-card::before { 
-            content:''; 
-            position:absolute; 
-            top:0; 
-            left:0; 
-            width:100%; 
-            height:4px; 
-            background:var(--gradient); 
-            background-size:400% 400%; 
-            animation:rainbow 8s ease infinite; 
-        }
-        
-        .stat-title { 
-            display: flex; 
-            align-items: center; 
-            gap: 10px; 
-            color: #aaa; 
-            font-size: 14px; 
-            margin-bottom: 15px; 
-        }
-        
-        .stat-title i { color:var(--primary); }
-        .stat-value { font-size:28px; font-weight:800; color:var(--primary); margin-bottom:5px; }
-        .stat-sub { font-size:14px; color:#888; }
-        
-        /* ===== MOBILE-FRIENDLY FILTER TABS ===== */
-        .filters { 
-            display: flex; 
-            gap: 15px; 
-            margin-bottom: 25px; 
-            flex-wrap: wrap; 
-        }
-        
-        @media (max-width: 768px) {
-            .filters {
-                gap: 10px;
-            }
-        }
-        
-        .filter-btn { 
-            padding: 12px 25px; 
-            border-radius: 30px; 
-            border: 1px solid var(--border); 
-            background: rgba(255,255,255,0.03); 
-            color: var(--text); 
-            cursor: pointer; 
-            font-weight: 600; 
-            font-size: 14px; 
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        @media (max-width: 768px) {
-            .filter-btn {
-                flex: 1;
-                justify-content: center;
-                padding: 10px 15px;
-                font-size: 13px;
-            }
-        }
-        
-        .filter-btn:hover { 
-            border-color: var(--primary); 
-            color: var(--primary); 
-            transform: translateY(-2px);
-        }
-        
-        .filter-btn.active { 
-            background: var(--primary); 
-            color: #000; 
-            border-color: var(--primary); 
-        }
-        
-        .income-card { 
-            background: rgba(22,24,33,0.7); 
-            backdrop-filter: blur(10px); 
-            border-radius: 24px; 
-            padding: 25px; 
-            border: 1px solid rgba(0,255,204,0.15); 
-            margin-bottom: 25px; 
-            position: relative; 
-        }
-        
-        @media (max-width: 768px) {
-            .income-card {
-                padding: 15px;
-            }
-        }
-        
-        .income-card::before { 
-            content:''; 
-            position:absolute; 
-            top:0; 
-            left:0; 
-            width:100%; 
-            height:4px; 
-            background:var(--gradient); 
-            background-size:400% 400%; 
-            animation:rainbow 8s ease infinite; 
-        }
-        
-        .card-header { 
-            display: flex; 
-            align-items: center; 
-            gap: 15px; 
-            margin-bottom: 25px; 
-            flex-wrap: wrap; 
-        }
-        
-        @media (max-width: 768px) {
-            .card-header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 10px;
-            }
-            
-            .card-header span {
-                margin-left: 0;
-                width: 100%;
-                text-align: center;
-            }
-        }
-        
-        .card-header i { font-size:28px; color:var(--primary); }
-        .card-header h2 { color:var(--primary); font-size:24px; font-weight:700; }
-        
-        @media (max-width: 768px) {
-            .card-header h2 {
-                font-size: 20px;
-            }
-        }
-        
-        .card-header span { 
-            margin-left: auto; 
-            background: rgba(0,255,204,0.1); 
-            padding: 8px 16px; 
-            border-radius: 30px; 
-            font-size: 14px; 
-            color: var(--primary); 
-            border: 1px solid rgba(0,255,204,0.3);
-            white-space: nowrap;
-        }
-        
-        /* ===== MOBILE-FRIENDLY TABLE ===== */
-        .table-responsive { 
-            overflow-x: auto; 
-            border-radius: 16px; 
-            border: 1px solid rgba(45,47,62,0.5); 
-            max-height: 500px; 
-            overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
-        }
-        
-        table { 
-            width: 100%; 
-            border-collapse: collapse; 
-            min-width: 1000px; 
-        }
-        
-        @media (max-width: 768px) {
-            table {
-                min-width: 800px;
-            }
-        }
-        
-        thead { 
-            background: linear-gradient(90deg, rgba(0,255,204,0.1), rgba(157,78,221,0.1)); 
-            position: sticky; 
-            top: 0; 
-            z-index: 10; 
-        }
-        
-        th { 
-            padding: 16px 15px; 
-            text-align: left; 
-            font-weight: 700; 
-            font-size: 14px; 
-            color: var(--primary); 
-            text-transform: uppercase; 
-            border-bottom: 2px solid rgba(0,255,204,0.2); 
-            white-space: nowrap;
-        }
-        
-        td { 
-            padding: 14px 15px; 
-            border-bottom: 1px solid rgba(45,47,62,0.3); 
-            font-size: 14px; 
-        }
-        
-        tr:hover td { background: rgba(255,255,255,0.03); }
-        
-        .level-badge { 
-            padding: 4px 10px; 
-            border-radius: 20px; 
-            font-size: 12px; 
-            font-weight: 700; 
-            display: inline-block; 
-            min-width: 70px; 
-            text-align: center; 
-        }
-        
-        .level-1 { background: rgba(0,255,204,0.1); color: var(--level1); border: 1px solid rgba(0,255,204,0.3); }
-        .level-2 { background: rgba(0,212,255,0.1); color: #00d4ff; border: 1px solid rgba(0,212,255,0.3); }
-        .level-3 { background: rgba(157,78,221,0.1); color: var(--secondary); border: 1px solid rgba(157,78,221,0.3); }
-        .level-4 { background: rgba(255,107,157,0.1); color: #ff6b9d; border: 1px solid rgba(255,107,157,0.3); }
-        .level-5 { background: rgba(255,170,0,0.1); color: #ffaa00; border: 1px solid rgba(255,170,0,0.3); }
-        .level-6 { background: rgba(255,140,0,0.1); color: #ff8c00; border: 1px solid rgba(255,140,0,0.3); }
-        .level-7 { background: rgba(255,94,58,0.1); color: #ff5e3a; border: 1px solid rgba(255,94,58,0.3); }
-        .level-8 { background: rgba(255,42,109,0.1); color: #ff2a6d; border: 1px solid rgba(255,42,109,0.3); }
-        .level-9 { background: rgba(212,78,255,0.1); color: #d44eff; border: 1px solid rgba(212,78,255,0.3); }
-        .level-10 { background: rgba(170,85,255,0.1); color: #aa55ff; border: 1px solid rgba(170,85,255,0.3); }
-        
-        .lapsed-badge { 
-            background: rgba(255,77,77,0.15); 
-            color: var(--lapsed); 
-            border: 1px solid rgba(255,77,77,0.3); 
-        }
-        
-        .wallet-addr { 
-            font-family: 'Courier New', monospace; 
-            background: rgba(0,0,0,0.3); 
-            padding: 6px 10px; 
-            border-radius: 8px; 
-            font-size: 12px; 
-            border: 1px solid rgba(255,255,255,0.1); 
-            display: inline-block; 
-        }
-        
-        .loading, .empty-state { text-align:center; padding:60px 20px; color:#888; }
-        .loading i { font-size:24px; margin-bottom:10px; color:var(--primary); }
-        .empty-state i { font-size:48px; margin-bottom:20px; color:var(--secondary); opacity:0.5; }
-        .percentage { font-weight:700; color:var(--primary); }
-        .reason-text { color:var(--lapsed); font-weight:600; }
-        
-        ::-webkit-scrollbar { width:8px; height:8px; }
-        ::-webkit-scrollbar-track { background:rgba(0,0,0,0.2); border-radius:4px; }
-        ::-webkit-scrollbar-thumb { background:var(--gradient); border-radius:4px; animation:rainbow 8s ease infinite; }
     </style>
 </head>
 <body>
-    <div class="crypto-bg"></div>
     <div class="rainbow-border"></div>
-    <div class="bg-glow"></div>
+    <div class="crypto-bg"></div>
+    <div class="floating-icons"> <div class="floating-icon">₿</div> <div class="floating-icon">Ξ</div> <div class="floating-icon">S</div> <div class="floating-icon">Σ</div> <div class="floating-icon">$</div> <div class="floating-icon">◈</div> <div class="floating-icon">✦</div> </div>
+    <div class="chain-warning" id="chainWarning"><i class="fas fa-exclamation-triangle"></i> Please switch to Polygon network</div>
     
-    <button class="connect-btn" id="connectBtn" onclick="connectWallet()">
-        <i class="fas fa-wallet"></i> <span id="btn-text">Connect Wallet</span>
-    </button>
+    <!-- Connect Button -->
+    <button class="connect-btn" id="connectBtn" onclick="handleConnectClick()"><i class="fas fa-wallet"></i> <span id="btn-text">Connect Wallet</span></button>
     
     <div class="container">
-        <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
+        <div class="header-actions">
+            <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
+            <button class="refresh-btn" onclick="loadIncomeData()"><i class="fas fa-sync-alt"></i> Refresh</button>
+        </div>
         
         <div class="header">
-            <h1>Income report</h1>
-            <p>ICO Bonus (10% Only Once) + Team Referral + Lapsed Income</p>
+            <h1>SIGMA SIX | INCOME REPORT</h1>
+            <p>ICO Bonus (10% on first purchase only) • Team Referral • Lapsed Income</p>
         </div>
         
-        <!-- Stats Cards -->
-        <div class="stats-container">
-            <div class="stat-card">
-                <div class="stat-title"><i class="fas fa-gift"></i> ICO Bonus (10%)</div>
-                <div class="stat-value" id="totalIco">0 SIG6</div>
-                <div class="stat-sub" id="totalIcoUsdt">$0.00 USDT</div>
+        <div class="filters-section">
+            <h2 class="filters-title"><i class="fas fa-filter"></i> Filter Income Data</h2>
+            <div class="filter-row">
+                <div class="filter-group"><label class="filter-label"><i class="far fa-calendar"></i> Start Date</label><input type="date" id="startDate" class="date-input"></div>
+                <div class="filter-group"><label class="filter-label"><i class="far fa-calendar"></i> End Date</label><input type="date" id="endDate" class="date-input"></div>
+                <div class="filter-group"><label class="filter-label"><i class="fas fa-tag"></i> Income Type</label>
+                    <select id="incomeType" class="type-select">
+                        <option value="all">All Types</option>
+                        <option value="ICO">ICO Bonus</option>
+                        <option value="REFERRAL">Team Referral</option>
+                        <option value="lapsed">Lapsed Income</option>
+                    </select>
+                </div>
+                <div class="filter-group"><label class="filter-label"><i class="fas fa-search"></i> Search Wallet</label><input type="text" id="searchWallet" class="search-input" placeholder="Enter wallet address..."></div>
             </div>
-            <div class="stat-card">
-                <div class="stat-title"><i class="fas fa-users"></i> Team Referral</div>
-                <div class="stat-value" id="totalRef">0 SIG6</div>
-                <div class="stat-sub" id="totalRefUsdt">$0.00 USDT</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-title"><i class="fas fa-exclamation-triangle"></i> Lapsed Income</div>
-                <div class="stat-value" id="totalLapsed">0 SIG6</div>
-                <div class="stat-sub" id="totalLapsedUsdt">$0.00 USDT</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-title"><i class="fas fa-chart-line"></i> Current Rate</div>
-                <div class="stat-value" id="currentRate">0.0105 USDT</div>
-                <div class="stat-sub" id="lastUpdated">Updating...</div>
+            <div class="filter-buttons">
+                <button class="apply-btn" onclick="applyFilters()"><i class="fas fa-check"></i> Apply Filters</button>
+                <button class="reset-btn" onclick="resetFilters()"><i class="fas fa-times"></i> Reset Filters</button>
             </div>
         </div>
         
-        <!-- Filter Tabs -->
-        <div class="filters">
-            <button class="filter-btn active" onclick="filterIncome('all')"><i class="fas fa-layer-group"></i> All Income</button>
-            <button class="filter-btn" onclick="filterIncome('ico')"><i class="fas fa-gift"></i> ICO Bonus</button>
-            <button class="filter-btn" onclick="filterIncome('referral')"><i class="fas fa-users"></i> Team Referral</button>
-            <button class="filter-btn" onclick="filterIncome('lapsed')"><i class="fas fa-exclamation-triangle"></i> Lapsed</button>
+        <!-- Stats Overview -->
+        <div class="main-card">
+            <h2 class="card-title"><i class="fas fa-chart-line"></i> Income Overview</h2>
+            <div class="stats-row">
+                <div class="stat-box"><div class="stat-label"><i class="fas fa-coins"></i> Total SIG6 Income</div><div id="total-sig6" class="stat-value positive">0.0000 SIG6</div></div>
+                <div class="stat-box"><div class="stat-label"><i class="fas fa-exclamation-triangle"></i> Lapsed Income</div><div id="lapsed-income" class="stat-value negative">0.0000 SIG6</div></div>
+                <div class="stat-box"><div class="stat-label"><i class="fas fa-history"></i> Total Transactions</div><div id="total-transactions" class="stat-value">0</div></div>
+            </div>
         </div>
         
-        <!-- ICO Bonus Card -->
-        <div class="income-card" id="icoCard">
-            <div class="card-header">
-                <i class="fas fa-gift"></i>
-                <h2>ICO Bonus (10% Extra on First Buy Only)</h2>
-                <span id="icoCount">0 transactions</span>
-            </div>
-            <div class="table-responsive">
-                <table>
+        <!-- ICO Bonus Table - Shows ONLY the first purchase with 10% bonus -->
+        <div class="main-card">
+            <h2 class="card-title"><i class="fas fa-star"></i> ICO Bonus</h2>
+            <div class="table-container">
+                <table class="desktop-table" id="ico-table">
                     <thead>
                         <tr>
-                            <th>Date & Time</th>
-                            <th>Transaction</th>
-                            <th>Bonus %</th>
-                            <th>Amount (SIG6)</th>
-                            <th>USDT Value</th>
-                            <th>Rate at Buy</th>
+                            <th>#</th>
+                            <th>Purchase Date</th>
+                            <th>USDT Amount</th>
+                            <th>Base SIG6</th>
+                            <th>Bonus (10%)</th>
+                            <th>Total SIG6</th>
                         </tr>
                     </thead>
-                    <tbody id="icoTableBody">
-                        <tr><td colspan="6" class="loading"><i class="fas fa-spinner fa-spin"></i><br>Loading ICO bonus...</td></tr>
-                    </tbody>
+                    <tbody id="ico-body-desktop"></tbody>
                 </table>
+                <div class="mobile-cards" id="ico-body-mobile"></div>
             </div>
         </div>
         
-        <!-- Team Referral Card -->
-        <div class="income-card" id="referralCard">
-            <div class="card-header">
-                <i class="fas fa-sitemap"></i>
-                <h2>Team Referral Income</h2>
-                <span id="refCount">0 transactions</span>
-            </div>
-            <div class="table-responsive">
-                <table>
+        <!-- Team Referral Table -->
+        <div class="main-card">
+            <h2 class="card-title"><i class="fas fa-users"></i> Team Referral</h2>
+            <div class="table-container">
+                <table class="desktop-table" id="referral-table">
                     <thead>
                         <tr>
-                            <th>Date & Time</th>
+                            <th>#</th>
                             <th>From Wallet</th>
                             <th>Level</th>
-                            <th>Reward %</th>
+                            <th>Percentage</th>
                             <th>Amount (SIG6)</th>
-                            <th>USDT Value</th>
+                            <th>Date</th>
                         </tr>
                     </thead>
-                    <tbody id="refTableBody">
-                        <tr><td colspan="6" class="loading"><i class="fas fa-spinner fa-spin"></i><br>Loading referral income...</td></tr>
-                    </tbody>
+                    <tbody id="referral-body-desktop"></tbody>
                 </table>
+                <div class="mobile-cards" id="referral-body-mobile"></div>
             </div>
         </div>
         
-        <!-- Lapsed Income Card -->
-        <div class="income-card" id="lapsedCard">
-            <div class="card-header">
-                <i class="fas fa-clock"></i>
-                <h2>Lapsed Income (Missed Referrals)</h2>
-                <span id="lapsedCount">0 transactions</span>
-            </div>
-            <div class="table-responsive">
-                <table>
+        <!-- Lapsed Income Table -->
+        <div class="main-card">
+            <h2 class="card-title"><i class="fas fa-exclamation-triangle"></i> Lapsed Income</h2>
+            <div class="table-container">
+                <table class="desktop-table" id="lapsed-table">
                     <thead>
                         <tr>
-                            <th>Date & Time</th>
+                            <th>#</th>
                             <th>From Wallet</th>
-                            <th>To Wallet</th>
                             <th>Level</th>
+                            <th>Amount (SIG6)</th>
                             <th>Reason</th>
-                            <th>Amount Lost (SIG6)</th>
-                            <th>USDT Value</th>
+                            <th>Date</th>
                         </tr>
                     </thead>
-                    <tbody id="lapsedTableBody">
-                        <tr><td colspan="7" class="loading"><i class="fas fa-spinner fa-spin"></i><br>Loading lapsed income...</td></tr>
-                    </tbody>
+                    <tbody id="lapsed-body-desktop"></tbody>
                 </table>
+                <div class="mobile-cards" id="lapsed-body-mobile"></div>
             </div>
         </div>
     </div>
 
     <script>
-        // ========== CONTRACT CONFIGURATION (UPDATED) ==========
-        const SIGMA_ADDR = "0x5bC7581A6f7dA420e931d17bD5CaF699C033f7Fd";
-        const CREATOR_WALLET = "0xb579377DDe2C03b2b46B5b12453F4dbAddB06f2E";
+        // Contract Configuration
+        const SIGMA_CONTRACT_ADDRESS = "0x068Aaba73Fd754F21140E2F13DA177ce7251A299";
+        let provider, userAddress, sigmaContract, signer;
+        let allReferralEvents = [];
+        let allLapsedEvents = [];
+        let allBoughtEvents = [];
         
-        // Complete ABI (REPLACED WITH PROVIDED ABI)
-        const SIGMA_ABI = [
-		{
-			"inputs": [
-				{
-					"internalType": "address",
-					"name": "spender",
-					"type": "address"
-				},
-				{
-					"internalType": "uint256",
-					"name": "value",
-					"type": "uint256"
-				}
-			],
-			"name": "approve",
-			"outputs": [
-				{
-					"internalType": "bool",
-					"name": "",
-					"type": "bool"
-				}
-			],
-			"stateMutability": "nonpayable",
-			"type": "function"
-		},
-		{
-			"inputs": [],
-			"name": "emergencyWithdraw",
-			"outputs": [],
-			"stateMutability": "nonpayable",
-			"type": "function"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "address",
-					"name": "_usdt",
-					"type": "address"
-				},
-				{
-					"internalType": "address",
-					"name": "_creator",
-					"type": "address"
-				}
-			],
-			"stateMutability": "nonpayable",
-			"type": "constructor"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "address",
-					"name": "spender",
-					"type": "address"
-				},
-				{
-					"internalType": "uint256",
-					"name": "allowance",
-					"type": "uint256"
-				},
-				{
-					"internalType": "uint256",
-					"name": "needed",
-					"type": "uint256"
-				}
-			],
-			"name": "ERC20InsufficientAllowance",
-			"type": "error"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "address",
-					"name": "sender",
-					"type": "address"
-				},
-				{
-					"internalType": "uint256",
-					"name": "balance",
-					"type": "uint256"
-				},
-				{
-					"internalType": "uint256",
-					"name": "needed",
-					"type": "uint256"
-				}
-			],
-			"name": "ERC20InsufficientBalance",
-			"type": "error"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "address",
-					"name": "approver",
-					"type": "address"
-				}
-			],
-			"name": "ERC20InvalidApprover",
-			"type": "error"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "address",
-					"name": "receiver",
-					"type": "address"
-				}
-			],
-			"name": "ERC20InvalidReceiver",
-			"type": "error"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "address",
-					"name": "sender",
-					"type": "address"
-				}
-			],
-			"name": "ERC20InvalidSender",
-			"type": "error"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "address",
-					"name": "spender",
-					"type": "address"
-				}
-			],
-			"name": "ERC20InvalidSpender",
-			"type": "error"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "address",
-					"name": "owner",
-					"type": "address"
-				}
-			],
-			"name": "OwnableInvalidOwner",
-			"type": "error"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "address",
-					"name": "account",
-					"type": "address"
-				}
-				],
-			"name": "OwnableUnauthorizedAccount",
-			"type": "error"
-		},
-		{
-			"inputs": [],
-			"name": "ReentrancyGuardReentrantCall",
-			"type": "error"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "address",
-					"name": "token",
-					"type": "address"
-				}
-			],
-			"name": "SafeERC20FailedOperation",
-			"type": "error"
-		},
-		{
-			"anonymous": false,
-			"inputs": [
-				{
-					"indexed": true,
-					"internalType": "address",
-					"name": "owner",
-					"type": "address"
-				},
-				{
-					"indexed": true,
-					"internalType": "address",
-					"name": "spender",
-					"type": "address"
-				},
-				{
-					"indexed": false,
-					"internalType": "uint256",
-					"name": "value",
-					"type": "uint256"
-				}
-			],
-			"name": "Approval",
-			"type": "event"
-		},
-		{
-			"anonymous": false,
-			"inputs": [
-				{
-					"indexed": true,
-					"internalType": "address",
-					"name": "user",
-					"type": "address"
-				},
-				{
-					"indexed": false,
-					"internalType": "uint256",
-					"name": "usdtAmount",
-					"type": "uint256"
-				},
-				{
-					"indexed": false,
-					"internalType": "uint256",
-					"name": "sigmaAmount",
-					"type": "uint256"
-				},
-				{
-					"indexed": false,
-					"internalType": "uint256",
-					"name": "rate",
-					"type": "uint256"
-				},
-				{
-					"indexed": false,
-					"internalType": "uint256",
-					"name": "timestamp",
-					"type": "uint256"
-				}
-			],
-			"name": "Bought",
-			"type": "event"
-		},
-		{
-			"anonymous": false,
-			"inputs": [
-				{
-					"indexed": true,
-					"internalType": "address",
-					"name": "from",
-					"type": "address"
-				},
-				{
-					"indexed": true,
-					"internalType": "address",
-					"name": "to",
-					"type": "address"
-				},
-				{
-					"indexed": false,
-					"internalType": "uint256",
-					"name": "amount",
-					"type": "uint256"
-				},
-				{
-					"indexed": false,
-					"internalType": "uint256",
-					"name": "level",
-					"type": "uint256"
-				},
-				{
-					"indexed": false,
-					"internalType": "string",
-					"name": "reason",
-					"type": "string"
-				},
-				{
-					"indexed": false,
-					"internalType": "uint256",
-					"name": "timestamp",
-					"type": "uint256"
-				}
-			],
-			"name": "IncomeLapsed",
-			"type": "event"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "address[]",
-					"name": "_users",
-					"type": "address[]"
-				},
-				{
-					"internalType": "uint256[]",
-					"name": "_balances",
-					"type": "uint256[]"
-				},
-				{
-					"internalType": "address[]",
-					"name": "_uplines",
-					"type": "address[]"
-				}
-			],
-			"name": "migrateUsers",
-			"outputs": [],
-			"stateMutability": "nonpayable",
-			"type": "function"
-		},
-		{
-			"anonymous": false,
-			"inputs": [
-				{
-					"indexed": true,
-					"internalType": "address",
-					"name": "previousOwner",
-					"type": "address"
-				},
-				{
-					"indexed": true,
-					"internalType": "address",
-					"name": "newOwner",
-					"type": "address"
-				}
-			],
-			"name": "OwnershipTransferred",
-			"type": "event"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "address",
-					"name": "_to",
-					"type": "address"
-				},
-				{
-					"internalType": "uint256",
-					"name": "_amount",
-					"type": "uint256"
-				}
-			],
-			"name": "p2pTransfer",
-			"outputs": [],
-			"stateMutability": "nonpayable",
-			"type": "function"
-		},
-		{
-			"anonymous": false,
-			"inputs": [
-				{
-					"indexed": true,
-					"internalType": "address",
-					"name": "from",
-					"type": "address"
-				},
-				{
-					"indexed": true,
-					"internalType": "address",
-					"name": "to",
-					"type": "address"
-				},
-				{
-					"indexed": false,
-					"internalType": "uint256",
-					"name": "amount",
-					"type": "uint256"
-				},
-				{
-					"indexed": false,
-					"internalType": "uint256",
-					"name": "timestamp",
-					"type": "uint256"
-				},
-				{
-					"indexed": false,
-					"internalType": "uint256",
-					"name": "currentRate",
-					"type": "uint256"
-				}
-			],
-			"name": "P2PTransfer",
-			"type": "event"
-		},
-		{
-			"anonymous": false,
-			"inputs": [
-				{
-					"indexed": true,
-					"internalType": "address",
-					"name": "from",
-					"type": "address"
-				},
-				{
-					"indexed": true,
-					"internalType": "address",
-					"name": "to",
-					"type": "address"
-				},
-				{
-					"indexed": false,
-					"internalType": "uint256",
-					"name": "amount",
-					"type": "uint256"
-				},
-				{
-					"indexed": false,
-					"internalType": "uint256",
-					"name": "level",
-					"type": "uint256"
-				},
-				{
-					"indexed": false,
-					"internalType": "uint256",
-					"name": "timestamp",
-					"type": "uint256"
-				}
-			],
-			"name": "ReferralPaid",
-			"type": "event"
-		},
-		{
-			"inputs": [],
-			"name": "renounceOwnership",
-			"outputs": [],
-			"stateMutability": "nonpayable",
-			"type": "function"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "uint256",
-					"name": "_sigmaAmount",
-					"type": "uint256"
-				}
-			],
-			"name": "sell",
-			"outputs": [],
-			"stateMutability": "nonpayable",
-			"type": "function"
-		},
-		{
-			"anonymous": false,
-			"inputs": [
-				{
-					"indexed": true,
-					"internalType": "address",
-					"name": "user",
-					"type": "address"
-				},
-				{
-					"indexed": false,
-					"internalType": "uint256",
-					"name": "sigmaAmount",
-					"type": "uint256"
-				},
-				{
-					"indexed": false,
-					"internalType": "uint256",
-					"name": "usdtAmount",
-					"type": "uint256"
-				},
-				{
-					"indexed": false,
-					"internalType": "uint256",
-					"name": "rate",
-					"type": "uint256"
-				},
-				{
-					"indexed": false,
-					"internalType": "uint256",
-					"name": "timestamp",
-					"type": "uint256"
-				}
-			],
-			"name": "Sold",
-			"type": "event"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "address",
-					"name": "to",
-					"type": "address"
-				},
-				{
-					"internalType": "uint256",
-					"name": "value",
-					"type": "uint256"
-				}
-			],
-			"name": "transfer",
-			"outputs": [
-				{
-					"internalType": "bool",
-					"name": "",
-					"type": "bool"
-				}
-			],
-			"stateMutability": "nonpayable",
-			"type": "function"
-		},
-		{
-			"anonymous": false,
-			"inputs": [
-				{
-					"indexed": true,
-					"internalType": "address",
-					"name": "from",
-					"type": "address"
-				},
-				{
-					"indexed": true,
-					"internalType": "address",
-					"name": "to",
-					"type": "address"
-				},
-				{
-					"indexed": false,
-					"internalType": "uint256",
-					"name": "value",
-					"type": "uint256"
-				}
-			],
-			"name": "Transfer",
-			"type": "event"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "address",
-					"name": "from",
-					"type": "address"
-				},
-				{
-					"internalType": "address",
-					"name": "to",
-					"type": "address"
-				},
-				{
-					"internalType": "uint256",
-					"name": "value",
-					"type": "uint256"
-				}
-			],
-			"name": "transferFrom",
-			"outputs": [
-				{
-					"internalType": "bool",
-					"name": "",
-					"type": "bool"
-				}
-			],
-			"stateMutability": "nonpayable",
-			"type": "function"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "address",
-					"name": "newOwner",
-					"type": "address"
-				}
-			],
-			"name": "transferOwnership",
-			"outputs": [],
-			"stateMutability": "nonpayable",
-			"type": "function"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "address",
-					"name": "_upline",
-					"type": "address"
-				},
-				{
-					"internalType": "uint256",
-					"name": "_level",
-					"type": "uint256"
-				}
-			],
-			"name": "_isEligible",
-			"outputs": [
-				{
-					"internalType": "bool",
-					"name": "",
-					"type": "bool"
-				}
-			],
-			"stateMutability": "view",
-			"type": "function"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "address",
-					"name": "owner",
-					"type": "address"
-				},
-				{
-					"internalType": "address",
-					"name": "spender",
-					"type": "address"
-				}
-			],
-			"name": "allowance",
-			"outputs": [
-				{
-					"internalType": "uint256",
-					"name": "",
-					"type": "uint256"
-				}
-			],
-			"stateMutability": "view",
-			"type": "function"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "address",
-					"name": "account",
-					"type": "address"
-				}
-			],
-			"name": "balanceOf",
-			"outputs": [
-				{
-					"internalType": "uint256",
-					"name": "",
-					"type": "uint256"
-				}
-			],
-			"stateMutability": "view",
-			"type": "function"
-		},
-		{
-			"inputs": [],
-			"name": "BASE_RATE",
-			"outputs": [
-				{
-					"internalType": "uint256",
-					"name": "",
-					"type": "uint256"
-				}
-			],
-			"stateMutability": "view",
-			"type": "function"
-		},
-		{
-			"inputs": [],
-			"name": "creatorWallet",
-			"outputs": [
-				{
-					"internalType": "address",
-					"name": "",
-					"type": "address"
-				}
-			],
-			"stateMutability": "view",
-			"type": "function"
-		},
-		{
-			"inputs": [],
-			"name": "currentRate",
-			"outputs": [
-				{
-					"internalType": "uint256",
-					"name": "",
-					"type": "uint256"
-				}
-			],
-			"stateMutability": "view",
-			"type": "function"
-		},
-		{
-			"inputs": [],
-			"name": "decimals",
-			"outputs": [
-				{
-					"internalType": "uint8",
-					"name": "",
-					"type": "uint8"
-				}
-			],
-			"stateMutability": "view",
-			"type": "function"
-		},
-		{
-			"inputs": [],
-			"name": "getSellRate",
-			"outputs": [
-				{
-					"internalType": "uint256",
-					"name": "",
-					"type": "uint256"
-				}
-			],
-			"stateMutability": "view",
-			"type": "function"
-		},
-		{
-			"inputs": [],
-			"name": "INCREMENT",
-			"outputs": [
-				{
-					"internalType": "uint256",
-					"name": "",
-					"type": "uint256"
-				}
-			],
-			"stateMutability": "view",
-			"type": "function"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "uint256",
-					"name": "",
-					"type": "uint256"
-				}
-			],
-			"name": "levelRewards",
-			"outputs": [
-				{
-					"internalType": "uint256",
-					"name": "",
-					"type": "uint256"
-				}
-			],
-			"stateMutability": "view",
-			"type": "function"
-		},
-		{
-			"inputs": [],
-			"name": "MIN_USDT_FOR_REF",
-			"outputs": [
-				{
-					"internalType": "uint256",
-					"name": "",
-					"type": "uint256"
-				}
-			],
-			"stateMutability": "view",
-			"type": "function"
-		},
-		{
-			"inputs": [],
-			"name": "name",
-			"outputs": [
-				{
-					"internalType": "string",
-					"name": "",
-					"type": "string"
-				}
-			],
-			"stateMutability": "view",
-			"type": "function"
-		},
-		{
-			"inputs": [],
-			"name": "owner",
-			"outputs": [
-				{
-					"internalType": "address",
-					"name": "",
-					"type": "address"
-				}
-			],
-			"stateMutability": "view",
-			"type": "function"
-		},
-		{
-			"inputs": [],
-			"name": "symbol",
-			"outputs": [
-				{
-					"internalType": "string",
-					"name": "",
-					"type": "string"
-				}
-			],
-			"stateMutability": "view",
-			"type": "function"
-		},
-		{
-			"inputs": [],
-			"name": "totalSupply",
-			"outputs": [
-				{
-					"internalType": "uint256",
-					"name": "",
-					"type": "uint256"
-				}
-			],
-			"stateMutability": "view",
-			"type": "function"
-		},
-		{
-			"inputs": [],
-			"name": "usdt",
-			"outputs": [
-				{
-					"internalType": "contract IERC20",
-					"name": "",
-					"type": "address"
-				}
-			],
-			"stateMutability": "view",
-			"type": "function"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "address",
-					"name": "",
-					"type": "address"
-				}
-			],
-			"name": "users",
-			"outputs": [
-				{
-					"internalType": "address",
-					"name": "upline",
-					"type": "address"
-				},
-				{
-					"internalType": "uint256",
-					"name": "referralExpiry",
-					"type": "uint256"
-				},
-				{
-					"internalType": "uint256",
-					"name": "totalReferralEarned",
-					"type": "uint256"
-				},
-				{
-					"internalType": "uint256",
-					"name": "lastBuyTimestamp",
-					"type": "uint256"
-				},
-				{
-					"internalType": "uint256",
-					"name": "directCount",
-					"type": "uint256"
-				},
-				{
-					"internalType": "bool",
-					"name": "isMigrated",
-					"type": "bool"
-				},
-				{
-					"internalType": "bool",
-					"name": "hasBought",
-					"type": "bool"
-				}
-			],
-			"stateMutability": "view",
-			"type": "function"
-		}
-	];
+        // Correct referral percentages from contract
+        const levelPercent = [0, 10, 4, 3, 2, 1, 0.5, 0.5, 0.5, 0.5, 0.5];
+        
+        // Complete ABI
+        const sigmaABI = [{"inputs":[{"internalType":"address","name":"_usdt","type":"address"},{"internalType":"address","name":"_creator","type":"address"}],"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"owner","type":"address"},{"indexed":true,"internalType":"address","name":"spender","type":"address"},{"indexed":false,"internalType":"uint256","name":"value","type":"uint256"}],"name":"Approval","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":false,"internalType":"uint256","name":"usdtAmount","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"sigmaAmount","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"rate","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"timestamp","type":"uint256"}],"name":"Bought","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"from","type":"address"},{"indexed":true,"internalType":"address","name":"to","type":"address"},{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"level","type":"uint256"},{"indexed":false,"internalType":"string","name":"reason","type":"string"},{"indexed":false,"internalType":"uint256","name":"timestamp","type":"uint256"}],"name":"IncomeLapsed","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"previousOwner","type":"address"},{"indexed":true,"internalType":"address","name":"newOwner","type":"address"}],"name":"OwnershipTransferred","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"from","type":"address"},{"indexed":true,"internalType":"address","name":"to","type":"address"},{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"level","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"timestamp","type":"uint256"}],"name":"ReferralPaid","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":false,"internalType":"uint256","name":"sigmaAmount","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"usdtAmount","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"rate","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"timestamp","type":"uint256"}],"name":"Sold","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"from","type":"address"},{"indexed":true,"internalType":"address","name":"to","type":"address"},{"indexed":false,"internalType":"uint256","name":"value","type":"uint256"}],"name":"Transfer","type":"event"},{"inputs":[],"name":"BASE_RATE","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"INCREMENT","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"MAX_SIGMA_BUY","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"MIN_FOR_RENEWAL","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"MIN_HOLD_VALUE","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_user","type":"address"},{"internalType":"address","name":"_upline","type":"address"}],"name":"adminSetUpline","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"owner","type":"address"},{"internalType":"address","name":"spender","type":"address"}],"name":"allowance","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"value","type":"uint256"}],"name":"approve","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"ath","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"atl","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"account","type":"address"}],"name":"balanceOf","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"_usdtAmount","type":"uint256"},{"internalType":"address","name":"_upline","type":"address"}],"name":"buy","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"creatorWallet","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"currentRate","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"dailyHistory","outputs":[{"internalType":"uint256","name":"open","type":"uint256"},{"internalType":"uint256","name":"high","type":"uint256"},{"internalType":"uint256","name":"low","type":"uint256"},{"internalType":"uint256","name":"close","type":"uint256"},{"internalType":"uint256","name":"timestamp","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"decimals","outputs":[{"internalType":"uint8","name":"","type":"uint8"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"getSellRate","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_upline","type":"address"},{"internalType":"uint256","name":"_level","type":"uint256"}],"name":"isLevelUnlocked","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"lastHistoryDay","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"levelRewards","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"name","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"owner","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_to","type":"address"},{"internalType":"uint256","name":"_amount","type":"uint256"}],"name":"p2pTransfer","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"renounceOwnership","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_sigmaAmount","type":"uint256"}],"name":"sell","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"symbol","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"totalSupply","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"value","type":"uint256"}],"name":"transfer","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"from","type":"address"},{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"value","type":"uint256"}],"name":"transferFrom","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"usdt","outputs":[{"internalType":"contract IERC20","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"users","outputs":[{"internalType":"address","name":"upline","type":"address"},{"internalType":"uint256","name":"referralExpiry","type":"uint256"},{"internalType":"uint256","name":"totalReferralEarned","type":"uint256"},{"internalType":"uint256","name":"lastBuyTimestamp","type":"uint256"},{"internalType":"uint256","name":"lastActionBlock","type":"uint256"},{"internalType":"uint256","name":"qualifiedDirectsCount","type":"uint256"},{"internalType":"bool","name":"hasBought","type":"bool"},{"internalType":"bool","name":"isInitialized","type":"bool"},{"internalType":"bool","name":"isCurrentlyQualified","type":"bool"}],"stateMutability":"view","type":"function"}];
 
-        let provider, signer, userAddress;
-        let sigmaContract;
-        let isConnected = false;
-        let currentRate = 0.0105;
-        let sellRate = 0.0100;
+        // Helper Functions
+        async function checkChain() { 
+            if(!provider) return false; 
+            try{ 
+                const net = await provider.getNetwork(); 
+                const chainId = Number(net.chainId); 
+                if(chainId !== 137 && chainId !== 80001){ 
+                    document.getElementById('chainWarning').classList.add('show'); 
+                    return false; 
+                } else { 
+                    document.getElementById('chainWarning').classList.remove('show'); 
+                    return true; 
+                }
+            } catch { 
+                return false; 
+            }
+        }
         
-        // Income data arrays
-        let icoIncome = [];
-        let referralIncome = [];
-        let lapsedIncome = [];
-        
-        // Level rewards percentages (from contract - basis points to percentage)
-        const levelRewards = [10.00, 4.00, 3.00, 2.00, 1.00, 0.50, 0.50, 0.50, 0.50, 0.50]; // percentages
-        
-        window.onload = async () => {
+        async function handleConnectClick() {
             if (window.ethereum) {
+                await connectWallet();
+            } else {
+                alert("Please install MetaMask or another Web3 wallet.");
+            }
+        }
+        
+        async function connectWallet(){
+            let ethProvider = window.ethereum;
+            if(!ethProvider){ alert("Wallet not found"); return; }
+            try{
+                provider = new ethers.BrowserProvider(ethProvider);
+                let accounts = await provider.send("eth_requestAccounts",[]);
+                if(!accounts || accounts.length===0) throw new Error("No accounts");
+                userAddress = accounts[0];
+                signer = await provider.getSigner();
+                sigmaContract = new ethers.Contract(SIGMA_CONTRACT_ADDRESS, sigmaABI, provider);
+                await checkChain();
+                const connectBtn = document.getElementById('connectBtn');
+                document.getElementById('btn-text').innerText = "🦊 "+userAddress.slice(0,6)+"..."+userAddress.slice(-4);
+                connectBtn.classList.add('connected');
+                localStorage.setItem('sigma_wallet_connected','true');
+                loadIncomeData();
+                
+                ethProvider.on('accountsChanged', async (accs) => { 
+                    if(accs.length > 0){ 
+                        userAddress = accs[0]; 
+                        signer = await provider.getSigner(); 
+                        document.getElementById('btn-text').innerText = "🦊 "+userAddress.slice(0,6)+"..."; 
+                        loadIncomeData(); 
+                    } else { 
+                        location.reload(); 
+                    } 
+                });
+                ethProvider.on('chainChanged', () => window.location.reload());
+            } catch(e){ 
+                alert("Error: "+e.message); 
+            }
+        }
+
+        async function loadIncomeData(){
+            if(!userAddress){ handleConnectClick(); return; }
+            if(!(await checkChain())) return;
+            
+            // Loading states
+            document.getElementById('ico-body-desktop').innerHTML = `<tr><td colspan="6" class="loading"><i class="fas fa-spinner fa-spin"></i> Loading ICO data...</td></tr>`;
+            document.getElementById('referral-body-desktop').innerHTML = `<tr><td colspan="6" class="loading"><i class="fas fa-spinner fa-spin"></i> Loading referral data...</td></tr>`;
+            document.getElementById('lapsed-body-desktop').innerHTML = `<tr><td colspan="6" class="loading"><i class="fas fa-spinner fa-spin"></i> Loading lapsed data...</td></tr>`;
+            
+            document.getElementById('ico-body-mobile').innerHTML = `<div class="loading"><i class="fas fa-spinner fa-spin"></i> Loading...</div>`;
+            document.getElementById('referral-body-mobile').innerHTML = `<div class="loading"><i class="fas fa-spinner fa-spin"></i> Loading...</div>`;
+            document.getElementById('lapsed-body-mobile').innerHTML = `<div class="loading"><i class="fas fa-spinner fa-spin"></i> Loading...</div>`;
+            
+            try{
+                const currentBlock = await provider.getBlockNumber();
+                const fromBlock = Math.max(0, currentBlock - 3000000); 
+                
+                // Fetch ReferralPaid events
+                const referralFilter = sigmaContract.filters.ReferralPaid(null, userAddress);
+                const refEvents = await sigmaContract.queryFilter(referralFilter, fromBlock, currentBlock);
+                
+                // Fetch Bought events
+                const boughtFilter = sigmaContract.filters.Bought(userAddress);
+                const boughtEvents = await sigmaContract.queryFilter(boughtFilter, fromBlock, currentBlock);
+                
+                // Fetch Lapsed events
+                const lapsedFilter = sigmaContract.filters.IncomeLapsed(null, userAddress);
+                const lapEvents = await sigmaContract.queryFilter(lapsedFilter, fromBlock, currentBlock);
+                
+                allReferralEvents = refEvents;
+                allBoughtEvents = boughtEvents;
+                allLapsedEvents = lapEvents;
+                
+                // Display data - ICO shows ONLY first purchase
+                displayICOData(allBoughtEvents);
+                displayReferralData(allReferralEvents);
+                displayLapsedData(allLapsedEvents);
+                updateStats(allReferralEvents, allBoughtEvents, allLapsedEvents);
+            } catch(error){
+                console.error(error);
+                document.getElementById('ico-body-desktop').innerHTML = `<tr><td colspan="6" class="no-data">Error: ${error.message}</td></tr>`;
+            }
+        }
+
+        function displayICOData(events){
+            const desktop = document.getElementById('ico-body-desktop');
+            const mobile = document.getElementById('ico-body-mobile');
+            
+            if(!events.length){ 
+                desktop.innerHTML = `<tr><td colspan="6" class="no-data">No purchases found</td></tr>`;
+                mobile.innerHTML = `<div class="no-data">No purchases found</div>`;
+                return;
+            }
+            
+            // Sort by timestamp (oldest first to find first purchase)
+            events.sort((a,b) => Number(a.args.timestamp) - Number(b.args.timestamp));
+            
+            // Take ONLY the first purchase
+            const firstPurchase = events[0];
+            
+            let args = firstPurchase.args;
+            let usdtAmount = parseFloat(ethers.formatUnits(args.usdtAmount, 6));
+            let sigmaAmount = parseFloat(ethers.formatUnits(args.sigmaAmount, 18));
+            let ts = Number(args.timestamp);
+            let dateStr = new Date(ts * 1000).toLocaleDateString('en-IN');
+            let timeStr = new Date(ts * 1000).toLocaleTimeString('en-IN');
+            
+            // Calculate base amount and bonus (10% on first purchase)
+            let baseAmount = sigmaAmount * 100 / 110;
+            let bonusAmount = sigmaAmount - baseAmount;
+            
+            let html = `<tr>
+                <td>1</td>
+                <td>${dateStr}<br><small>${timeStr}</small></td>
+                <td>$${usdtAmount.toFixed(2)} USDT</td>
+                <td>${baseAmount.toFixed(4)} SIG6</td>
+                <td class="amount-positive">+${bonusAmount.toFixed(4)} SIG6</td>
+                <td class="amount-positive">${sigmaAmount.toFixed(4)} SIG6</td>
+            </tr>`;
+            
+            let mobileHtml = `<div class="mobile-card">
+                <div class="mobile-card-header"><span class="mobile-card-title">First Purchase (with 10% Bonus)</span></div>
+                <div class="mobile-card-row"><span class="mobile-card-label">Date</span><span class="mobile-card-value">${dateStr} ${timeStr}</span></div>
+                <div class="mobile-card-row"><span class="mobile-card-label">USDT</span><span class="mobile-card-value">$${usdtAmount.toFixed(2)}</span></div>
+                <div class="mobile-card-row"><span class="mobile-card-label">Base SIG6</span><span class="mobile-card-value">${baseAmount.toFixed(4)}</span></div>
+                <div class="mobile-card-row"><span class="mobile-card-label">Bonus (10%)</span><span class="mobile-card-value mobile-amount positive">+${bonusAmount.toFixed(4)}</span></div>
+                <div class="mobile-card-row"><span class="mobile-card-label">Total</span><span class="mobile-card-value mobile-amount positive">${sigmaAmount.toFixed(4)} SIG6</span></div>
+            </div>`;
+            
+            desktop.innerHTML = html;
+            mobile.innerHTML = mobileHtml;
+        }
+
+        function displayReferralData(events){
+            const desktop = document.getElementById('referral-body-desktop');
+            const mobile = document.getElementById('referral-body-mobile');
+            
+            if(!events.length){ 
+                desktop.innerHTML = `<tr><td colspan="6" class="no-data">No referral income received yet</td></tr>`;
+                mobile.innerHTML = `<div class="no-data">No referral income received yet</div>`;
+                return;
+            }
+            
+            events.sort((a,b) => Number(b.args.timestamp) - Number(a.args.timestamp));
+            let html = '', mobileHtml = '';
+            
+            events.forEach((ev, i) => {
+                let args = ev.args;
+                let from = args.from;
+                let level = Number(args.level);
+                let amount = parseFloat(ethers.formatUnits(args.amount, 18));
+                let percent = (level >= 1 && level <= 10) ? levelPercent[level] : 0;
+                let ts = Number(args.timestamp);
+                let dateStr = new Date(ts * 1000).toLocaleDateString('en-IN');
+                let fromShort = from.slice(0,6) + '...' + from.slice(-4);
+                
+                html += `<tr>
+                    <td>${i+1}</td>
+                    <td><div class="wallet-address" onclick="copyToClipboard('${from}')"><i class="fas fa-copy"></i> ${fromShort}</div></td>
+                    <td>Level ${level}</td>
+                    <td><span class="percent-badge">${percent}%</span></td>
+                    <td class="amount-positive">${amount.toFixed(4)} SIG6</td>
+                    <td>${dateStr}</td>
+                </tr>`;
+                
+                mobileHtml += `<div class="mobile-card">
+                    <div class="mobile-card-header"><span class="mobile-card-title">Level ${level}</span><span class="percent-badge">${percent}%</span></div>
+                    <div class="mobile-card-row"><span class="mobile-card-label">From</span><span class="mobile-card-value"><span class="mobile-wallet-address" onclick="copyToClipboard('${from}')"><i class="fas fa-copy"></i> ${fromShort}</span></span></div>
+                    <div class="mobile-card-row"><span class="mobile-card-label">Amount</span><span class="mobile-card-value mobile-amount positive">${amount.toFixed(4)} SIG6</span></div>
+                    <div class="mobile-card-row"><span class="mobile-card-label">Date</span><span class="mobile-card-value">${dateStr}</span></div>
+                </div>`;
+            });
+            
+            desktop.innerHTML = html;
+            mobile.innerHTML = mobileHtml;
+        }
+
+        function displayLapsedData(events){
+            const desktop = document.getElementById('lapsed-body-desktop');
+            const mobile = document.getElementById('lapsed-body-mobile');
+            
+            if(!events.length){
+                desktop.innerHTML = `<tr><td colspan="6" class="no-data">No lapsed income</td></tr>`;
+                mobile.innerHTML = `<div class="no-data">No lapsed income</div>`;
+                return;
+            }
+            
+            events.sort((a,b) => Number(b.args.timestamp) - Number(a.args.timestamp));
+            let html = '', mobileHtml = '';
+            
+            events.forEach((ev, i) => {
+                let args = ev.args;
+                let from = args.from;
+                let level = Number(args.level);
+                let amount = parseFloat(ethers.formatUnits(args.amount, 18));
+                let reason = args.reason || "Unknown";
+                let ts = Number(args.timestamp);
+                let date = new Date(ts * 1000).toLocaleDateString('en-IN');
+                let fromShort = from.slice(0,6) + '...' + from.slice(-4);
+                let reasonShort = reason.length > 25 ? reason.slice(0,25) + '...' : reason;
+                
+                html += `<tr>
+                    <td>${i+1}</td>
+                    <td><div class="wallet-address" onclick="copyToClipboard('${from}')"><i class="fas fa-copy"></i> ${fromShort}</div></td>
+                    <td>Level ${level}</td>
+                    <td class="amount-negative">${amount.toFixed(4)} SIG6</td>
+                    <td><span class="reason-badge" title="${reason}">${reasonShort}</span></td>
+                    <td>${date}</td>
+                </tr>`;
+                
+                mobileHtml += `<div class="mobile-card">
+                    <div class="mobile-card-header"><span class="mobile-card-title">Level ${level}</span></div>
+                    <div class="mobile-card-row"><span class="mobile-card-label">From</span><span class="mobile-card-value"><span class="mobile-wallet-address" onclick="copyToClipboard('${from}')"><i class="fas fa-copy"></i> ${fromShort}</span></span></div>
+                    <div class="mobile-card-row"><span class="mobile-card-label">Amount</span><span class="mobile-card-value mobile-amount negative">${amount.toFixed(4)} SIG6</span></div>
+                    <div class="mobile-card-row"><span class="mobile-card-label">Reason</span><span class="mobile-card-value">${reasonShort}</span></div>
+                    <div class="mobile-card-row"><span class="mobile-card-label">Date</span><span class="mobile-card-value">${date}</span></div>
+                </div>`;
+            });
+            
+            desktop.innerHTML = html;
+            mobile.innerHTML = mobileHtml;
+        }
+
+        function updateStats(refEvents, icoEvents, lapEvents){
+            let totalReferral = 0;
+            let totalICO = 0;
+            let totalLapsed = 0;
+            
+            refEvents.forEach(e => { 
+                totalReferral += parseFloat(ethers.formatUnits(e.args.amount, 18)); 
+            });
+            
+            // Only count first purchase for ICO total
+            if (icoEvents.length > 0) {
+                // Sort to get first purchase
+                icoEvents.sort((a,b) => Number(a.args.timestamp) - Number(b.args.timestamp));
+                totalICO += parseFloat(ethers.formatUnits(icoEvents[0].args.sigmaAmount, 18));
+            }
+            
+            lapEvents.forEach(e => { 
+                totalLapsed += parseFloat(ethers.formatUnits(e.args.amount, 18)); 
+            });
+            
+            let totalIncome = totalReferral + totalICO;
+            
+            document.getElementById('total-sig6').innerText = totalIncome.toFixed(4) + " SIG6";
+            document.getElementById('lapsed-income').innerText = totalLapsed.toFixed(4) + " SIG6";
+            document.getElementById('total-transactions').innerText = refEvents.length + (icoEvents.length > 0 ? 1 : 0) + lapEvents.length;
+        }
+
+        function applyFilters(){
+            const start = document.getElementById('startDate').value;
+            const end = document.getElementById('endDate').value;
+            const type = document.getElementById('incomeType').value;
+            const search = document.getElementById('searchWallet').value.toLowerCase().trim();
+            
+            let filteredRef = [...allReferralEvents];
+            let filteredIco = [...allBoughtEvents];
+            let filteredLap = [...allLapsedEvents];
+            
+            const toTimestamp = (d) => d ? Math.floor(new Date(d).getTime()/1000) : null;
+            const st = toTimestamp(start);
+            const et = end ? Math.floor(new Date(end).getTime()/1000) + 86400 : null;
+            
+            if(st){ 
+                filteredRef = filteredRef.filter(e => Number(e.args.timestamp) >= st); 
+                filteredIco = filteredIco.filter(e => Number(e.args.timestamp) >= st); 
+                filteredLap = filteredLap.filter(e => Number(e.args.timestamp) >= st); 
+            }
+            if(et){ 
+                filteredRef = filteredRef.filter(e => Number(e.args.timestamp) <= et); 
+                filteredIco = filteredIco.filter(e => Number(e.args.timestamp) <= et); 
+                filteredLap = filteredLap.filter(e => Number(e.args.timestamp) <= et); 
+            }
+            
+            if(type !== 'all'){
+                if(type === 'lapsed') { 
+                    filteredRef = []; 
+                    filteredIco = []; 
+                }
+                else if(type === 'REFERRAL') { 
+                    filteredIco = []; 
+                    filteredLap = []; 
+                }
+                else if(type === 'ICO') { 
+                    filteredRef = []; 
+                    filteredLap = []; 
+                }
+            }
+            
+            if(search){
+                filteredRef = filteredRef.filter(e => e.args.from.toLowerCase().includes(search));
+                filteredLap = filteredLap.filter(e => e.args.from.toLowerCase().includes(search));
+            }
+            
+            displayReferralData(filteredRef);
+            displayICOData(filteredIco);
+            displayLapsedData(filteredLap);
+            updateStats(filteredRef, filteredIco, filteredLap);
+        }
+
+        function resetFilters(){
+            document.getElementById('startDate').value = ''; 
+            document.getElementById('endDate').value = ''; 
+            document.getElementById('incomeType').value = 'all'; 
+            document.getElementById('searchWallet').value = '';
+            displayReferralData(allReferralEvents);
+            displayICOData(allBoughtEvents);
+            displayLapsedData(allLapsedEvents);
+            updateStats(allReferralEvents, allBoughtEvents, allLapsedEvents);
+        }
+
+        function copyToClipboard(t){ 
+            navigator.clipboard.writeText(t).then(() => alert("Address copied!")); 
+        }
+
+        // Initialize on page load
+        window.onload = function(){
+            const end = new Date(); 
+            const start = new Date(); 
+            start.setDate(start.getDate() - 30);
+            document.getElementById('startDate').valueAsDate = start; 
+            document.getElementById('endDate').valueAsDate = end;
+            
+            // Auto-connect if previously connected
+            if(localStorage.getItem('sigma_wallet_connected') === 'true' && window.ethereum){
                 provider = new ethers.BrowserProvider(window.ethereum);
-                const accounts = await provider.send("eth_accounts", []);
-                if (accounts.length > 0) await connectWallet();
+                provider.send("eth_accounts",[]).then(accs => { 
+                    if(accs.length){ 
+                        userAddress = accs[0]; 
+                        document.getElementById('btn-text').innerText = '🦊 ' + userAddress.slice(0,6) + '...'; 
+                        document.getElementById('connectBtn').classList.add('connected'); 
+                        sigmaContract = new ethers.Contract(SIGMA_CONTRACT_ADDRESS, sigmaABI, provider); 
+                        loadIncomeData(); 
+                    } 
+                });
             }
         };
-        
-        async function connectWallet() {
-            if (!window.ethereum) { 
-                alert("Please install MetaMask!"); 
-                window.open("https://metamask.io/download/", "_blank");
-                return; 
-            }
-            
-            try {
-                provider = new ethers.BrowserProvider(window.ethereum);
-                
-                // Check network
-                const network = await provider.getNetwork();
-                if (network.chainId !== 137n) {
-                    alert("Please switch to Polygon Mainnet");
-                    try {
-                        await window.ethereum.request({
-                            method: 'wallet_switchEthereumChain',
-                            params: [{ chainId: '0x89' }],
-                        });
-                    } catch (switchError) {
-                        console.log("Network switch error:", switchError);
-                    }
-                }
-                
-                const accounts = await provider.send("eth_requestAccounts", []);
-                userAddress = accounts[0].toLowerCase();
-                signer = await provider.getSigner();
-                
-                sigmaContract = new ethers.Contract(SIGMA_ADDR, SIGMA_ABI, provider);
-                
-                isConnected = true;
-                document.getElementById('connectBtn').classList.add('connected');
-                document.getElementById('btn-text').innerText = userAddress.slice(0,6) + '...' + userAddress.slice(-4);
-                
-                await loadIncomeData();
-                
-                // Auto-refresh every 30 seconds
-                setInterval(async () => {
-                    if (isConnected) {
-                        await loadIncomeData();
-                    }
-                }, 30000);
-                
-                window.ethereum.on('accountsChanged', async (acc) => {
-                    if (acc.length) { 
-                        userAddress = acc[0].toLowerCase(); 
-                        await loadIncomeData(); 
-                    } else {
-                        window.location.reload();
-                    }
-                });
-                
-            } catch (error) {
-                console.error("Connection error:", error);
-                alert("Connection failed: " + error.message);
-            }
-        }
-        
-        async function loadIncomeData() {
-            if (!userAddress || !sigmaContract) return;
-            
-            try {
-                // Get current rates
-                try {
-                    const rateBN = await sigmaContract.currentRate();
-                    const sellRateBN = await sigmaContract.getSellRate();
-                    currentRate = parseFloat(ethers.formatUnits(rateBN, 6));
-                    sellRate = parseFloat(ethers.formatUnits(sellRateBN, 6));
-                    
-                    document.getElementById('currentRate').innerText = currentRate.toFixed(4) + ' USDT';
-                } catch (e) {
-                    console.log("Rate fetch error:", e);
-                }
-
-                // Get user data to check migration status
-                const userData = await sigmaContract.users(userAddress).catch(() => null);
-                const isMigrated = userData ? userData.isMigrated : false;
-                
-                console.log("User data:", { 
-                    address: userAddress,
-                    isMigrated,
-                    hasBought: userData ? userData.hasBought : false 
-                });
-                
-                // ===== FETCH BOUGHT EVENTS (for ICO Bonus) =====
-                console.log("🔍 Fetching Bought events...");
-                const boughtFilter = sigmaContract.filters.Bought(userAddress);
-                const boughtEvents = await sigmaContract.queryFilter(boughtFilter, 0, 'latest');
-                
-                icoIncome = [];
-                
-                // Sort events by timestamp (oldest first)
-                const sortedEvents = boughtEvents.sort((a, b) => 
-                    Number(a.args.timestamp) - Number(b.args.timestamp)
-                );
-                
-                console.log(`Found ${sortedEvents.length} Bought events`);
-                
-                // ✅ FIX: ICO bonus sirf first buy ke liye aur sirf agar migrated nahi hai
-                for (let i = 0; i < sortedEvents.length; i++) {
-                    const event = sortedEvents[i];
-                    const timestamp = Number(event.args.timestamp);
-                    const sigmaAmount = parseFloat(ethers.formatEther(event.args.sigmaAmount));
-                    const usdtAmount = parseFloat(ethers.formatUnits(event.args.usdtAmount, 6));
-                    const rateAtBuy = parseFloat(ethers.formatUnits(event.args.rate, 6));
-                    
-                    // Calculate base amount WITHOUT bonus using rate at time of buy
-                    // Formula from contract: tokensToMint = (usdtAmount * 99 * 1e18) / (100 * rate)
-                    const baseAmount = (usdtAmount * 99) / (100 * rateAtBuy);
-                    const bonusAmount = sigmaAmount - baseAmount;
-                    
-                    console.log(`Buy #${i+1} at ${new Date(timestamp*1000).toLocaleString()}:`, {
-                        usdtAmount,
-                        sigmaAmount,
-                        rateAtBuy,
-                        baseAmount,
-                        bonusAmount,
-                        isEligible: (i === 0 && bonusAmount > 0.01 && !isMigrated)
-                    });
-                    
-                    // ✅ ICO bonus SIRF PEHLI BUY KE LIYE
-                    if (i === 0 && bonusAmount > 0.01 && !isMigrated) {
-                        icoIncome.push({
-                            date: new Date(timestamp * 1000),
-                            txHash: event.transactionHash,
-                            percentage: 10.00,
-                            amount: bonusAmount,
-                            usdtValue: bonusAmount * sellRate,
-                            rateAtBuy: rateAtBuy
-                        });
-                        console.log("✅ Added ICO bonus for first buy");
-                    }
-                }
-                
-                // ===== FETCH REFERRAL PAID EVENTS (to = userAddress) =====
-                console.log("🔍 Fetching ReferralPaid events...");
-                const refFilter = sigmaContract.filters.ReferralPaid(null, userAddress);
-                const refEvents = await sigmaContract.queryFilter(refFilter, 0, 'latest');
-                
-                referralIncome = [];
-                for (const event of refEvents) {
-                    const timestamp = Number(event.args.timestamp);
-                    const from = event.args.from.toLowerCase();
-                    const amount = parseFloat(ethers.formatEther(event.args.amount));
-                    const level = Number(event.args.level);
-                    
-                    // Get level reward percentage
-                    let percentage = 0;
-                    if (level >= 1 && level <= 10) {
-                        percentage = levelRewards[level - 1];
-                    }
-                    
-                    referralIncome.push({
-                        date: new Date(timestamp * 1000),
-                        txHash: event.transactionHash,
-                        from: from,
-                        fromShort: from.slice(0,6) + '...' + from.slice(-4),
-                        level: level,
-                        percentage: percentage,
-                        amount: amount,
-                        usdtValue: amount * sellRate
-                    });
-                }
-                
-                // ===== FETCH INCOME LAPSED EVENTS (to = userAddress) =====
-                console.log("🔍 Fetching IncomeLapsed events...");
-                const lapseFilter = sigmaContract.filters.IncomeLapsed(null, userAddress);
-                const lapseEvents = await sigmaContract.queryFilter(lapseFilter, 0, 'latest');
-                
-                lapsedIncome = [];
-                for (const event of lapseEvents) {
-                    const timestamp = Number(event.args.timestamp);
-                    const from = event.args.from.toLowerCase();
-                    const amount = parseFloat(ethers.formatEther(event.args.amount));
-                    const level = Number(event.args.level);
-                    const reason = event.args.reason;
-                    
-                    lapsedIncome.push({
-                        date: new Date(timestamp * 1000),
-                        txHash: event.transactionHash,
-                        from: from,
-                        fromShort: from.slice(0,6) + '...' + from.slice(-4),
-                        to: userAddress,
-                        toShort: userAddress.slice(0,6) + '...' + userAddress.slice(-4),
-                        level: level,
-                        reason: reason,
-                        amount: amount,
-                        usdtValue: amount * sellRate
-                    });
-                }
-                
-                // Update UI
-                updateStats();
-                renderTables();
-                document.getElementById('lastUpdated').innerText = 'Last updated: ' + new Date().toLocaleTimeString();
-                
-            } catch (error) {
-                console.error("Error loading income data:", error);
-                document.getElementById('icoTableBody').innerHTML = '<tr><td colspan="6" class="empty-state"><i class="fas fa-exclamation-triangle"></i><br>Error loading data</td></tr>';
-            }
-        }
-        
-        function updateStats() {
-            const totalIco = icoIncome.reduce((sum, i) => sum + i.amount, 0);
-            const totalRef = referralIncome.reduce((sum, i) => sum + i.amount, 0);
-            const totalLapsed = lapsedIncome.reduce((sum, i) => sum + i.amount, 0);
-            
-            document.getElementById('totalIco').innerText = totalIco.toFixed(2) + ' SIG6';
-            document.getElementById('totalIcoUsdt').innerText = '$' + (totalIco * sellRate).toFixed(2) + ' USDT';
-            
-            document.getElementById('totalRef').innerText = totalRef.toFixed(2) + ' SIG6';
-            document.getElementById('totalRefUsdt').innerText = '$' + (totalRef * sellRate).toFixed(2) + ' USDT';
-            
-            document.getElementById('totalLapsed').innerText = totalLapsed.toFixed(2) + ' SIG6';
-            document.getElementById('totalLapsedUsdt').innerText = '$' + (totalLapsed * sellRate).toFixed(2) + ' USDT';
-            
-            document.getElementById('icoCount').innerText = icoIncome.length + ' transaction';
-            document.getElementById('refCount').innerText = referralIncome.length + ' transactions';
-            document.getElementById('lapsedCount').innerText = lapsedIncome.length + ' transactions';
-        }
-        
-        function renderTables() {
-            // ICO Bonus Table
-            let icoHtml = '';
-            if (icoIncome.length === 0) {
-                icoHtml = '<tr><td colspan="6" class="empty-state"><i class="fas fa-gift"></i><br>No ICO bonus found</td></tr>';
-            } else {
-                icoIncome.sort((a, b) => b.date - a.date).forEach(i => {
-                    icoHtml += `<tr>
-                        <td>${i.date.toLocaleString()}</td>
-                        <td>
-                            <span class="wallet-addr" title="${i.txHash}">
-                                <i class="fas fa-receipt"></i> ${i.txHash ? i.txHash.slice(0,10)+'...' : 'Self'}
-                                <i class="fas fa-copy" style="margin-left:5px; cursor:pointer; opacity:0.7" onclick="copyToClipboard('${i.txHash}')" title="Copy TX Hash"></i>
-                            </span>
-                        </td>
-                        <td><span class="percentage">${i.percentage.toFixed(2)}%</span></td>
-                        <td style="color:var(--primary); font-weight:700">${i.amount.toFixed(2)} SIG6</td>
-                        <td>$${i.usdtValue.toFixed(2)}</td>
-                        <td>${i.rateAtBuy.toFixed(4)} USDT</td>
-                    </tr>`;
-                });
-            }
-            document.getElementById('icoTableBody').innerHTML = icoHtml;
-            
-            // Referral Table
-            let refHtml = '';
-            if (referralIncome.length === 0) {
-                refHtml = '<tr><td colspan="6" class="empty-state"><i class="fas fa-users"></i><br>No referral income yet</td></tr>';
-            } else {
-                referralIncome.sort((a, b) => b.date - a.date).forEach(r => {
-                    refHtml += `<tr>
-                        <td>${r.date.toLocaleString()}</td>
-                        <td>
-                            <span class="wallet-addr" title="${r.from}">
-                                <i class="fas fa-user"></i> ${r.fromShort}
-                                <i class="fas fa-copy" style="margin-left:5px; cursor:pointer; opacity:0.7" onclick="copyAddress('${r.from}')" title="Copy address"></i>
-                            </span>
-                        </td>
-                        <td><span class="level-badge level-${r.level}">Level ${r.level}</span></td>
-                        <td><span class="percentage">${r.percentage.toFixed(2)}%</span></td>
-                        <td style="color:var(--primary); font-weight:700">${r.amount.toFixed(2)} SIG6</td>
-                        <td>$${r.usdtValue.toFixed(2)}</td>
-                    </tr>`;
-                });
-            }
-            document.getElementById('refTableBody').innerHTML = refHtml;
-            
-            // Lapsed Table
-            let lapseHtml = '';
-            if (lapsedIncome.length === 0) {
-                lapseHtml = '<tr><td colspan="7" class="empty-state"><i class="fas fa-clock"></i><br>No lapsed income</td></tr>';
-            } else {
-                lapsedIncome.sort((a, b) => b.date - a.date).forEach(l => {
-                    lapseHtml += `<tr>
-                        <td>${l.date.toLocaleString()}</td>
-                        <td>
-                            <span class="wallet-addr" title="${l.from}">
-                                <i class="fas fa-user"></i> ${l.fromShort}
-                                <i class="fas fa-copy" style="margin-left:5px; cursor:pointer; opacity:0.7" onclick="copyAddress('${l.from}')" title="Copy address"></i>
-                            </span>
-                        </td>
-                        <td>
-                            <span class="wallet-addr" title="${l.to}">
-                                <i class="fas fa-user"></i> ${l.toShort}
-                            </span>
-                        </td>
-                        <td><span class="level-badge lapsed-badge">Level ${l.level}</span></td>
-                        <td><span class="reason-text" title="${l.reason}">${l.reason.length > 30 ? l.reason.slice(0,30)+'...' : l.reason}</span></td>
-                        <td style="color:var(--lapsed); font-weight:700">${l.amount.toFixed(2)} SIG6</td>
-                        <td>$${l.usdtValue.toFixed(2)}</td>
-                    </tr>`;
-                });
-            }
-            document.getElementById('lapsedTableBody').innerHTML = lapseHtml;
-        }
-        
-        function filterIncome(type) {
-            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
-            
-            const icoCard = document.getElementById('icoCard');
-            const refCard = document.getElementById('referralCard');
-            const lapseCard = document.getElementById('lapsedCard');
-            
-            if (type === 'all') {
-                icoCard.style.display = 'block';
-                refCard.style.display = 'block';
-                lapseCard.style.display = 'block';
-            } else if (type === 'ico') {
-                icoCard.style.display = 'block';
-                refCard.style.display = 'none';
-                lapseCard.style.display = 'none';
-            } else if (type === 'referral') {
-                icoCard.style.display = 'none';
-                refCard.style.display = 'block';
-                lapseCard.style.display = 'none';
-            } else if (type === 'lapsed') {
-                icoCard.style.display = 'none';
-                refCard.style.display = 'none';
-                lapseCard.style.display = 'block';
-            }
-        }
-        
-        function copyAddress(addr) {
-            navigator.clipboard.writeText(addr);
-            alert("Address copied to clipboard!");
-        }
-        
-        function copyToClipboard(text) {
-            navigator.clipboard.writeText(text);
-            alert("Copied to clipboard!");
-        }
     </script>
 </body>
 </html>
