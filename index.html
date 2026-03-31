@@ -38,7 +38,6 @@
             opacity: 0.5;
         }
         
-        /* Primary grid - thin lines */
         .crypto-bg::before {
             content: '';
             position: absolute;
@@ -47,23 +46,12 @@
             width: 200%;
             height: 200%;
             background-image: 
-                /* Vertical lines */
-                repeating-linear-gradient(90deg, 
-                    transparent 0px, 
-                    transparent 49px,
-                    rgba(0, 255, 204, 0.15) 49px,
-                    rgba(0, 255, 204, 0.15) 50px),
-                /* Horizontal lines */
-                repeating-linear-gradient(0deg, 
-                    transparent 0px, 
-                    transparent 49px,
-                    rgba(157, 78, 221, 0.15) 49px,
-                    rgba(157, 78, 221, 0.15) 50px);
+                repeating-linear-gradient(90deg, transparent 0px, transparent 49px, rgba(0,255,204,0.15) 49px, rgba(0,255,204,0.15) 50px),
+                repeating-linear-gradient(0deg, transparent 0px, transparent 49px, rgba(157,78,221,0.15) 49px, rgba(157,78,221,0.15) 50px);
             animation: gridMove 20s linear infinite;
             transform-origin: center;
         }
         
-        /* Secondary diagonal grid - crisscross effect */
         .crypto-bg::after {
             content: '';
             position: absolute;
@@ -72,41 +60,22 @@
             width: 200%;
             height: 200%;
             background-image: 
-                /* Diagonal lines 45deg */
-                repeating-linear-gradient(45deg, 
-                    transparent 0px, 
-                    transparent 69px,
-                    rgba(255, 42, 109, 0.1) 69px,
-                    rgba(255, 42, 109, 0.1) 70px),
-                /* Diagonal lines -45deg */
-                repeating-linear-gradient(-45deg, 
-                    transparent 0px, 
-                    transparent 89px,
-                    rgba(0, 255, 204, 0.1) 89px,
-                    rgba(0, 255, 204, 0.1) 90px);
+                repeating-linear-gradient(45deg, transparent 0px, transparent 69px, rgba(255,42,109,0.1) 69px, rgba(255,42,109,0.1) 70px),
+                repeating-linear-gradient(-45deg, transparent 0px, transparent 89px, rgba(0,255,204,0.1) 89px, rgba(0,255,204,0.1) 90px);
             animation: diagonalMove 15s linear infinite reverse;
             transform-origin: center;
         }
         
         @keyframes gridMove {
-            0% {
-                transform: translate(0, 0) rotate(0deg);
-            }
-            100% {
-                transform: translate(50px, 50px) rotate(0.5deg);
-            }
+            0% { transform: translate(0, 0) rotate(0deg); }
+            100% { transform: translate(50px, 50px) rotate(0.5deg); }
         }
         
         @keyframes diagonalMove {
-            0% {
-                transform: translate(0, 0) rotate(0deg);
-            }
-            100% {
-                transform: translate(-70px, -70px) rotate(-0.5deg);
-            }
+            0% { transform: translate(0, 0) rotate(0deg); }
+            100% { transform: translate(-70px, -70px) rotate(-0.5deg); }
         }
         
-        /* Floating particles for extra premium feel */
         .crypto-particles {
             position: fixed;
             top: 0;
@@ -128,37 +97,15 @@
             animation: particleFloat 15s infinite linear;
         }
         
-        .particle:nth-child(3n) {
-            background: var(--secondary);
-            box-shadow: 0 0 10px var(--secondary);
-        }
-        
-        .particle:nth-child(5n) {
-            background: #ff2a6d;
-            box-shadow: 0 0 10px #ff2a6d;
-        }
+        .particle:nth-child(3n) { background: var(--secondary); box-shadow: 0 0 10px var(--secondary); }
+        .particle:nth-child(5n) { background: #ff2a6d; box-shadow: 0 0 10px #ff2a6d; }
         
         @keyframes particleFloat {
-            0% {
-                transform: translate(0, 0) scale(1);
-                opacity: 0.3;
-            }
-            25% {
-                transform: translate(100px, -100px) scale(1.5);
-                opacity: 0.6;
-            }
-            50% {
-                transform: translate(200px, 0) scale(1);
-                opacity: 0.3;
-            }
-            75% {
-                transform: translate(100px, 100px) scale(0.8);
-                opacity: 0.6;
-            }
-            100% {
-                transform: translate(0, 0) scale(1);
-                opacity: 0.3;
-            }
+            0% { transform: translate(0, 0) scale(1); opacity: 0.3; }
+            25% { transform: translate(100px, -100px) scale(1.5); opacity: 0.6; }
+            50% { transform: translate(200px, 0) scale(1); opacity: 0.3; }
+            75% { transform: translate(100px, 100px) scale(0.8); opacity: 0.6; }
+            100% { transform: translate(0, 0) scale(1); opacity: 0.3; }
         }
         
         .rainbow-border { position:fixed; top:0; left:0; width:100%; height:4px; background:var(--gradient); background-size:400% 400%; animation:rainbow 8s ease infinite; z-index:1000; }
@@ -183,7 +130,7 @@
         .connect-btn { background:linear-gradient(90deg, var(--primary), var(--secondary)); color:#000; border:none; border-radius:15px; padding:16px 30px; font-weight:800; font-size:16px; cursor:pointer; transition:all 0.3s; display:flex; align-items:center; justify-content:center; gap:10px; box-shadow:0 4px 20px rgba(0,255,204,0.3); animation:float 4s ease-in-out infinite; }
         @keyframes float { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-10px); } }
         .connect-btn:hover { transform:translateY(-3px); box-shadow:0 8px 25px rgba(0,255,204,0.5); }
-        .connect-btn.connected { background:rgba(0,255,204,0.1); color:var(--primary); border:1px solid var(--primary); }
+        .connect-btn.connected { background:rgba(0,255,204,0.1); color:var(--primary); border:1px solid var(--primary); animation:none; }
         
         .main-card { background:rgba(22,24,33,0.8); backdrop-filter:blur(10px); border-radius:24px; padding:30px; border:1px solid rgba(0,255,204,0.2); box-shadow:0 20px 40px rgba(0,0,0,0.5); position:relative; overflow:hidden; }
         .main-card::before { content:''; position:absolute; top:0; left:0; width:100%; height:4px; background:var(--gradient); background-size:400% 400%; animation:rainbow 8s ease infinite; }
@@ -209,6 +156,7 @@
         
         .calc-box { background:rgba(0,255,204,0.05); border:1px dashed var(--primary); border-radius:16px; padding:20px; font-size:14px; margin-bottom:20px; min-height:100px; }
         .row { display:flex; justify-content:space-between; margin-bottom:10px; }
+        .tax-info { font-size:11px; color:#ffaa00; margin-top:8px; padding-top:8px; border-top:1px dashed rgba(0,255,204,0.3); }
         
         .action-btn { width:100%; padding:20px; border-radius:16px; border:none; font-weight:800; font-size:17px; cursor:pointer; transition:all 0.3s; margin-top:10px; text-transform:uppercase; background:var(--gradient); background-size:400% 400%; color:#000; animation:rainbow 8s ease infinite; }
         .action-btn:hover { transform:translateY(-3px); box-shadow:0 8px 25px rgba(0,255,204,0.4); }
@@ -220,6 +168,7 @@
             padding: 20px;
             margin: 15px 0;
             border: 1px solid var(--primary);
+            display: none;
         }
         .step {
             display: flex;
@@ -229,9 +178,7 @@
             border-radius: 12px;
             margin-bottom: 10px;
         }
-        .step:last-child {
-            margin-bottom: 0;
-        }
+        .step:last-child { margin-bottom: 0; }
         .step-number {
             width: 30px;
             height: 30px;
@@ -243,25 +190,10 @@
             justify-content: center;
             font-weight: 800;
         }
-        .step.completed .step-number {
-            background: var(--success);
-        }
-        .step.completed .step-text {
-            color: var(--success);
-        }
-        .step.active .step-number {
-            background: var(--warning);
-            animation: pulse 1s infinite;
-        }
-        .step-text {
-            flex: 1;
-            font-size: 14px;
-            font-weight: 600;
-        }
-        .step-status {
-            font-size: 12px;
-            color: #888;
-        }
+        .step.completed .step-number { background: var(--success); }
+        .step.active .step-number { background: var(--warning); animation: pulse 1s infinite; }
+        .step-text { flex: 1; font-size: 14px; font-weight: 600; }
+        .step-status { font-size: 12px; color: #888; }
         
         .contract-box { background:rgba(0,0,0,0.3); padding:20px; border-radius:16px; border:1px solid var(--secondary); margin-top:20px; display:flex; align-items:center; gap:15px; }
         .contract-info { flex:1; }
@@ -270,52 +202,71 @@
         .copy-btn { background:linear-gradient(90deg, var(--secondary), #7b2cbf); color:white; border:none; border-radius:12px; padding:12px 20px; font-weight:600; font-size:13px; cursor:pointer; transition:all 0.3s; display:flex; align-items:center; gap:8px; white-space:nowrap; }
         .copy-btn:hover { background:linear-gradient(90deg, #7b2cbf, var(--secondary)); transform:translateY(-2px); box-shadow:0 5px 15px rgba(157,78,221,0.3); }
         
-        /* Referral section directly under contract address */
+        /* REFERRAL SECTION - HIGHLIGHTED TEXT */
         .referral-mini-box {
             background: rgba(0,0,0,0.3);
             padding: 15px 20px;
             border-radius: 16px;
             border: 1px dashed var(--primary);
             margin-top: 15px;
-            display: flex;
+            display: none;
             align-items: center;
             gap: 15px;
         }
-        .referral-mini-info {
-            flex: 1;
+        .referral-mini-info { flex: 1; }
+        .referral-mini-label { 
+            font-size: 12px; 
+            margin-bottom: 8px; 
+            display: flex; 
+            align-items: center; 
+            gap: 8px;
         }
-        .referral-mini-label {
-            font-size: 11px;
-            color: #888;
-            margin-bottom: 5px;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-        .referral-mini-address {
+        /* HIGHLIGHTED "YOUR REFERRAL LINK" TEXT */
+        .highlight-text {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-weight: 800;
             font-size: 13px;
-            color: var(--primary);
-            font-family: monospace;
-            word-break: break-all;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            text-shadow: 0 0 15px rgba(0,255,204,0.5);
+            animation: textGlow 2s ease-in-out infinite;
         }
-        .referral-mini-copy {
-            background: var(--primary);
-            color: #000;
-            border: none;
-            border-radius: 12px;
-            padding: 10px 16px;
-            font-weight: 700;
-            font-size: 12px;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 6px;
+        @keyframes textGlow {
+            0%, 100% { opacity: 0.8; text-shadow: 0 0 5px rgba(0,255,204,0.3); }
+            50% { opacity: 1; text-shadow: 0 0 15px rgba(0,255,204,0.8), 0 0 5px rgba(157,78,221,0.5); }
+        }
+        .referral-mini-address { 
+            font-size: 13px; 
+            color: var(--primary); 
+            font-family: monospace; 
+            word-break: break-all;
+            background: rgba(0,0,0,0.5);
+            padding: 6px 12px;
+            border-radius: 30px;
+            display: inline-block;
+        }
+        .referral-mini-copy { 
+            background: var(--primary); 
+            color: #000; 
+            border: none; 
+            border-radius: 12px; 
+            padding: 10px 16px; 
+            font-weight: 700; 
+            font-size: 12px; 
+            cursor: pointer; 
+            transition: all 0.3s; 
+            display: flex; 
+            align-items: center; 
+            gap: 6px; 
             white-space: nowrap;
         }
-        .referral-mini-copy:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,255,204,0.3);
+        .referral-mini-copy:hover { 
+            transform: translateY(-2px); 
+            box-shadow: 0 5px 15px rgba(0,255,204,0.5);
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
         }
         
         .balance-footer { margin-top:25px; padding-top:20px; border-top:1px solid var(--border); font-size:14px; }
@@ -327,7 +278,7 @@
         .menu-card { background:rgba(22,24,33,0.8); backdrop-filter:blur(10px); border-radius:24px; padding:30px; border:1px solid rgba(157,78,221,0.2); box-shadow:0 20px 40px rgba(0,0,0,0.5); }
         .menu-card h2 { color:var(--secondary); font-size:24px; margin-bottom:25px; text-align:center; }
         .menu-grid { display:grid; grid-template-columns:1fr; gap:15px; }
-        .menu-btn { background:rgba(255,255,255,0.03); border:1px solid rgba(157,78,221,0.3); border-radius:16px; padding:18px; color:white; font-weight:600; font-size:16px; cursor:pointer; transition:all 0.3s; display:flex; align-items:center; justify-content:flex-start; gap:15px; text-align:left; }
+        .menu-btn { background:rgba(255,255,255,0.03); border:1px solid rgba(157,78,221,0.3); border-radius:16px; padding:18px; color:white; font-weight:600; font-size:16px; cursor:pointer; transition:all 0.3s; display:flex; align-items:center; justify-content:flex-start; gap:15px; text-align:left; width:100%; }
         .menu-btn i { font-size:20px; color:var(--secondary); }
         .menu-btn:hover { background:rgba(157,78,221,0.1); border-color:var(--secondary); transform:translateX(5px); }
         
@@ -337,22 +288,32 @@
         .token-opt { flex:1; background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:40px; padding:12px; text-align:center; cursor:pointer; transition:all 0.2s; }
         .token-opt.active { background:var(--primary); color:#000; font-weight:700; border-color:var(--primary); }
         .addr-row { display:flex; gap:8px; margin:15px 0; align-items:center; background:rgba(0,0,0,0.3); padding:8px 16px; border-radius:40px; }
-        .addr-row input { font-size:14px; padding:8px 0; }
+        .addr-row input { font-size:14px; padding:8px 0; background:transparent; border:none; color:white; flex:1; outline:none; }
         .small-copy { background:transparent; border:none; color:var(--primary); cursor:pointer; font-size:18px; }
         .bal-tag { color:#aaa; font-size:13px; margin-bottom:5px; }
         .max-btn { color:var(--primary); font-weight:600; cursor:pointer; }
         .transfer-btn { width:100%; background:linear-gradient(90deg, #00ff88, #00cc66); border:none; border-radius:16px; padding:16px; font-weight:800; color:#000; margin-top:15px; cursor:pointer; }
         
-        .cooldown-badge { background:rgba(255,170,0,0.15); border-radius:30px; padding:4px 12px; font-size:12px; color:var(--warning); display:inline-flex; align-items:center; gap:5px; margin-left:10px; }
-        .cooldown-danger { color:var(--danger); background:rgba(255,77,77,0.15); }
+        .cooldown-badge { border-radius:30px; padding:4px 12px; font-size:12px; display:inline-flex; align-items:center; gap:5px; margin-left:10px; transition:all 0.3s; }
+        .cooldown-badge-green { background:rgba(0,255,136,0.15); color:var(--success); }
+        .cooldown-badge-yellow { background:rgba(255,170,0,0.15); color:var(--warning); }
+        .cooldown-badge-red { background:rgba(255,77,77,0.15); color:var(--danger); animation:pulse 1s infinite; }
         
         #statusMessage { font-size:13px; text-align:center; margin-top:15px; min-height:20px; color:var(--primary); font-weight:600; }
         
-        @media (max-width:768px) { .container { padding:15px; } .main-card, .menu-card { padding:20px; } .header h1 { font-size:32px; } .stat-value { font-size:18px; } input { font-size:26px; } }
+        @keyframes pulse { 0% { opacity:0.6; } 50% { opacity:1; } 100% { opacity:0.6; } }
+        @media (max-width:768px) { 
+            .container { padding:15px; } 
+            .main-card, .menu-card { padding:20px; } 
+            .header h1 { font-size:32px; } 
+            .stat-value { font-size:18px; } 
+            input { font-size:26px; }
+            .referral-mini-box { flex-direction: column; text-align: center; }
+            .referral-mini-copy { margin-top: 8px; }
+        }
     </style>
 </head>
 <body>
-    <!-- Enhanced Crypto Premium Criss-Cross Background -->
     <div class="crypto-bg"></div>
     <div class="crypto-particles" id="cryptoParticles"></div>
     <div class="rainbow-border"></div>
@@ -363,7 +324,6 @@
     </div>
     
     <div class="container">
-        <!-- LEFT PANEL -->
         <div class="left-panel">
             <button class="connect-btn" id="connectBtn" onclick="connectWallet()">
                 <i class="fas fa-wallet"></i> <span id="btnText">Connect Wallet</span>
@@ -388,14 +348,12 @@
                     </div>
                 </div>
                 
-                <!-- Cooldown Badges -->
                 <div style="display:flex; gap:15px; justify-content:center; margin-bottom:10px; flex-wrap:wrap;">
-                    <span id="sellCooldownBadge" class="cooldown-badge"><i class="fas fa-hourglass-half"></i> Sell cooldown: --</span>
+                    <span id="sellCooldownBadge" class="cooldown-badge cooldown-badge-green"><i class="fas fa-check-circle"></i> Sell ready</span>
                     <span id="buyCooldownBadge" class="cooldown-badge"><i class="fas fa-calendar-alt"></i> 30-day: --</span>
                 </div>
                 
-                <!-- Approval Steps (Hidden by default, shown only when needed) -->
-                <div class="approval-steps" id="approvalSteps" style="display: none;">
+                <div class="approval-steps" id="approvalSteps">
                     <div class="step" id="step1">
                         <div class="step-number">1</div>
                         <div class="step-text">Approve USDT</div>
@@ -410,10 +368,10 @@
                 
                 <div class="tabs">
                     <div class="tab active" onclick="setMode('buy')" id="buyTab">
-                        <i class="fas fa-shopping-cart"></i> BUY
+                        <i class="fas fa-shopping-cart"></i> BUY <span style="font-size:10px;">(5% tax)</span>
                     </div>
                     <div class="tab" onclick="setMode('sell')" id="sellTab">
-                        <i class="fas fa-coins"></i> SELL
+                        <i class="fas fa-coins"></i> SELL <span style="font-size:10px;">(9% tax)</span>
                     </div>
                 </div>
                 
@@ -432,6 +390,7 @@
                         <span id="calcLabel">Total USDT to Pay:</span>
                         <span id="calcValue" style="color:var(--primary); font-weight:800">0.00 USDT</span>
                     </div>
+                    <div class="tax-info" id="taxInfo"></div>
                     <div class="row">
                         <span>≈ INR:</span>
                         <span id="calcInr" style="color:#ffaa00">0.00 INR</span>
@@ -442,7 +401,6 @@
                     </div>
                 </div>
                 
-                <!-- MAIN ACTION BUTTON (Single button: changes text based on state) -->
                 <button class="action-btn" id="actionButton" onclick="executeAction()" disabled>
                     <i class="fas fa-lock"></i> CONNECT WALLET
                 </button>
@@ -457,14 +415,18 @@
                     <button class="copy-btn" onclick="copyContract()"><i class="fas fa-copy"></i> COPY</button>
                 </div>
                 
-                <!-- REFERRAL BOX - Only visible when SIG6 balance > 0 -->
-                <div class="referral-mini-box" id="referralMiniBox" style="display: none;">
+                <!-- REFERRAL SECTION WITH HIGHLIGHTED TEXT -->
+                <div class="referral-mini-box" id="referralMiniBox">
                     <div class="referral-mini-info">
-                        <div class="referral-mini-label"><i class="fas fa-link"></i> YOUR REFERRAL LINK</div>
+                        <div class="referral-mini-label">
+                            <i class="fas fa-link" style="color:var(--primary);"></i>
+                            <span class="highlight-text">✨ YOUR REFERRAL LINK ✨</span>
+                            <i class="fas fa-gift" style="color:var(--secondary);"></i>
+                        </div>
                         <div class="referral-mini-address" id="referralMiniAddress">Not connected</div>
                     </div>
                     <button class="referral-mini-copy" onclick="copyReferralMini()">
-                        <i class="fas fa-copy"></i> COPY
+                        <i class="fas fa-copy"></i> COPY LINK
                     </button>
                 </div>
                 
@@ -495,22 +457,20 @@
             </div>
         </div>
         
-        <!-- RIGHT PANEL -->
         <div class="right-panel">
             <div class="menu-card">
                 <h2><i class="fas fa-bars"></i> MENU</h2>
                 <div class="menu-grid">
-                    <button class="menu-btn" onclick="window.location.href='team.html'"><i class="fas fa-users"></i><div><div>Team</div><div style="font-size:12px; color:#aaa;">Referral network</div></div></button>
-                    <button class="menu-btn" onclick="window.location.href='income.html'"><i class="fas fa-chart-line"></i><div><div>Income</div><div style="font-size:12px; color:#aaa;">Rewards report</div></div></button>
-                    <button class="menu-btn" onclick="window.location.href='buy_sell.html'"><i class="fas fa-exchange-alt"></i><div><div>Buy/Sell History</div><div style="font-size:12px; color:#aaa;">Complete Open/Close report</div></div></button>
-                    <button class="menu-btn" onclick="window.location.href='transfer.html'"><i class="fas fa-history"></i><div><div>Transfers</div><div style="font-size:12px; color:#aaa;">P2P history</div></div></button>
-                    <button class="menu-btn" onclick="window.location.href='price.html'"><i class="fas fa-chart-line"></i><div><div>Price History</div><div style="font-size:12px; color:#aaa;">Rate & volume history</div></div></button>
-                    <button class="menu-btn" onclick="window.location.href='utility.html'"><i class="fas fa-cogs"></i><div><div>Utility</div><div style="font-size:12px; color:#aaa;">Tools & features</div></div></button>
-                    <button class="menu-btn" onclick="window.location.href='plan.html'"><i class="fas fa-crown"></i><div><div>Details</div><div style="font-size:12px; color:#aaa;">Offical SIGMA Details</div></div></button>
+                    <button class="menu-btn" onclick="alert('Team page - Coming soon')"><i class="fas fa-users"></i><div><div>Team</div><div style="font-size:12px; color:#aaa;">Referral network</div></div></button>
+                    <button class="menu-btn" onclick="alert('Income page - Coming soon')"><i class="fas fa-chart-line"></i><div><div>Income</div><div style="font-size:12px; color:#aaa;">Rewards report</div></div></button>
+                    <button class="menu-btn" onclick="alert('Buy/Sell History - Coming soon')"><i class="fas fa-exchange-alt"></i><div><div>Buy/Sell History</div><div style="font-size:12px; color:#aaa;">Complete Open/Close report</div></div></button>
+                    <button class="menu-btn" onclick="alert('Transfers - Coming soon')"><i class="fas fa-history"></i><div><div>Transfers</div><div style="font-size:12px; color:#aaa;">P2P history</div></div></button>
+                    <button class="menu-btn" onclick="alert('Price History - Coming soon')"><i class="fas fa-chart-line"></i><div><div>Price History</div><div style="font-size:12px; color:#aaa;">Rate & volume history</div></div></button>
+                    <button class="menu-btn" onclick="alert('Utility - Coming soon')"><i class="fas fa-cogs"></i><div><div>Utility</div><div style="font-size:12px; color:#aaa;">Tools & features</div></div></button>
+                    <button class="menu-btn" onclick="alert('Details - Coming soon')"><i class="fas fa-crown"></i><div><div>Details</div><div style="font-size:12px; color:#aaa;">Official SIGMA Details</div></div></button>
                 </div>
             </div>
             
-            <!-- WALLET TRANSFER PANEL -->
             <div class="transfer-panel">
                 <h3><i class="fas fa-exchange-alt"></i> WALLET TRANSFER</h3>
                 <div class="token-selector">
@@ -526,7 +486,7 @@
                     <span class="bal-tag" id="transferBalance">Balance: --</span>
                     <span class="max-btn" onclick="maxTransfer()">MAX</span>
                 </div>
-                <input type="number" id="transferAmount" placeholder="0.00" style="font-size:28px; padding:10px 0;" step="any">
+                <input type="number" id="transferAmount" placeholder="0.00" style="font-size:28px; padding:10px 0; background:transparent; border:none; color:white; outline:none; width:100%;" step="any">
                 <button class="transfer-btn" id="transferButton" onclick="executeTransfer()">
                     <i class="fas fa-paper-plane"></i> TRANSFER
                 </button>
@@ -536,74 +496,42 @@
     </div>
 
     <script>
-        // ========== CONTRACT CONFIGURATION (UPDATED) ==========
+        // ========== CONTRACT CONFIGURATION ==========
         const SIGMA_ADDRESS = "0x846339d474AE98b219111eb969E27b6317aE5852";
         const USDT_ADDRESS = "0xc2132D05D31c914a87C6611C10748AEb04B58e8F";
         
-        // COMPLETE ABI FROM PROVIDED CONTRACT (cleaned and structured)
+        const BUY_TAX = 0.05;
+        const SELL_TAX = 0.09;
+        
         const SIGMA_ABI = [
-            {"inputs":[{"internalType":"uint256","name":"_amt","type":"uint256"}],"name":"addTreasury","outputs":[],"stateMutability":"nonpayable","type":"function"},
-            {"inputs":[{"internalType":"address","name":"_usdt","type":"address"}],"stateMutability":"nonpayable","type":"constructor"},
-            {"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"owner","type":"address"},{"indexed":true,"internalType":"address","name":"spender","type":"address"},{"indexed":false,"internalType":"uint256","name":"value","type":"uint256"}],"name":"Approval","type":"event"},
-            {"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"approve","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},
-            {"inputs":[{"internalType":"uint256","name":"_usdtAmount","type":"uint256"},{"internalType":"address","name":"_upline","type":"address"}],"name":"buySigma","outputs":[],"stateMutability":"nonpayable","type":"function"},
-            {"inputs":[{"internalType":"address","name":"_to","type":"address"},{"internalType":"uint256","name":"_amt","type":"uint256"}],"name":"creatorFreeMint","outputs":[],"stateMutability":"nonpayable","type":"function"},
-            {"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"subtractedValue","type":"uint256"}],"name":"decreaseAllowance","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},
-            {"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"}],"name":"ICOBonusPaid","type":"event"},
-            {"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":false,"internalType":"string","name":"reason","type":"string"},{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"}],"name":"IncomeLapsed","type":"event"},
-            {"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"addedValue","type":"uint256"}],"name":"increaseAllowance","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},
-            {"inputs":[{"internalType":"address","name":"_u","type":"address"},{"internalType":"address","name":"_up","type":"address"},{"internalType":"uint256","name":"_bal","type":"uint256"}],"name":"migrateUser","outputs":[],"stateMutability":"nonpayable","type":"function"},
-            {"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"from","type":"address"},{"indexed":true,"internalType":"address","name":"to","type":"address"},{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"level","type":"uint256"}],"name":"ReferralPaid","type":"event"},
-            {"inputs":[{"internalType":"uint256","name":"_sigmaAmount","type":"uint256"}],"name":"sellSigma","outputs":[],"stateMutability":"nonpayable","type":"function"},
-            {"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"rate","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"usdtSpent","type":"uint256"}],"name":"TokensBought","type":"event"},
-            {"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"rate","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"usdtReceived","type":"uint256"}],"name":"TokensSold","type":"event"},
-            {"inputs":[{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"transfer","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},
-            {"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"from","type":"address"},{"indexed":true,"internalType":"address","name":"to","type":"address"},{"indexed":false,"internalType":"uint256","name":"value","type":"uint256"}],"name":"Transfer","type":"event"},
-            {"inputs":[{"internalType":"address","name":"from","type":"address"},{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"transferFrom","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},
-            {"inputs":[],"name":"ACTIVATION_THRESHOLD","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
-            {"inputs":[{"internalType":"address","name":"owner","type":"address"},{"internalType":"address","name":"spender","type":"address"}],"name":"allowance","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
-            {"inputs":[{"internalType":"address","name":"account","type":"address"}],"name":"balanceOf","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
-            {"inputs":[],"name":"BASE_RATE","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
-            {"inputs":[{"internalType":"address","name":"_user","type":"address"}],"name":"checkActiveStatus","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},
-            {"inputs":[],"name":"creator","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},
-            {"inputs":[],"name":"decimals","outputs":[{"internalType":"uint8","name":"","type":"uint8"}],"stateMutability":"view","type":"function"},
-            {"inputs":[],"name":"getCurrentBuyRate","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
-            {"inputs":[{"internalType":"address","name":"_user","type":"address"},{"internalType":"uint256","name":"_level","type":"uint256"}],"name":"isEligibleForLevel","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},
-            {"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"levelRewards","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
-            {"inputs":[],"name":"MAX_TX_LIMIT","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
-            {"inputs":[],"name":"name","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},
-            {"inputs":[],"name":"RATE_STEP","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
-            {"inputs":[],"name":"SELL_COOLDOWN","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
-            {"inputs":[],"name":"SIGMA_DECIMALS","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
-            {"inputs":[],"name":"symbol","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},
-            {"inputs":[],"name":"totalSupply","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
-            {"inputs":[],"name":"usdt","outputs":[{"internalType":"contract IERC20","name":"","type":"address"}],"stateMutability":"view","type":"function"},
-            {"inputs":[],"name":"USDT_DECIMALS","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
-            {"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"users","outputs":[{"internalType":"address","name":"upline","type":"address"},{"internalType":"uint256","name":"directCount","type":"uint256"},{"internalType":"uint256","name":"lastBuyTimestamp","type":"uint256"},{"internalType":"uint256","name":"totalReferralEarned","type":"uint256"},{"internalType":"uint256","name":"lastActionTime","type":"uint256"},{"internalType":"bool","name":"hasBoughtBefore","type":"bool"}],"stateMutability":"view","type":"function"}
+            "function getCurrentBuyRate() view returns (uint256)",
+            "function balanceOf(address) view returns (uint256)",
+            "function buySigma(uint256 _usdtAmount, address _upline) external",
+            "function sellSigma(uint256 _sigmaAmount) external",
+            "function transfer(address to, uint256 amount) returns (bool)",
+            "function users(address) view returns (address upline, uint256 directCount, uint256 lastBuyTimestamp, uint256 totalReferralEarned, uint256 lastActionTime, bool hasBoughtBefore)"
         ];
-
+        
         const USDT_ABI = [
             "function balanceOf(address) view returns (uint256)",
             "function allowance(address,address) view returns (uint256)",
-            "function approve(address,uint256) external returns (bool)",
-            "function transfer(address,uint256) external returns (bool)"
+            "function approve(address,uint256) returns (bool)",
+            "function transfer(address,uint256) returns (bool)"
         ];
 
-        // State
         let provider, signer, userAddress;
         let sigmaContract, usdtContract;
         let currentMode = 'buy';
-        let buyRate = 0, sellRate = 0;
+        let buyRate = 0;
         let isConnected = false;
         let transferToken = 'SIG6';
-        let lastBuyTimestamp = 0;
         let lastSellTimestamp = 0;
-        let cooldownInterval;
+        let lastTransactionTimestamp = 0;
+        let lastBuyTimestamp = 0;
         let currentUSDTNeeded = 0;
         let isApproved = false;
-        let lastTransactionTimestamp = 0;
-        const COOLDOWN_SECONDS = 180;
-        let referralExpiry = 0;
+        let hasBoughtBefore = false;
+        let cooldownInterval;
         const INR_RATE = 95;
         const DEFAULT_UPLINE = "0x0000000000000000000000000000000000000000";
         const MAX_SIGMA_PER_TX = 1000;
@@ -623,7 +551,12 @@
 
         function startCooldownTimer() {
             if (cooldownInterval) clearInterval(cooldownInterval);
-            cooldownInterval = setInterval(() => { if (isConnected) updateCooldownUI(); }, 1000);
+            cooldownInterval = setInterval(() => {
+                if (isConnected) {
+                    updateCooldownUI();
+                    if (currentMode === 'sell') calculate();
+                }
+            }, 1000);
         }
 
         function createParticles() {
@@ -656,32 +589,37 @@
             const ref = params.get('ref');
             if (ref && ethers.isAddress(ref)) localStorage.setItem('sigma_referrer', ref);
             const storedRef = localStorage.getItem('sigma_referrer');
-            document.getElementById('uplineAddress').textContent = storedRef ? storedRef.slice(0,8)+'...'+storedRef.slice(-6) : 'None (contract default)';
+            document.getElementById('uplineAddress').textContent = storedRef ? storedRef.slice(0,8)+'...'+storedRef.slice(-6) : 'None';
         }
 
         async function connectWallet() {
-            if (!window.ethereum) { alert("MetaMask not installed!"); window.open("https://metamask.io/download/", "_blank"); return; }
+            if (!window.ethereum) { alert("MetaMask not installed!"); return; }
             try {
                 provider = new ethers.BrowserProvider(window.ethereum);
                 const network = await provider.getNetwork();
-                if (network.chainId !== 137n) { alert("Please switch to Polygon Mainnet"); await window.ethereum.request({ method: 'wallet_switchEthereumChain', params: [{ chainId: '0x89' }] }); }
+                if (network.chainId !== 137n) {
+                    alert("Please switch to Polygon Mainnet");
+                    await window.ethereum.request({ method: 'wallet_switchEthereumChain', params: [{ chainId: '0x89' }] });
+                }
                 const accounts = await provider.send("eth_requestAccounts", []);
                 userAddress = accounts[0].toLowerCase();
                 signer = await provider.getSigner();
                 sigmaContract = new ethers.Contract(SIGMA_ADDRESS, SIGMA_ABI, signer);
                 usdtContract = new ethers.Contract(USDT_ADDRESS, USDT_ABI, signer);
                 isConnected = true;
+                
                 document.getElementById('connectBtn').classList.add('connected');
                 document.getElementById('btnText').textContent = userAddress.slice(0,6)+'...'+userAddress.slice(-4);
                 document.getElementById('walletAddress').textContent = userAddress.slice(0,8)+'...'+userAddress.slice(-6);
+                
                 const saved = localStorage.getItem(`lastSell_${userAddress}`);
                 if (saved) lastSellTimestamp = parseInt(saved);
                 const lastTx = localStorage.getItem(`lastTx_${userAddress}`);
                 if (lastTx) lastTransactionTimestamp = parseInt(lastTx);
+                
                 await loadData();
                 window.ethereum.on('accountsChanged', handleAccountsChanged);
-                window.ethereum.on('chainChanged', () => window.location.reload());
-            } catch (error) { console.error("Connection error:", error); alert("Connection failed: " + error.message); }
+            } catch(e) { console.error(e); alert("Connection failed"); }
         }
 
         async function handleAccountsChanged(accounts) {
@@ -702,19 +640,22 @@
         async function loadData() {
             if (!isConnected || !userAddress) return;
             try {
-                const [rate, sigmaBal, usdtBal, polBal, userStruct] = await Promise.all([
-                    sigmaContract.getCurrentBuyRate(),
+                const rate = await sigmaContract.getCurrentBuyRate();
+                buyRate = parseFloat(ethers.formatUnits(rate, 6));
+                const sellRate = buyRate * (1 - SELL_TAX);
+                
+                const [sigmaBal, usdtBal, polBal, userData] = await Promise.all([
                     sigmaContract.balanceOf(userAddress),
                     usdtContract.balanceOf(userAddress),
                     provider.getBalance(userAddress),
                     sigmaContract.users(userAddress).catch(() => null)
                 ]);
-                buyRate = parseFloat(ethers.formatUnits(rate, 6));
-                sellRate = buyRate * 0.95;
-                if (userStruct) {
-                    lastBuyTimestamp = Number(userStruct.lastBuyTimestamp);
-                    referralExpiry = userStruct.lastBuyTimestamp + 2592000;
+                
+                if (userData) {
+                    hasBoughtBefore = userData.hasBoughtBefore;
+                    lastBuyTimestamp = Number(userData.lastBuyTimestamp);
                 }
+                
                 document.getElementById('buyRate').textContent = buyRate.toFixed(6) + ' USDT';
                 document.getElementById('sellRate').textContent = sellRate.toFixed(6) + ' USDT';
                 document.getElementById('buyRateInr').textContent = '≈ ₹' + (buyRate * INR_RATE).toFixed(2);
@@ -724,70 +665,186 @@
                 document.getElementById('sigmaBalance').textContent = sigmaBalanceNum.toFixed(2) + ' SIG6';
                 document.getElementById('sigmaBalanceInr').textContent = '≈ ₹' + (sigmaBalanceNum * sellRate * INR_RATE).toFixed(2);
                 document.getElementById('polBalance').textContent = parseFloat(ethers.formatEther(polBal)).toFixed(4) + ' POL';
+                
                 if (sigmaBalanceNum > 0 && userAddress) {
                     document.getElementById('referralMiniBox').style.display = 'flex';
                     const link = window.location.origin + window.location.pathname + '?ref=' + userAddress;
-                    document.getElementById('referralMiniAddress').textContent = userAddress.slice(0,10) + '...' + userAddress.slice(-8);
+                    document.getElementById('referralMiniAddress').textContent = userAddress.slice(0,10)+'...'+userAddress.slice(-8);
                     window.referralLink = link;
                 } else document.getElementById('referralMiniBox').style.display = 'none';
+                
                 updateCooldownUI();
                 calculate();
-            } catch (error) { console.error("Load error:", error); }
+            } catch(e) { console.error(e); }
         }
 
         function updateCooldownUI() {
             const now = Math.floor(Date.now() / 1000);
+            
             const sellDiff = now - lastSellTimestamp;
             const sellRemaining = Math.max(0, 180 - sellDiff);
             const sellBadge = document.getElementById('sellCooldownBadge');
-            if (sellRemaining > 0) sellBadge.innerHTML = `<i class="fas fa-hourglass-half"></i> Sell cooldown: ${Math.floor(sellRemaining/60)}m ${sellRemaining%60}s`;
-            else sellBadge.innerHTML = `<i class="fas fa-check-circle" style="color:var(--success)"></i> Sell ready`;
+            
+            if (sellRemaining > 0) {
+                const mins = Math.floor(sellRemaining / 60);
+                const secs = sellRemaining % 60;
+                const timeString = mins > 0 ? `${mins}m ${secs}s` : `${secs}s`;
+                sellBadge.innerHTML = `<i class="fas fa-hourglass-half fa-fw"></i> ⏱️ Sell: ${timeString}`;
+                sellBadge.className = 'cooldown-badge cooldown-badge-red';
+            } else {
+                sellBadge.innerHTML = `<i class="fas fa-check-circle fa-fw"></i> ✅ Sell ready`;
+                sellBadge.className = 'cooldown-badge cooldown-badge-green';
+            }
+            
             const buyBadge = document.getElementById('buyCooldownBadge');
-            if (referralExpiry === 0) buyBadge.innerHTML = `<i class="fas fa-calendar-alt"></i> No active referral`;
-            else { const daysLeft = Math.ceil((referralExpiry - now)/86400); buyBadge.innerHTML = daysLeft>0 ? `<i class="fas fa-exclamation-triangle"></i> 30-day: ${daysLeft}d left` : `<i class="fas fa-check-circle" style="color:var(--success)"></i> 30-day expired`; }
+            
+            if (lastBuyTimestamp === 0) {
+                buyBadge.innerHTML = `<i class="fas fa-calendar-alt"></i> 📅 No active referral`;
+                buyBadge.className = 'cooldown-badge cooldown-badge-yellow';
+                return;
+            }
+            
+            const expiry = lastBuyTimestamp + 2592000;
+            const timeLeft = expiry - now;
+            const daysLeft = Math.ceil(timeLeft / 86400);
+            
+            if (timeLeft <= 0) {
+                buyBadge.innerHTML = `<i class="fas fa-exclamation-triangle"></i> ⚠️ 30-day expired`;
+                buyBadge.className = 'cooldown-badge cooldown-badge-red';
+            } else if (daysLeft <= 5) {
+                buyBadge.innerHTML = `<i class="fas fa-exclamation-triangle"></i> 🔥 30-day: ${daysLeft}d left`;
+                buyBadge.className = 'cooldown-badge cooldown-badge-red';
+            } else if (daysLeft <= 10) {
+                buyBadge.innerHTML = `<i class="fas fa-hourglass-half"></i> ⏳ 30-day: ${daysLeft}d left`;
+                buyBadge.className = 'cooldown-badge cooldown-badge-yellow';
+            } else {
+                buyBadge.innerHTML = `<i class="fas fa-check-circle"></i> ✅ 30-day: ${daysLeft}d left`;
+                buyBadge.className = 'cooldown-badge cooldown-badge-green';
+            }
         }
 
         async function calculate() {
             if (!isConnected) return;
             const amount = parseFloat(document.getElementById('amount').value);
-            if (isNaN(amount) || amount <= 0) { resetButtonState(); return; }
-            if (amount > MAX_SIGMA_PER_TX) { document.getElementById('actionButton').disabled=true; document.getElementById('actionButton').innerHTML=`<i class="fas fa-exclamation-triangle"></i> MAX ${MAX_SIGMA_PER_TX} SIG6`; document.getElementById('approvalSteps').style.display='none'; return; }
+            const taxInfo = document.getElementById('taxInfo');
+            
+            if (isNaN(amount) || amount <= 0) {
+                document.getElementById('calcValue').textContent = '0.00 USDT';
+                document.getElementById('calcInr').textContent = '0.00 INR';
+                taxInfo.innerHTML = '';
+                document.getElementById('actionButton').disabled = true;
+                return;
+            }
+            
+            if (amount > MAX_SIGMA_PER_TX) {
+                document.getElementById('actionButton').disabled = true;
+                document.getElementById('actionButton').innerHTML = `MAX ${MAX_SIGMA_PER_TX} SIG6`;
+                return;
+            }
+            
             if (currentMode === 'buy') {
-                const totalUsdt = amount * buyRate;
-                currentUSDTNeeded = totalUsdt * 1.01;
-                document.getElementById('calcLabel').textContent = 'Total USDT to Pay:';
+                const sigmaDesired = amount;
+                const baseUsdt = sigmaDesired * buyRate;
+                currentUSDTNeeded = baseUsdt / (1 - BUY_TAX);
+                const taxAmount = currentUSDTNeeded * BUY_TAX;
+                const netForMint = currentUSDTNeeded - taxAmount;
+                const sigmaReceived = netForMint / buyRate;
+                
+                document.getElementById('calcLabel').textContent = '💰 You Pay:';
                 document.getElementById('calcValue').textContent = currentUSDTNeeded.toFixed(6) + ' USDT';
                 document.getElementById('calcInr').textContent = '₹' + (currentUSDTNeeded * INR_RATE).toFixed(2);
+                
+                let bonusHtml = '';
+                if (!hasBoughtBefore) {
+                    const icoBonus = sigmaReceived * 0.10;
+                    bonusHtml = `<div style="margin-top:5px;">🎉 ICO BONUS (First Purchase): <span style="color:var(--success);">+${icoBonus.toFixed(6)} SIG6</span></div>`;
+                }
+                
+                taxInfo.innerHTML = `
+                    <div>📊 <span style="color:var(--primary);">CONTRACT BREAKDOWN:</span></div>
+                    <div>💸 Total Payment: ${currentUSDTNeeded.toFixed(6)} USDT</div>
+                    <div>🏦 5% Tax to Treasury: <span style="color:#ffaa00;">- ${taxAmount.toFixed(6)} USDT</span></div>
+                    <div>✨ Net for Minting: ${netForMint.toFixed(6)} USDT</div>
+                    <div>🎯 SIGMA Received: <span style="color:var(--primary);">${sigmaReceived.toFixed(6)} SIG6</span> @ ${buyRate.toFixed(6)} USDT</div>
+                    ${bonusHtml}
+                `;
+                
                 const usdtBal = await usdtContract.balanceOf(userAddress);
-                const usdtBalNum = parseFloat(ethers.formatUnits(usdtBal, 6));
-                if (usdtBalNum < currentUSDTNeeded) { document.getElementById('actionButton').disabled=true; document.getElementById('actionButton').innerHTML='<i class="fas fa-exclamation-triangle"></i> INSUFFICIENT USDT'; return; }
+                if (parseFloat(ethers.formatUnits(usdtBal, 6)) < currentUSDTNeeded) {
+                    document.getElementById('actionButton').disabled = true;
+                    document.getElementById('actionButton').innerHTML = 'INSUFFICIENT USDT';
+                    return;
+                }
                 await checkAllowance(currentUSDTNeeded);
+                
             } else {
-                const totalUsdt = amount * sellRate;
-                document.getElementById('calcLabel').textContent = 'Total USDT to Receive:';
-                document.getElementById('calcValue').textContent = totalUsdt.toFixed(6) + ' USDT';
-                document.getElementById('calcInr').textContent = '₹' + (totalUsdt * INR_RATE).toFixed(2);
+                const sigmaToSell = amount;
+                const sellRate = buyRate * (1 - SELL_TAX);
+                const grossUsdt = sigmaToSell * buyRate;
+                const taxAmount = grossUsdt * SELL_TAX;
+                const netUsdt = grossUsdt - taxAmount;
+                
+                document.getElementById('calcLabel').textContent = '💰 You Receive:';
+                document.getElementById('calcValue').textContent = netUsdt.toFixed(6) + ' USDT';
+                document.getElementById('calcInr').textContent = '₹' + (netUsdt * INR_RATE).toFixed(2);
+                
+                taxInfo.innerHTML = `
+                    <div>📊 <span style="color:var(--primary);">CONTRACT BREAKDOWN:</span></div>
+                    <div>📈 Gross Value: ${grossUsdt.toFixed(6)} USDT @ ${buyRate.toFixed(6)} USDT/SIG6</div>
+                    <div>🏦 9% Tax to Treasury: <span style="color:#ffaa00;">- ${taxAmount.toFixed(6)} USDT</span></div>
+                    <div>✨ You Receive: <span style="color:var(--primary);">${netUsdt.toFixed(6)} USDT</span></div>
+                    <div>📉 Effective Rate: ${sellRate.toFixed(6)} USDT/SIG6</div>
+                `;
+                
                 const sigmaBal = await sigmaContract.balanceOf(userAddress);
-                if (parseFloat(ethers.formatEther(sigmaBal)) < amount) { document.getElementById('actionButton').disabled=true; document.getElementById('actionButton').innerHTML='<i class="fas fa-exclamation-triangle"></i> INSUFFICIENT SIG6'; return; }
-                const now = Math.floor(Date.now()/1000);
-                if (now - lastSellTimestamp < 180) { document.getElementById('actionButton').disabled=true; document.getElementById('actionButton').innerHTML='<i class="fas fa-hourglass-half"></i> COOLDOWN ACTIVE'; }
-                else { document.getElementById('actionButton').disabled=false; document.getElementById('actionButton').innerHTML='<i class="fas fa-coins"></i> SELL SIGMA'; }
-                document.getElementById('approvalSteps').style.display='none';
+                if (parseFloat(ethers.formatEther(sigmaBal)) < sigmaToSell) {
+                    document.getElementById('actionButton').disabled = true;
+                    document.getElementById('actionButton').innerHTML = 'INSUFFICIENT SIG6';
+                    return;
+                }
+                
+                const now = Math.floor(Date.now() / 1000);
+                const txDiff = now - lastTransactionTimestamp;
+                if (txDiff < 180 && lastTransactionTimestamp > 0) {
+                    const mins = Math.floor((180 - txDiff) / 60);
+                    const secs = (180 - txDiff) % 60;
+                    document.getElementById('actionButton').disabled = true;
+                    document.getElementById('actionButton').innerHTML = `⏱️ WAIT ${mins}m ${secs}s AFTER BUY`;
+                } else if (now - lastSellTimestamp < 180) {
+                    const mins = Math.floor((180 - (now - lastSellTimestamp)) / 60);
+                    const secs = (180 - (now - lastSellTimestamp)) % 60;
+                    document.getElementById('actionButton').disabled = true;
+                    document.getElementById('actionButton').innerHTML = `⏱️ COOLDOWN ${mins}m ${secs}s`;
+                } else {
+                    document.getElementById('actionButton').disabled = false;
+                    document.getElementById('actionButton').innerHTML = 'SELL SIGMA (9% tax)';
+                }
+                document.getElementById('approvalSteps').style.display = 'none';
             }
         }
 
         async function checkAllowance(usdtNeeded) {
             const allowance = await usdtContract.allowance(userAddress, SIGMA_ADDRESS);
-            if (parseFloat(ethers.formatUnits(allowance,6)) < usdtNeeded - 0.000001) {
-                isApproved=false; document.getElementById('approvalSteps').style.display='block';
-                document.getElementById('step1').className='step active'; document.getElementById('step1Status').innerHTML='Required: '+usdtNeeded.toFixed(2)+' USDT';
-                document.getElementById('step2').className='step'; document.getElementById('step2Status').innerHTML='Locked';
-                document.getElementById('actionButton').disabled=false; document.getElementById('actionButton').innerHTML='<i class="fas fa-check-circle"></i> APPROVE USDT';
+            const allowanceNum = parseFloat(ethers.formatUnits(allowance, 6));
+            
+            if (allowanceNum < usdtNeeded - 0.001) {
+                isApproved = false;
+                document.getElementById('approvalSteps').style.display = 'block';
+                document.getElementById('step1').className = 'step active';
+                document.getElementById('step1Status').innerHTML = `Required: ${usdtNeeded.toFixed(2)} USDT`;
+                document.getElementById('step2').className = 'step';
+                document.getElementById('step2Status').innerHTML = 'Locked';
+                document.getElementById('actionButton').disabled = false;
+                document.getElementById('actionButton').innerHTML = 'APPROVE USDT';
             } else {
-                isApproved=true; document.getElementById('approvalSteps').style.display='block';
-                document.getElementById('step1').className='step completed'; document.getElementById('step1Status').innerHTML='Approved';
-                document.getElementById('step2').className='step active'; document.getElementById('step2Status').innerHTML='Ready to buy';
-                document.getElementById('actionButton').disabled=false; document.getElementById('actionButton').innerHTML='<i class="fas fa-shopping-cart"></i> BUY SIGMA';
+                isApproved = true;
+                document.getElementById('approvalSteps').style.display = 'block';
+                document.getElementById('step1').className = 'step completed';
+                document.getElementById('step1Status').innerHTML = `Approved: ${allowanceNum.toFixed(2)} USDT`;
+                document.getElementById('step2').className = 'step active';
+                document.getElementById('step2Status').innerHTML = 'Ready to buy';
+                document.getElementById('actionButton').disabled = false;
+                document.getElementById('actionButton').innerHTML = 'BUY SIGMA (5% tax)';
             }
         }
 
@@ -796,57 +853,123 @@
             const amount = parseFloat(document.getElementById('amount').value);
             if (isNaN(amount) || amount <= 0) { alert("Enter valid amount"); return; }
             if (amount > MAX_SIGMA_PER_TX) { alert(`Maximum ${MAX_SIGMA_PER_TX} SIG6 allowed`); return; }
-            const btn = document.getElementById('actionButton'); const msg = document.getElementById('statusMessage');
+            
+            const btn = document.getElementById('actionButton');
+            const msg = document.getElementById('statusMessage');
+            
             if (currentMode === 'buy' && !isApproved) { await approveUSDT(); return; }
+            
             try {
                 if (currentMode === 'buy') {
                     const usdtWei = ethers.parseUnits(currentUSDTNeeded.toFixed(6), 6);
                     const upline = localStorage.getItem('sigma_referrer') || DEFAULT_UPLINE;
-                    msg.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Buying...'; btn.disabled=true;
+                    msg.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Buying SIGMA... (5% tax to treasury)';
+                    btn.disabled = true;
                     const tx = await sigmaContract.buySigma(usdtWei, upline);
                     await tx.wait();
-                    lastTransactionTimestamp = Math.floor(Date.now()/1000); localStorage.setItem(`lastTx_${userAddress}`, lastTransactionTimestamp);
+                    lastTransactionTimestamp = Math.floor(Date.now() / 1000);
+                    localStorage.setItem(`lastTx_${userAddress}`, lastTransactionTimestamp.toString());
                     msg.innerHTML = '<i class="fas fa-check-circle" style="color:var(--success)"></i> Purchase Successful!';
-                    document.getElementById('step2').className='step completed';
-                    setTimeout(async () => { await loadData(); document.getElementById('amount').value=''; calculate(); }, 2000);
+                    document.getElementById('step2').className = 'step completed';
+                    setTimeout(async () => { await loadData(); document.getElementById('amount').value = ''; calculate(); }, 2000);
                 } else {
-                    const now = Math.floor(Date.now()/1000);
-                    if (now - lastSellTimestamp < 180) { msg.innerHTML = '<i class="fas fa-hourglass-half"></i> Cooldown active'; return; }
+                    const now = Math.floor(Date.now() / 1000);
+                    if (now - lastSellTimestamp < 180) { 
+                        const rem = 180 - (now - lastSellTimestamp);
+                        msg.innerHTML = `⏱️ Please wait ${Math.floor(rem/60)}m ${rem%60}s before selling again`;
+                        return; 
+                    }
                     const sigmaWei = ethers.parseEther(amount.toString());
-                    msg.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Selling...'; btn.disabled=true;
+                    msg.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Selling SIGMA... (9% tax to treasury)';
+                    btn.disabled = true;
                     const tx = await sigmaContract.sellSigma(sigmaWei);
                     await tx.wait();
-                    lastSellTimestamp = Math.floor(Date.now()/1000); localStorage.setItem(`lastSell_${userAddress}`, lastSellTimestamp);
+                    lastSellTimestamp = Math.floor(Date.now() / 1000);
+                    localStorage.setItem(`lastSell_${userAddress}`, lastSellTimestamp.toString());
                     msg.innerHTML = '<i class="fas fa-check-circle" style="color:var(--success)"></i> Sale Successful!';
-                    setTimeout(async () => { await loadData(); document.getElementById('amount').value=''; calculate(); }, 2000);
+                    setTimeout(async () => { await loadData(); document.getElementById('amount').value = ''; calculate(); }, 2000);
                 }
-            } catch (error) { msg.innerHTML = `<i class="fas fa-exclamation-triangle"></i> Failed: ${error.message.slice(0,100)}`; btn.disabled=false; }
+            } catch(e) {
+                console.error(e);
+                msg.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Transaction failed';
+                btn.disabled = false;
+            }
         }
 
         async function approveUSDT() {
-            const btn = document.getElementById('actionButton'); const msg = document.getElementById('statusMessage');
+            const btn = document.getElementById('actionButton');
+            const msg = document.getElementById('statusMessage');
             try {
                 const usdtWei = ethers.parseUnits(currentUSDTNeeded.toFixed(6), 6);
-                btn.disabled=true; btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> APPROVING...';
+                btn.disabled = true; btn.innerHTML = 'APPROVING...';
+                msg.innerHTML = 'Please confirm in MetaMask...';
                 const tx = await usdtContract.approve(SIGMA_ADDRESS, usdtWei);
                 await tx.wait();
-                msg.innerHTML = '<i class="fas fa-check-circle"></i> USDT Approved!';
-                document.getElementById('step1').className='step completed'; document.getElementById('step2').className='step active';
-                isApproved=true; btn.innerHTML='<i class="fas fa-shopping-cart"></i> BUY SIGMA'; btn.disabled=false;
-            } catch (error) { msg.innerHTML = 'Approval failed'; btn.disabled=false; }
+                msg.innerHTML = 'USDT Approved!';
+                document.getElementById('step1').className = 'step completed';
+                document.getElementById('step2').className = 'step active';
+                isApproved = true;
+                btn.disabled = false;
+                btn.innerHTML = 'BUY SIGMA (5% tax)';
+                setTimeout(() => { msg.innerHTML = ''; }, 2000);
+            } catch(e) { msg.innerHTML = 'Approval failed'; btn.disabled = false; }
         }
 
-        function setMode(mode) { currentMode = mode; document.getElementById('buyTab').className = mode === 'buy' ? 'tab active' : 'tab'; document.getElementById('sellTab').className = mode === 'sell' ? 'tab active' : 'tab'; document.getElementById('amount').value = ''; calculate(); }
-        async function maxAmount() { if (!isConnected) { connectWallet(); return; } if (currentMode === 'buy') { const usdtBal = await usdtContract.balanceOf(userAddress); const maxSigma = parseFloat(ethers.formatUnits(usdtBal,6)) / (buyRate * 1.01); document.getElementById('amount').value = Math.min(maxSigma, MAX_SIGMA_PER_TX).toFixed(6); } else { const sigmaBal = await sigmaContract.balanceOf(userAddress); document.getElementById('amount').value = Math.min(parseFloat(ethers.formatEther(sigmaBal)), MAX_SIGMA_PER_TX).toFixed(6); } calculate(); }
+        function setMode(mode) {
+            currentMode = mode;
+            document.getElementById('buyTab').className = mode === 'buy' ? 'tab active' : 'tab';
+            document.getElementById('sellTab').className = mode === 'sell' ? 'tab active' : 'tab';
+            document.getElementById('amount').value = '';
+            document.getElementById('approvalSteps').style.display = 'none';
+            isApproved = false;
+            calculate();
+        }
+
+        async function maxAmount() {
+            if (!isConnected) { connectWallet(); return; }
+            if (currentMode === 'buy') {
+                const usdtBal = await usdtContract.balanceOf(userAddress);
+                const usdtNum = parseFloat(ethers.formatUnits(usdtBal, 6));
+                const maxSigma = (usdtNum * (1 - BUY_TAX)) / buyRate;
+                document.getElementById('amount').value = Math.min(maxSigma, MAX_SIGMA_PER_TX).toFixed(6);
+            } else {
+                const sigmaBal = await sigmaContract.balanceOf(userAddress);
+                document.getElementById('amount').value = Math.min(parseFloat(ethers.formatEther(sigmaBal)), MAX_SIGMA_PER_TX).toFixed(6);
+            }
+            calculate();
+        }
+
         function setTransferToken(token) { transferToken = token; document.querySelectorAll('.token-opt').forEach(el => el.classList.remove('active')); event.target.classList.add('active'); updateTransferBalance(); }
-        async function updateTransferBalance() { if(!isConnected) return; let balance=0; if(transferToken==='SIG6') balance=parseFloat(ethers.formatEther(await sigmaContract.balanceOf(userAddress))); else if(transferToken==='USDT') balance=parseFloat(ethers.formatUnits(await usdtContract.balanceOf(userAddress),6)); else balance=parseFloat(ethers.formatEther(await provider.getBalance(userAddress))); document.getElementById('transferBalance').textContent=`Balance: ${balance.toFixed(6)} ${transferToken}`; }
-        function maxTransfer() { const bal=document.getElementById('transferBalance').textContent.match(/Balance: ([\d.]+)/); if(bal) document.getElementById('transferAmount').value=bal[1]; }
-        function pasteAddress() { navigator.clipboard.readText().then(t=>document.getElementById('recipientAddress').value=t); }
-        async function executeTransfer() { if(!isConnected) { connectWallet(); return; } const to=document.getElementById('recipientAddress').value.trim(); if(!ethers.isAddress(to)) { document.getElementById('transferStatus').textContent='Invalid address'; return; } const amount=parseFloat(document.getElementById('transferAmount').value); if(isNaN(amount)||amount<=0) { document.getElementById('transferStatus').textContent='Invalid amount'; return; } const btn=document.getElementById('transferButton'); btn.disabled=true; try { if(transferToken==='SIG6') await (await sigmaContract.transfer(to, ethers.parseEther(amount.toString()))).wait(); else if(transferToken==='USDT') await (await usdtContract.transfer(to, ethers.parseUnits(amount.toString(),6))).wait(); else await (await signer.sendTransaction({to, value: ethers.parseEther(amount.toString())})).wait(); document.getElementById('transferStatus').innerHTML='<i class="fas fa-check-circle"></i> Transfer successful!'; setTimeout(()=>{ document.getElementById('transferStatus').innerHTML=''; updateTransferBalance(); },3000); } catch(e) { document.getElementById('transferStatus').innerHTML='Transfer failed'; } finally { btn.disabled=false; } }
+        async function updateTransferBalance() {
+            if (!isConnected) return;
+            let bal = 0;
+            if (transferToken === 'SIG6') bal = parseFloat(ethers.formatEther(await sigmaContract.balanceOf(userAddress)));
+            else if (transferToken === 'USDT') bal = parseFloat(ethers.formatUnits(await usdtContract.balanceOf(userAddress), 6));
+            else bal = parseFloat(ethers.formatEther(await provider.getBalance(userAddress)));
+            document.getElementById('transferBalance').textContent = `Balance: ${bal.toFixed(6)} ${transferToken}`;
+        }
+        function maxTransfer() { const m = document.getElementById('transferBalance').textContent.match(/Balance: ([\d.]+)/); if(m) document.getElementById('transferAmount').value = m[1]; }
+        function pasteAddress() { navigator.clipboard.readText().then(t => document.getElementById('recipientAddress').value = t); }
+        async function executeTransfer() {
+            if (!isConnected) return;
+            const to = document.getElementById('recipientAddress').value.trim();
+            if (!ethers.isAddress(to)) { document.getElementById('transferStatus').textContent = 'Invalid address'; return; }
+            const amount = parseFloat(document.getElementById('transferAmount').value);
+            if (isNaN(amount) || amount <= 0) return;
+            const btn = event.target; btn.disabled = true;
+            try {
+                if (transferToken === 'SIG6') await (await sigmaContract.transfer(to, ethers.parseEther(amount.toString()))).wait();
+                else if (transferToken === 'USDT') await (await usdtContract.transfer(to, ethers.parseUnits(amount.toString(), 6))).wait();
+                else await (await signer.sendTransaction({ to, value: ethers.parseEther(amount.toString()) })).wait();
+                document.getElementById('transferStatus').innerHTML = '<i class="fas fa-check-circle" style="color:var(--success)"></i> Transfer successful!';
+                setTimeout(() => { document.getElementById('transferStatus').innerHTML = ''; updateTransferBalance(); }, 3000);
+            } catch(e) { document.getElementById('transferStatus').innerHTML = 'Transfer failed'; }
+            btn.disabled = false;
+        }
+        
         function copyContract() { navigator.clipboard.writeText(SIGMA_ADDRESS); alert("Contract address copied!"); }
-        function copyReferralMini() { if(window.referralLink) { navigator.clipboard.writeText(window.referralLink); alert("Referral link copied!"); } }
+        function copyReferralMini() { if(window.referralLink) { navigator.clipboard.writeText(window.referralLink); alert("Referral link copied! Share with friends to earn rewards!"); } }
         function copyWallet() { if(userAddress) { navigator.clipboard.writeText(userAddress); alert("Wallet address copied!"); } }
-        function resetButtonState() { document.getElementById('calcValue').textContent='0.00 USDT'; document.getElementById('calcInr').textContent='0.00 INR'; document.getElementById('actionButton').disabled=true; document.getElementById('approvalSteps').style.display='none'; if(currentMode==='buy') document.getElementById('actionButton').innerHTML='<i class="fas fa-lock"></i> ENTER AMOUNT'; else document.getElementById('actionButton').innerHTML='<i class="fas fa-lock"></i> ENTER AMOUNT'; }
     </script>
 </body>
 </html>
