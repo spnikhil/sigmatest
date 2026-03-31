@@ -219,7 +219,6 @@
             {"inputs":[],"name":"getCurrentSellRate","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
             {"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"balanceOf","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
             {"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"lastSellTimestamp","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
-            {"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"stats","outputs":[{"internalType":"uint256","name":"icoBonus","type":"uint256"},{"internalType":"uint256","name":"referralIncome","type":"uint256"},{"internalType":"uint256","name":"lapsedIncome","type":"uint256"}],"stateMutability":"view","type":"function"},
             {"inputs":[{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"value","type":"uint256"}],"name":"transfer","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},
             {"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":false,"internalType":"uint256","name":"usdtAmount","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"tokensMinted","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"currentRate","type":"uint256"}],"name":"Buy","type":"event"},
             {"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":false,"internalType":"uint256","name":"tokensBurned","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"usdtReceived","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"currentRate","type":"uint256"}],"name":"Sell","type":"event"}
@@ -293,13 +292,14 @@
         async function loadData() {
             if (!isConnected || !userAddress) return;
             try {
-                // FIXED: Properly handle decimals - rates come with 6 decimals (USDT format)
+                // FIXED: Rates come with 18 decimals (like SIG6 token)
+                // Convert from 18 decimals to actual USDT value
                 const rawBuyRate = await sigmaContract.getCurrentBuyRate();
                 const rawSellRate = await sigmaContract.getCurrentSellRate();
                 
-                // Convert from 6 decimals to actual USDT value (divide by 1,000,000)
-                buyRate = Number(ethers.formatUnits(rawBuyRate, 6));
-                sellRate = Number(ethers.formatUnits(rawSellRate, 6));
+                // Use formatEther for 18 decimals (same as SIG6 token)
+                buyRate = parseFloat(ethers.formatEther(rawBuyRate));
+                sellRate = parseFloat(ethers.formatEther(rawSellRate));
                 
                 // Display with proper formatting - should show like 0.41315
                 document.getElementById('buyRate').textContent = buyRate.toFixed(6) + ' USDT';
@@ -307,7 +307,7 @@
                 document.getElementById('buyRateInr').textContent = '≈ ₹' + (buyRate * INR_RATE).toFixed(2);
                 document.getElementById('sellRateInr').textContent = '≈ ₹' + (sellRate * INR_RATE).toFixed(2);
                 
-                // Balances
+                // Balances - USDT is 6 decimals, SIG6 is 18 decimals, POL is 18 decimals
                 const sigmaBal = await sigmaContract.balanceOf(userAddress);
                 const usdtBal = await usdtContract.balanceOf(userAddress);
                 const polBal = await provider.getBalance(userAddress);
@@ -432,6 +432,7 @@
             
             try {
                 if (currentMode === 'buy') {
+                    // Calculate USDT amount with 1% tax
                     const usdtWithTax = amount * buyRate * 1.01;
                     const usdtWei = ethers.parseUnits(usdtWithTax.toFixed(6), 6);
                     msg.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Buying SIGMA...';
