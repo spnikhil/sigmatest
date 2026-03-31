@@ -27,7 +27,7 @@
             min-height: 100vh; overflow-x: hidden; position: relative;
         }
         
-        /* ===== UPDATED CRISSCROSS LINE ANIMATION ===== */
+        /* ===== ENHANCED CRYPTO PREMIUM CRISS-CROSS BACKGROUND ===== */
         .crypto-bg {
             position: fixed;
             top: 0;
@@ -35,34 +35,130 @@
             width: 100%;
             height: 100%;
             z-index: -2;
-            background: linear-gradient(90deg, rgba(0,255,204,0.03) 1px, transparent 1px) 0 0 / 50px 50px,
-                        linear-gradient(0deg, rgba(157,78,221,0.03) 1px, transparent 1px) 0 0 / 50px 50px;
-            animation: bgMove 20s linear infinite;
+            opacity: 0.5;
+        }
+        
+        /* Primary grid - thin lines */
+        .crypto-bg::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background-image: 
+                /* Vertical lines */
+                repeating-linear-gradient(90deg, 
+                    transparent 0px, 
+                    transparent 49px,
+                    rgba(0, 255, 204, 0.15) 49px,
+                    rgba(0, 255, 204, 0.15) 50px),
+                /* Horizontal lines */
+                repeating-linear-gradient(0deg, 
+                    transparent 0px, 
+                    transparent 49px,
+                    rgba(157, 78, 221, 0.15) 49px,
+                    rgba(157, 78, 221, 0.15) 50px);
+            animation: gridMove 20s linear infinite;
             transform-origin: center;
         }
         
-        /* Add second layer for crisscross effect */
+        /* Secondary diagonal grid - crisscross effect */
         .crypto-bg::after {
             content: '';
             position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background-image: 
+                /* Diagonal lines 45deg */
+                repeating-linear-gradient(45deg, 
+                    transparent 0px, 
+                    transparent 69px,
+                    rgba(255, 42, 109, 0.1) 69px,
+                    rgba(255, 42, 109, 0.1) 70px),
+                /* Diagonal lines -45deg */
+                repeating-linear-gradient(-45deg, 
+                    transparent 0px, 
+                    transparent 89px,
+                    rgba(0, 255, 204, 0.1) 89px,
+                    rgba(0, 255, 204, 0.1) 90px);
+            animation: diagonalMove 15s linear infinite reverse;
+            transform-origin: center;
+        }
+        
+        @keyframes gridMove {
+            0% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+            100% {
+                transform: translate(50px, 50px) rotate(0.5deg);
+            }
+        }
+        
+        @keyframes diagonalMove {
+            0% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+            100% {
+                transform: translate(-70px, -70px) rotate(-0.5deg);
+            }
+        }
+        
+        /* Floating particles for extra premium feel */
+        .crypto-particles {
+            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(45deg, rgba(255,42,109,0.02) 1px, transparent 1px) 0 0 / 70px 70px,
-                        linear-gradient(-45deg, rgba(0,255,204,0.02) 1px, transparent 1px) 0 0 / 70px 70px;
-            animation: bgMoveReverse 15s linear infinite;
+            z-index: -1;
             pointer-events: none;
         }
         
-        @keyframes bgMove {
-            0% { background-position: 0 0, 0 0; }
-            100% { background-position: 100px 100px, 100px 100px; }
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: var(--primary);
+            border-radius: 50%;
+            opacity: 0.3;
+            box-shadow: 0 0 10px var(--primary);
+            animation: particleFloat 15s infinite linear;
         }
         
-        @keyframes bgMoveReverse {
-            0% { background-position: 0 0, 0 0; }
-            100% { background-position: -100px -100px, -100px -100px; }
+        .particle:nth-child(3n) {
+            background: var(--secondary);
+            box-shadow: 0 0 10px var(--secondary);
+        }
+        
+        .particle:nth-child(5n) {
+            background: #ff2a6d;
+            box-shadow: 0 0 10px #ff2a6d;
+        }
+        
+        @keyframes particleFloat {
+            0% {
+                transform: translate(0, 0) scale(1);
+                opacity: 0.3;
+            }
+            25% {
+                transform: translate(100px, -100px) scale(1.5);
+                opacity: 0.6;
+            }
+            50% {
+                transform: translate(200px, 0) scale(1);
+                opacity: 0.3;
+            }
+            75% {
+                transform: translate(100px, 100px) scale(0.8);
+                opacity: 0.6;
+            }
+            100% {
+                transform: translate(0, 0) scale(1);
+                opacity: 0.3;
+            }
         }
         
         .rainbow-border { position:fixed; top:0; left:0; width:100%; height:4px; background:var(--gradient); background-size:400% 400%; animation:rainbow 8s ease infinite; z-index:1000; }
@@ -167,28 +263,6 @@
             color: #888;
         }
         
-        .approve-btn {
-            background: #ffaa00;
-            color: #000;
-            border: none;
-            border-radius: 12px;
-            padding: 15px;
-            font-weight: 800;
-            font-size: 16px;
-            cursor: pointer;
-            width: 100%;
-            margin: 10px 0;
-            transition: all 0.3s;
-        }
-        .approve-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(255,170,0,0.3);
-        }
-        .approve-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-        
         .contract-box { background:rgba(0,0,0,0.3); padding:20px; border-radius:16px; border:1px solid var(--secondary); margin-top:20px; display:flex; align-items:center; gap:15px; }
         .contract-info { flex:1; }
         .contract-label { font-size:12px; color:#888; margin-bottom:5px; display:flex; align-items:center; gap:8px; }
@@ -278,6 +352,7 @@
     </style>
 </head>
 <body>
+    <!-- Enhanced Crypto Premium Criss-Cross Background -->
     <div class="crypto-bg"></div>
     <div class="crypto-particles" id="cryptoParticles"></div>
     <div class="rainbow-border"></div>
@@ -317,9 +392,10 @@
                 <div style="display:flex; gap:15px; justify-content:center; margin-bottom:10px; flex-wrap:wrap;">
                     <span id="sellCooldownBadge" class="cooldown-badge"><i class="fas fa-hourglass-half"></i> Sell cooldown: --</span>
                     <span id="buyCooldownBadge" class="cooldown-badge"><i class="fas fa-calendar-alt"></i> 30-day: --</span>
+                    <span id="buySellCooldownBadge" class="cooldown-badge" style="display:none;"></span>
                 </div>
                 
-                <!-- Approval Steps -->
+                <!-- Approval Steps (Hidden by default, shown only when needed) -->
                 <div class="approval-steps" id="approvalSteps" style="display: none;">
                     <div class="step" id="step1">
                         <div class="step-number">1</div>
@@ -332,11 +408,6 @@
                         <div class="step-status" id="step2Status">Locked</div>
                     </div>
                 </div>
-                
-                <!-- Approve Button -->
-                <button class="approve-btn" id="approveBtn" onclick="approveUSDT()" style="display: none;">
-                    <i class="fas fa-check-circle"></i> APPROVE USDT
-                </button>
                 
                 <div class="tabs">
                     <div class="tab active" onclick="setMode('buy')" id="buyTab">
@@ -372,7 +443,7 @@
                     </div>
                 </div>
                 
-                <!-- MAIN ACTION BUTTON -->
+                <!-- MAIN ACTION BUTTON (Single button: changes text based on state) -->
                 <button class="action-btn" id="actionButton" onclick="executeAction()" disabled>
                     <i class="fas fa-lock"></i> CONNECT WALLET
                 </button>
@@ -382,12 +453,12 @@
                 <div class="contract-box">
                     <div class="contract-info">
                         <div class="contract-label"><i class="fas fa-file-contract"></i> CONTRACT (NEW)</div>
-                        <div class="contract-address">0x5bC7581A6f7dA420e931d17bD5CaF699C033f7Fd</div>
+                        <div class="contract-address">0x068Aaba73Fd754F21140E2F13DA177ce7251A299</div>
                     </div>
                     <button class="copy-btn" onclick="copyContract()"><i class="fas fa-copy"></i> COPY</button>
                 </div>
                 
-                <!-- ONLY ONE REFERRAL BOX - Contract ke neeche wala -->
+                <!-- REFERRAL BOX - Only visible when SIG6 balance > 0 -->
                 <div class="referral-mini-box" id="referralMiniBox" style="display: none;">
                     <div class="referral-mini-info">
                         <div class="referral-mini-label"><i class="fas fa-link"></i> YOUR REFERRAL LINK</div>
@@ -434,6 +505,9 @@
                     <button class="menu-btn" onclick="window.location.href='income.html'"><i class="fas fa-chart-line"></i><div><div>Income</div><div style="font-size:12px; color:#aaa;">Rewards report</div></div></button>
                     <button class="menu-btn" onclick="window.location.href='buy_sell.html'"><i class="fas fa-exchange-alt"></i><div><div>Buy/Sell History</div><div style="font-size:12px; color:#aaa;">Complete Open/Close report</div></div></button>
                     <button class="menu-btn" onclick="window.location.href='transfer.html'"><i class="fas fa-history"></i><div><div>Transfers</div><div style="font-size:12px; color:#aaa;">P2P history</div></div></button>
+                    <button class="menu-btn" onclick="window.location.href='price.html'"><i class="fas fa-chart-line"></i><div><div>Price History</div><div style="font-size:12px; color:#aaa;">Rate & volume history</div></div></button>
+                    <button class="menu-btn" onclick="window.location.href='utility.html'"><i class="fas fa-cogs"></i><div><div>Utility</div><div style="font-size:12px; color:#aaa;">Tools & features</div></div></button>
+                    <button class="menu-btn" onclick="window.location.href='plan.html'"><i class="fas fa-crown"></i><div><div>Details</div><div style="font-size:12px; color:#aaa;">Offical SIGMA Details</div></div></button>
                 </div>
             </div>
             
@@ -463,881 +537,945 @@
     </div>
 
     <script>
-        // ========== CONTRACT CONFIGURATION (UPDATED) ==========
-        const SIGMA_ADDRESS = "0x5bC7581A6f7dA420e931d17bD5CaF699C033f7Fd";
+        // ========== CONTRACT CONFIGURATION ==========
+        const SIGMA_ADDRESS = "0x068Aaba73Fd754F21140E2F13DA177ce7251A299";
         const USDT_ADDRESS = "0xc2132D05D31c914a87C6611C10748AEb04B58e8F";
-        const CREATOR_WALLET = "0xb579377DDe2C03b2b46B5b12453F4dbAddB06f2E";
         
-        // COMPLETE ABI (REPLACED WITH PROVIDED ABI)
+        // ABI - COMPLETE FROM CONTRACT
         const SIGMA_ABI = [
-		{
-			"inputs": [
-				{
-					"internalType": "address",
-					"name": "spender",
-					"type": "address"
-				},
-				{
-					"internalType": "uint256",
-					"name": "value",
-					"type": "uint256"
-				}
-			],
-			"name": "approve",
-			"outputs": [
-				{
-					"internalType": "bool",
-					"name": "",
-					"type": "bool"
-				}
-			],
-			"stateMutability": "nonpayable",
-			"type": "function"
-		},
-		{
-			"inputs": [],
-			"name": "emergencyWithdraw",
-			"outputs": [],
-			"stateMutability": "nonpayable",
-			"type": "function"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "address",
-					"name": "_usdt",
-					"type": "address"
-				},
-				{
-					"internalType": "address",
-					"name": "_creator",
-					"type": "address"
-				}
-			],
-			"stateMutability": "nonpayable",
-			"type": "constructor"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "address",
-					"name": "spender",
-					"type": "address"
-				},
-				{
-					"internalType": "uint256",
-					"name": "allowance",
-					"type": "uint256"
-				},
-				{
-					"internalType": "uint256",
-					"name": "needed",
-					"type": "uint256"
-				}
-				],
-			"name": "ERC20InsufficientAllowance",
-			"type": "error"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "address",
-					"name": "sender",
-					"type": "address"
-				},
-				{
-					"internalType": "uint256",
-					"name": "balance",
-					"type": "uint256"
-				},
-				{
-					"internalType": "uint256",
-					"name": "needed",
-					"type": "uint256"
-				}
-			],
-			"name": "ERC20InsufficientBalance",
-			"type": "error"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "address",
-					"name": "approver",
-					"type": "address"
-				}
-			],
-			"name": "ERC20InvalidApprover",
-			"type": "error"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "address",
-					"name": "receiver",
-					"type": "address"
-				}
-			],
-			"name": "ERC20InvalidReceiver",
-			"type": "error"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "address",
-					"name": "sender",
-					"type": "address"
-				}
-			],
-			"name": "ERC20InvalidSender",
-			"type": "error"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "address",
-					"name": "spender",
-					"type": "address"
-				}
-			],
-			"name": "ERC20InvalidSpender",
-			"type": "error"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "address",
-					"name": "owner",
-					"type": "address"
-				}
-			],
-			"name": "OwnableInvalidOwner",
-			"type": "error"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "address",
-					"name": "account",
-					"type": "address"
-				}
-				],
-			"name": "OwnableUnauthorizedAccount",
-			"type": "error"
-		},
-		{
-			"inputs": [],
-			"name": "ReentrancyGuardReentrantCall",
-			"type": "error"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "address",
-					"name": "token",
-					"type": "address"
-				}
-			],
-			"name": "SafeERC20FailedOperation",
-			"type": "error"
-		},
-		{
-			"anonymous": false,
-			"inputs": [
-				{
-					"indexed": true,
-					"internalType": "address",
-					"name": "owner",
-					"type": "address"
-				},
-				{
-					"indexed": true,
-					"internalType": "address",
-					"name": "spender",
-					"type": "address"
-				},
-				{
-					"indexed": false,
-					"internalType": "uint256",
-					"name": "value",
-					"type": "uint256"
-				}
-			],
-			"name": "Approval",
-			"type": "event"
-		},
-		{
-			"anonymous": false,
-			"inputs": [
-				{
-					"indexed": true,
-					"internalType": "address",
-					"name": "user",
-					"type": "address"
-				},
-				{
-					"indexed": false,
-					"internalType": "uint256",
-					"name": "usdtAmount",
-					"type": "uint256"
-				},
-				{
-					"indexed": false,
-					"internalType": "uint256",
-					"name": "sigmaAmount",
-					"type": "uint256"
-				},
-				{
-					"indexed": false,
-					"internalType": "uint256",
-					"name": "rate",
-					"type": "uint256"
-				},
-				{
-					"indexed": false,
-					"internalType": "uint256",
-					"name": "timestamp",
-					"type": "uint256"
-				}
-			],
-			"name": "Bought",
-			"type": "event"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "uint256",
-					"name": "_usdtAmount",
-					"type": "uint256"
-				},
-				{
-					"internalType": "address",
-					"name": "_upline",
-					"type": "address"
-				}
-			],
-			"name": "buy",
-			"outputs": [],
-			"stateMutability": "nonpayable",
-			"type": "function"
-		},
-		{
-			"anonymous": false,
-			"inputs": [
-				{
-					"indexed": true,
-					"internalType": "address",
-					"name": "from",
-					"type": "address"
-				},
-				{
-					"indexed": true,
-					"internalType": "address",
-					"name": "to",
-					"type": "address"
-				},
-				{
-					"indexed": false,
-					"internalType": "uint256",
-					"name": "amount",
-					"type": "uint256"
-				},
-				{
-					"indexed": false,
-					"internalType": "uint256",
-					"name": "level",
-					"type": "uint256"
-				},
-				{
-					"indexed": false,
-					"internalType": "string",
-					"name": "reason",
-					"type": "string"
-				},
-				{
-					"indexed": false,
-					"internalType": "uint256",
-					"name": "timestamp",
-					"type": "uint256"
-				}
-			],
-			"name": "IncomeLapsed",
-			"type": "event"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "address[]",
-					"name": "_users",
-					"type": "address[]"
-				},
-				{
-					"internalType": "uint256[]",
-					"name": "_balances",
-					"type": "uint256[]"
-				},
-				{
-					"internalType": "address[]",
-					"name": "_uplines",
-					"type": "address[]"
-				}
-			],
-			"name": "migrateUsers",
-			"outputs": [],
-			"stateMutability": "nonpayable",
-			"type": "function"
-		},
-		{
-			"anonymous": false,
-			"inputs": [
-				{
-					"indexed": true,
-					"internalType": "address",
-					"name": "previousOwner",
-					"type": "address"
-				},
-				{
-					"indexed": true,
-					"internalType": "address",
-					"name": "newOwner",
-					"type": "address"
-				}
-			],
-			"name": "OwnershipTransferred",
-			"type": "event"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "address",
-					"name": "_to",
-					"type": "address"
-				},
-				{
-					"internalType": "uint256",
-					"name": "_amount",
-					"type": "uint256"
-				}
-			],
-			"name": "p2pTransfer",
-			"outputs": [],
-			"stateMutability": "nonpayable",
-			"type": "function"
-		},
-		{
-			"anonymous": false,
-			"inputs": [
-				{
-					"indexed": true,
-					"internalType": "address",
-					"name": "from",
-					"type": "address"
-				},
-				{
-					"indexed": true,
-					"internalType": "address",
-					"name": "to",
-					"type": "address"
-				},
-				{
-					"indexed": false,
-					"internalType": "uint256",
-					"name": "amount",
-					"type": "uint256"
-				},
-				{
-					"indexed": false,
-					"internalType": "uint256",
-					"name": "timestamp",
-					"type": "uint256"
-				},
-				{
-					"indexed": false,
-					"internalType": "uint256",
-					"name": "currentRate",
-					"type": "uint256"
-				}
-			],
-			"name": "P2PTransfer",
-			"type": "event"
-		},
-		{
-			"anonymous": false,
-			"inputs": [
-				{
-					"indexed": true,
-					"internalType": "address",
-					"name": "from",
-					"type": "address"
-				},
-				{
-					"indexed": true,
-					"internalType": "address",
-					"name": "to",
-					"type": "address"
-				},
-				{
-					"indexed": false,
-					"internalType": "uint256",
-					"name": "amount",
-					"type": "uint256"
-				},
-				{
-					"indexed": false,
-					"internalType": "uint256",
-					"name": "level",
-					"type": "uint256"
-				},
-				{
-					"indexed": false,
-					"internalType": "uint256",
-					"name": "timestamp",
-					"type": "uint256"
-				}
-			],
-			"name": "ReferralPaid",
-			"type": "event"
-		},
-		{
-			"inputs": [],
-			"name": "renounceOwnership",
-			"outputs": [],
-			"stateMutability": "nonpayable",
-			"type": "function"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "uint256",
-					"name": "_sigmaAmount",
-					"type": "uint256"
-				}
-			],
-			"name": "sell",
-			"outputs": [],
-			"stateMutability": "nonpayable",
-			"type": "function"
-		},
-		{
-			"anonymous": false,
-			"inputs": [
-				{
-					"indexed": true,
-					"internalType": "address",
-					"name": "user",
-					"type": "address"
-				},
-				{
-					"indexed": false,
-					"internalType": "uint256",
-					"name": "sigmaAmount",
-					"type": "uint256"
-				},
-				{
-					"indexed": false,
-					"internalType": "uint256",
-					"name": "usdtAmount",
-					"type": "uint256"
-				},
-				{
-					"indexed": false,
-					"internalType": "uint256",
-					"name": "rate",
-					"type": "uint256"
-				},
-				{
-					"indexed": false,
-					"internalType": "uint256",
-					"name": "timestamp",
-					"type": "uint256"
-				}
-			],
-			"name": "Sold",
-			"type": "event"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "address",
-					"name": "to",
-					"type": "address"
-				},
-				{
-					"internalType": "uint256",
-					"name": "value",
-					"type": "uint256"
-				}
-			],
-			"name": "transfer",
-			"outputs": [
-				{
-					"internalType": "bool",
-					"name": "",
-					"type": "bool"
-				}
-			],
-			"stateMutability": "nonpayable",
-			"type": "function"
-		},
-		{
-			"anonymous": false,
-			"inputs": [
-				{
-					"indexed": true,
-					"internalType": "address",
-					"name": "from",
-					"type": "address"
-				},
-				{
-					"indexed": true,
-					"internalType": "address",
-					"name": "to",
-					"type": "address"
-				},
-				{
-					"indexed": false,
-					"internalType": "uint256",
-					"name": "value",
-					"type": "uint256"
-				}
-			],
-			"name": "Transfer",
-			"type": "event"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "address",
-					"name": "from",
-					"type": "address"
-				},
-				{
-					"internalType": "address",
-					"name": "to",
-					"type": "address"
-				},
-				{
-					"internalType": "uint256",
-					"name": "value",
-					"type": "uint256"
-				}
-			],
-			"name": "transferFrom",
-			"outputs": [
-				{
-					"internalType": "bool",
-					"name": "",
-					"type": "bool"
-				}
-			],
-			"stateMutability": "nonpayable",
-			"type": "function"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "address",
-					"name": "newOwner",
-					"type": "address"
-				}
-			],
-			"name": "transferOwnership",
-			"outputs": [],
-			"stateMutability": "nonpayable",
-			"type": "function"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "address",
-					"name": "_upline",
-					"type": "address"
-				},
-				{
-					"internalType": "uint256",
-					"name": "_level",
-					"type": "uint256"
-				}
-			],
-			"name": "_isEligible",
-			"outputs": [
-				{
-					"internalType": "bool",
-					"name": "",
-					"type": "bool"
-				}
-			],
-			"stateMutability": "view",
-			"type": "function"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "address",
-					"name": "owner",
-					"type": "address"
-				},
-				{
-					"internalType": "address",
-					"name": "spender",
-					"type": "address"
-				}
-			],
-			"name": "allowance",
-			"outputs": [
-				{
-					"internalType": "uint256",
-					"name": "",
-					"type": "uint256"
-				}
-			],
-			"stateMutability": "view",
-			"type": "function"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "address",
-					"name": "account",
-					"type": "address"
-				}
-			],
-			"name": "balanceOf",
-			"outputs": [
-				{
-					"internalType": "uint256",
-					"name": "",
-					"type": "uint256"
-				}
-			],
-			"stateMutability": "view",
-			"type": "function"
-		},
-		{
-			"inputs": [],
-			"name": "BASE_RATE",
-			"outputs": [
-				{
-					"internalType": "uint256",
-					"name": "",
-					"type": "uint256"
-				}
-			],
-			"stateMutability": "view",
-			"type": "function"
-		},
-		{
-			"inputs": [],
-			"name": "creatorWallet",
-			"outputs": [
-				{
-					"internalType": "address",
-					"name": "",
-					"type": "address"
-				}
-			],
-			"stateMutability": "view",
-			"type": "function"
-		},
-		{
-			"inputs": [],
-			"name": "currentRate",
-			"outputs": [
-				{
-					"internalType": "uint256",
-					"name": "",
-					"type": "uint256"
-				}
-			],
-			"stateMutability": "view",
-			"type": "function"
-		},
-		{
-			"inputs": [],
-			"name": "decimals",
-			"outputs": [
-				{
-					"internalType": "uint8",
-					"name": "",
-					"type": "uint8"
-				}
-			],
-			"stateMutability": "view",
-			"type": "function"
-		},
-		{
-			"inputs": [],
-			"name": "getSellRate",
-			"outputs": [
-				{
-					"internalType": "uint256",
-					"name": "",
-					"type": "uint256"
-				}
-			],
-			"stateMutability": "view",
-			"type": "function"
-		},
-		{
-			"inputs": [],
-			"name": "INCREMENT",
-			"outputs": [
-				{
-					"internalType": "uint256",
-					"name": "",
-					"type": "uint256"
-				}
-			],
-			"stateMutability": "view",
-			"type": "function"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "uint256",
-					"name": "",
-					"type": "uint256"
-				}
-			],
-			"name": "levelRewards",
-			"outputs": [
-				{
-					"internalType": "uint256",
-					"name": "",
-					"type": "uint256"
-				}
-			],
-			"stateMutability": "view",
-			"type": "function"
-		},
-		{
-			"inputs": [],
-			"name": "MIN_USDT_FOR_REF",
-			"outputs": [
-				{
-					"internalType": "uint256",
-					"name": "",
-					"type": "uint256"
-				}
-			],
-			"stateMutability": "view",
-			"type": "function"
-		},
-		{
-			"inputs": [],
-			"name": "name",
-			"outputs": [
-				{
-					"internalType": "string",
-					"name": "",
-					"type": "string"
-				}
-			],
-			"stateMutability": "view",
-			"type": "function"
-		},
-		{
-			"inputs": [],
-			"name": "owner",
-			"outputs": [
-				{
-					"internalType": "address",
-					"name": "",
-					"type": "address"
-				}
-			],
-			"stateMutability": "view",
-			"type": "function"
-		},
-		{
-			"inputs": [],
-			"name": "symbol",
-			"outputs": [
-				{
-					"internalType": "string",
-					"name": "",
-					"type": "string"
-				}
-			],
-			"stateMutability": "view",
-			"type": "function"
-		},
-		{
-			"inputs": [],
-			"name": "totalSupply",
-			"outputs": [
-				{
-					"internalType": "uint256",
-					"name": "",
-					"type": "uint256"
-				}
-			],
-			"stateMutability": "view",
-			"type": "function"
-		},
-		{
-			"inputs": [],
-			"name": "usdt",
-			"outputs": [
-				{
-					"internalType": "contract IERC20",
-					"name": "",
-					"type": "address"
-				}
-			],
-			"stateMutability": "view",
-			"type": "function"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "address",
-					"name": "",
-					"type": "address"
-				}
-			],
-			"name": "users",
-			"outputs": [
-				{
-					"internalType": "address",
-					"name": "upline",
-					"type": "address"
-				},
-				{
-					"internalType": "uint256",
-					"name": "referralExpiry",
-					"type": "uint256"
-				},
-				{
-					"internalType": "uint256",
-					"name": "totalReferralEarned",
-					"type": "uint256"
-				},
-				{
-					"internalType": "uint256",
-					"name": "lastBuyTimestamp",
-					"type": "uint256"
-				},
-				{
-					"internalType": "uint256",
-					"name": "directCount",
-					"type": "uint256"
-				},
-				{
-					"internalType": "bool",
-					"name": "isMigrated",
-					"type": "bool"
-				},
-				{
-					"internalType": "bool",
-					"name": "hasBought",
-					"type": "bool"
-				}
-			],
-			"stateMutability": "view",
-			"type": "function"
-		}
-	];
+            {
+                "inputs": [
+                    {
+                        "internalType": "address",
+                        "name": "_user",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "address",
+                        "name": "_upline",
+                        "type": "address"
+                    }
+                ],
+                "name": "adminSetUpline",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "address",
+                        "name": "_usdt",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "address",
+                        "name": "_creator",
+                        "type": "address"
+                    }
+                ],
+                "stateMutability": "nonpayable",
+                "type": "constructor"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "address",
+                        "name": "spender",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "allowance",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "needed",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "ERC20InsufficientAllowance",
+                "type": "error"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "address",
+                        "name": "sender",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "balance",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "needed",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "ERC20InsufficientBalance",
+                "type": "error"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "address",
+                        "name": "approver",
+                        "type": "address"
+                    }
+                ],
+                "name": "ERC20InvalidApprover",
+                "type": "error"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "address",
+                        "name": "receiver",
+                        "type": "address"
+                    }
+                ],
+                "name": "ERC20InvalidReceiver",
+                "type": "error"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "address",
+                        "name": "sender",
+                        "type": "address"
+                    }
+                ],
+                "name": "ERC20InvalidSender",
+                "type": "error"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "address",
+                        "name": "spender",
+                        "type": "address"
+                    }
+                ],
+                "name": "ERC20InvalidSpender",
+                "type": "error"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "address",
+                        "name": "owner",
+                        "type": "address"
+                    }
+                ],
+                "name": "OwnableInvalidOwner",
+                "type": "error"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "address",
+                        "name": "account",
+                        "type": "address"
+                    }
+                ],
+                "name": "OwnableUnauthorizedAccount",
+                "type": "error"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "address",
+                        "name": "_to",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "_amount",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "p2pTransfer",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "inputs": [],
+                "name": "ReentrancyGuardReentrantCall",
+                "type": "error"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "address",
+                        "name": "token",
+                        "type": "address"
+                    }
+                ],
+                "name": "SafeERC20FailedOperation",
+                "type": "error"
+            },
+            {
+                "anonymous": false,
+                "inputs": [
+                    {
+                        "indexed": true,
+                        "internalType": "address",
+                        "name": "owner",
+                        "type": "address"
+                    },
+                    {
+                        "indexed": true,
+                        "internalType": "address",
+                        "name": "spender",
+                        "type": "address"
+                    },
+                    {
+                        "indexed": false,
+                        "internalType": "uint256",
+                        "name": "value",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "Approval",
+                "type": "event"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "address",
+                        "name": "spender",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "value",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "approve",
+                "outputs": [
+                    {
+                        "internalType": "bool",
+                        "name": "",
+                        "type": "bool"
+                    }
+                ],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "anonymous": false,
+                "inputs": [
+                    {
+                        "indexed": true,
+                        "internalType": "address",
+                        "name": "user",
+                        "type": "address"
+                    },
+                    {
+                        "indexed": false,
+                        "internalType": "uint256",
+                        "name": "usdtAmount",
+                        "type": "uint256"
+                    },
+                    {
+                        "indexed": false,
+                        "internalType": "uint256",
+                        "name": "sigmaAmount",
+                        "type": "uint256"
+                    },
+                    {
+                        "indexed": false,
+                        "internalType": "uint256",
+                        "name": "rate",
+                        "type": "uint256"
+                    },
+                    {
+                        "indexed": false,
+                        "internalType": "uint256",
+                        "name": "timestamp",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "Bought",
+                "type": "event"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "_usdtAmount",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "address",
+                        "name": "_upline",
+                        "type": "address"
+                    }
+                ],
+                "name": "buy",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "anonymous": false,
+                "inputs": [
+                    {
+                        "indexed": true,
+                        "internalType": "address",
+                        "name": "from",
+                        "type": "address"
+                    },
+                    {
+                        "indexed": true,
+                        "internalType": "address",
+                        "name": "to",
+                        "type": "address"
+                    },
+                    {
+                        "indexed": false,
+                        "internalType": "uint256",
+                        "name": "amount",
+                        "type": "uint256"
+                    },
+                    {
+                        "indexed": false,
+                        "internalType": "uint256",
+                        "name": "level",
+                        "type": "uint256"
+                    },
+                    {
+                        "indexed": false,
+                        "internalType": "string",
+                        "name": "reason",
+                        "type": "string"
+                    },
+                    {
+                        "indexed": false,
+                        "internalType": "uint256",
+                        "name": "timestamp",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "IncomeLapsed",
+                "type": "event"
+            },
+            {
+                "anonymous": false,
+                "inputs": [
+                    {
+                        "indexed": true,
+                        "internalType": "address",
+                        "name": "previousOwner",
+                        "type": "address"
+                    },
+                    {
+                        "indexed": true,
+                        "internalType": "address",
+                        "name": "newOwner",
+                        "type": "address"
+                    }
+                ],
+                "name": "OwnershipTransferred",
+                "type": "event"
+            },
+            {
+                "anonymous": false,
+                "inputs": [
+                    {
+                        "indexed": true,
+                        "internalType": "address",
+                        "name": "from",
+                        "type": "address"
+                    },
+                    {
+                        "indexed": true,
+                        "internalType": "address",
+                        "name": "to",
+                        "type": "address"
+                    },
+                    {
+                        "indexed": false,
+                        "internalType": "uint256",
+                        "name": "amount",
+                        "type": "uint256"
+                    },
+                    {
+                        "indexed": false,
+                        "internalType": "uint256",
+                        "name": "level",
+                        "type": "uint256"
+                    },
+                    {
+                        "indexed": false,
+                        "internalType": "uint256",
+                        "name": "timestamp",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "ReferralPaid",
+                "type": "event"
+            },
+            {
+                "inputs": [],
+                "name": "renounceOwnership",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "_sigmaAmount",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "sell",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "anonymous": false,
+                "inputs": [
+                    {
+                        "indexed": true,
+                        "internalType": "address",
+                        "name": "user",
+                        "type": "address"
+                    },
+                    {
+                        "indexed": false,
+                        "internalType": "uint256",
+                        "name": "sigmaAmount",
+                        "type": "uint256"
+                    },
+                    {
+                        "indexed": false,
+                        "internalType": "uint256",
+                        "name": "usdtAmount",
+                        "type": "uint256"
+                    },
+                    {
+                        "indexed": false,
+                        "internalType": "uint256",
+                        "name": "rate",
+                        "type": "uint256"
+                    },
+                    {
+                        "indexed": false,
+                        "internalType": "uint256",
+                        "name": "timestamp",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "Sold",
+                "type": "event"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "address",
+                        "name": "to",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "value",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "transfer",
+                "outputs": [
+                    {
+                        "internalType": "bool",
+                        "name": "",
+                        "type": "bool"
+                    }
+                ],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "anonymous": false,
+                "inputs": [
+                    {
+                        "indexed": true,
+                        "internalType": "address",
+                        "name": "from",
+                        "type": "address"
+                    },
+                    {
+                        "indexed": true,
+                        "internalType": "address",
+                        "name": "to",
+                        "type": "address"
+                    },
+                    {
+                        "indexed": false,
+                        "internalType": "uint256",
+                        "name": "value",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "Transfer",
+                "type": "event"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "address",
+                        "name": "from",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "address",
+                        "name": "to",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "value",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "transferFrom",
+                "outputs": [
+                    {
+                        "internalType": "bool",
+                        "name": "",
+                        "type": "bool"
+                    }
+                ],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "address",
+                        "name": "newOwner",
+                        "type": "address"
+                    }
+                ],
+                "name": "transferOwnership",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "address",
+                        "name": "owner",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "address",
+                        "name": "spender",
+                        "type": "address"
+                    }
+                ],
+                "name": "allowance",
+                "outputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "",
+                        "type": "uint256"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [],
+                "name": "ath",
+                "outputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "",
+                        "type": "uint256"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [],
+                "name": "atl",
+                "outputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "",
+                        "type": "uint256"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "address",
+                        "name": "account",
+                        "type": "address"
+                    }
+                ],
+                "name": "balanceOf",
+                "outputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "",
+                        "type": "uint256"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [],
+                "name": "BASE_RATE",
+                "outputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "",
+                        "type": "uint256"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [],
+                "name": "creatorWallet",
+                "outputs": [
+                    {
+                        "internalType": "address",
+                        "name": "",
+                        "type": "address"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [],
+                "name": "currentRate",
+                "outputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "",
+                        "type": "uint256"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "dailyHistory",
+                "outputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "open",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "high",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "low",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "close",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "timestamp",
+                        "type": "uint256"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [],
+                "name": "decimals",
+                "outputs": [
+                    {
+                        "internalType": "uint8",
+                        "name": "",
+                        "type": "uint8"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [],
+                "name": "getSellRate",
+                "outputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "",
+                        "type": "uint256"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [],
+                "name": "INCREMENT",
+                "outputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "",
+                        "type": "uint256"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "address",
+                        "name": "_upline",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "_level",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "isLevelUnlocked",
+                "outputs": [
+                    {
+                        "internalType": "bool",
+                        "name": "",
+                        "type": "bool"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [],
+                "name": "lastHistoryDay",
+                "outputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "",
+                        "type": "uint256"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "levelRewards",
+                "outputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "",
+                        "type": "uint256"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [],
+                "name": "MAX_SIGMA_BUY",
+                "outputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "",
+                        "type": "uint256"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [],
+                "name": "MIN_FOR_RENEWAL",
+                "outputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "",
+                        "type": "uint256"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [],
+                "name": "MIN_HOLD_VALUE",
+                "outputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "",
+                        "type": "uint256"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [],
+                "name": "name",
+                "outputs": [
+                    {
+                        "internalType": "string",
+                        "name": "",
+                        "type": "string"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [],
+                "name": "owner",
+                "outputs": [
+                    {
+                        "internalType": "address",
+                        "name": "",
+                        "type": "address"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [],
+                "name": "symbol",
+                "outputs": [
+                    {
+                        "internalType": "string",
+                        "name": "",
+                        "type": "string"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [],
+                "name": "totalSupply",
+                "outputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "",
+                        "type": "uint256"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [],
+                "name": "usdt",
+                "outputs": [
+                    {
+                        "internalType": "contract IERC20",
+                        "name": "",
+                        "type": "address"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "address",
+                        "name": "",
+                        "type": "address"
+                    }
+                ],
+                "name": "users",
+                "outputs": [
+                    {
+                        "internalType": "address",
+                        "name": "upline",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "referralExpiry",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "totalReferralEarned",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "lastBuyTimestamp",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "lastActionBlock",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "qualifiedDirectsCount",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "bool",
+                        "name": "hasBought",
+                        "type": "bool"
+                    },
+                    {
+                        "internalType": "bool",
+                        "name": "isInitialized",
+                        "type": "bool"
+                    },
+                    {
+                        "internalType": "bool",
+                        "name": "isCurrentlyQualified",
+                        "type": "bool"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            }
+        ];
 
         const USDT_ABI = [
             "function balanceOf(address) view returns (uint256)",
@@ -1358,8 +1496,18 @@
         let cooldownInterval;
         let currentUSDTNeeded = 0;
         let isApproved = false;
+        let hasUserBought = false;
+        
+        // Track last transaction time for buy-sell cooldown
+        let lastTransactionTimestamp = 0;
+        const COOLDOWN_SECONDS = 180; // 3 minutes
+        
+        // FIXED: Track referral expiry separately
+        let referralExpiry = 0;
 
         const INR_RATE = 95;
+        const DEFAULT_UPLINE = "0x0000000000000000000000000000000000000000";
+        const MAX_SIGMA_PER_TX = 1000; // Max 1000 SIG6 per transaction
 
         window.onload = async () => {
             createParticles();
@@ -1426,9 +1574,13 @@
             if (ref && ethers.isAddress(ref)) {
                 localStorage.setItem('sigma_referrer', ref);
             }
-            const storedRef = localStorage.getItem('sigma_referrer') || CREATOR_WALLET;
-            document.getElementById('uplineAddress').textContent = 
-                storedRef.slice(0,8) + '...' + storedRef.slice(-6);
+            const storedRef = localStorage.getItem('sigma_referrer');
+            if (storedRef) {
+                document.getElementById('uplineAddress').textContent = 
+                    storedRef.slice(0,8) + '...' + storedRef.slice(-6);
+            } else {
+                document.getElementById('uplineAddress').textContent = 'None (contract default)';
+            }
         }
 
         async function connectWallet() {
@@ -1469,14 +1621,15 @@
                 document.getElementById('walletAddress').textContent = 
                     userAddress.slice(0,8) + '...' + userAddress.slice(-6);
                 
-                if (userAddress === CREATOR_WALLET.toLowerCase()) {
-                    document.getElementById('statusMessage').innerHTML = 
-                        '<i class="fas fa-exclamation-triangle" style="color:var(--danger)"></i> ⚠️ Creator Wallet detected! Cannot trade.';
-                }
-                
                 const saved = localStorage.getItem(`lastSell_${userAddress}`);
                 if (saved) {
                     lastSellTimestamp = parseInt(saved);
+                }
+                
+                // Load last transaction timestamp
+                const lastTx = localStorage.getItem(`lastTx_${userAddress}`);
+                if (lastTx) {
+                    lastTransactionTimestamp = parseInt(lastTx);
                 }
                 
                 await loadData();
@@ -1496,18 +1649,18 @@
                 document.getElementById('btnText').textContent = 
                     userAddress.slice(0,6) + '...' + userAddress.slice(-4);
                 
-                if (userAddress === CREATOR_WALLET.toLowerCase()) {
-                    document.getElementById('statusMessage').innerHTML = 
-                        '<i class="fas fa-exclamation-triangle" style="color:var(--danger)"></i> ⚠️ Creator Wallet detected! Cannot trade.';
-                } else {
-                    document.getElementById('statusMessage').innerHTML = '';
-                }
-                
                 const saved = localStorage.getItem(`lastSell_${userAddress}`);
                 if (saved) {
                     lastSellTimestamp = parseInt(saved);
                 } else {
                     lastSellTimestamp = 0;
+                }
+                
+                const lastTx = localStorage.getItem(`lastTx_${userAddress}`);
+                if (lastTx) {
+                    lastTransactionTimestamp = parseInt(lastTx);
+                } else {
+                    lastTransactionTimestamp = 0;
                 }
                 
                 await loadData();
@@ -1522,7 +1675,6 @@
             document.getElementById('btnText').textContent = 'Connect Wallet';
             document.getElementById('actionButton').disabled = true;
             document.getElementById('actionButton').innerHTML = '<i class="fas fa-lock"></i> CONNECT WALLET';
-            document.getElementById('approveBtn').style.display = 'none';
             document.getElementById('approvalSteps').style.display = 'none';
             document.getElementById('referralMiniBox').style.display = 'none';
             
@@ -1535,6 +1687,7 @@
             document.getElementById('statusMessage').innerHTML = '';
         }
 
+        // ========== MAIN LOADDATA FUNCTION - FIXED 30-DAY RESET LOGIC ==========
         async function loadData() {
             if (!isConnected || !userAddress) return;
             
@@ -1553,6 +1706,13 @@
                 
                 if (userStruct) {
                     lastBuyTimestamp = Number(userStruct.lastBuyTimestamp);
+                    hasUserBought = userStruct.hasBought || lastBuyTimestamp > 0;
+                    
+                    // FIXED: Get referral expiry from contract
+                    referralExpiry = Number(userStruct.referralExpiry);
+                    
+                } else {
+                    hasUserBought = false;
                 }
                 
                 document.getElementById('buyRate').textContent = buyRate.toFixed(6) + ' USDT';
@@ -1572,13 +1732,14 @@
                 
                 document.getElementById('polBalance').textContent = polBalanceNum.toFixed(4) + ' POL';
                 
-                // ✅ SIRF EK REFERRAL BOX - Contract ke neeche wala
-                if (userAddress) {
+                // Show referral box ONLY if SIG6 balance > 0
+                if (sigmaBalanceNum > 0 && userAddress) {
                     document.getElementById('referralMiniBox').style.display = 'flex';
                     const link = window.location.origin + window.location.pathname + '?ref=' + userAddress;
                     document.getElementById('referralMiniAddress').textContent = userAddress.slice(0,10) + '...' + userAddress.slice(-8);
-                    // Store link for copy function
                     window.referralLink = link;
+                } else {
+                    document.getElementById('referralMiniBox').style.display = 'none';
                 }
                 
                 updateCooldownUI();
@@ -1589,6 +1750,7 @@
             }
         }
 
+        // FIXED: updateCooldownUI function with proper referral expiry
         function updateCooldownUI() {
             const now = Math.floor(Date.now() / 1000);
             
@@ -1606,20 +1768,28 @@
                 sellBadge.className = 'cooldown-badge';
             }
 
-            const buyDiff = now - lastBuyTimestamp;
-            const thirtyDays = 30 * 24 * 3600;
+            // FIXED: Use referralExpiry from contract (set by MIN_FOR_RENEWAL condition)
             const buyBadge = document.getElementById('buyCooldownBadge');
             
-            if (lastBuyTimestamp === 0) {
-                buyBadge.innerHTML = `<i class="fas fa-calendar-alt"></i> No buy yet`;
+            if (!userAddress) {
+                buyBadge.innerHTML = `<i class="fas fa-calendar-alt"></i> 30-day: --`;
+                return;
+            }
+            
+            if (referralExpiry === 0) {
+                buyBadge.innerHTML = `<i class="fas fa-calendar-alt"></i> No active referral`;
                 buyBadge.className = 'cooldown-badge';
-            } else if (buyDiff < thirtyDays) {
-                const daysRem = Math.ceil((thirtyDays - buyDiff) / 86400);
-                buyBadge.className = 'cooldown-badge cooldown-danger';
-                buyBadge.innerHTML = `<i class="fas fa-exclamation-triangle"></i> 30-day: ${daysRem}d left`;
             } else {
-                buyBadge.className = 'cooldown-badge';
-                buyBadge.innerHTML = `<i class="fas fa-check-circle" style="color:var(--success)"></i> 30-day passed`;
+                const timeLeft = referralExpiry - now;
+                
+                if (timeLeft <= 0) {
+                    buyBadge.className = 'cooldown-badge';
+                    buyBadge.innerHTML = `<i class="fas fa-check-circle" style="color:var(--success)"></i> 30-day expired`;
+                } else {
+                    const daysLeft = Math.ceil(timeLeft / 86400);
+                    buyBadge.className = 'cooldown-badge cooldown-danger';
+                    buyBadge.innerHTML = `<i class="fas fa-exclamation-triangle"></i> 30-day: ${daysLeft}d left`;
+                }
             }
         }
 
@@ -1632,7 +1802,6 @@
                 document.getElementById('calcValue').textContent = '0.00 USDT';
                 document.getElementById('calcInr').textContent = '0.00 INR';
                 document.getElementById('actionButton').disabled = true;
-                document.getElementById('approveBtn').style.display = 'none';
                 document.getElementById('approvalSteps').style.display = 'none';
                 
                 if (currentMode === 'buy') {
@@ -1643,6 +1812,21 @@
                 return;
             }
             
+            // Check max limit per transaction
+            if (amount > MAX_SIGMA_PER_TX) {
+                document.getElementById('calcValue').textContent = '0.00 USDT';
+                document.getElementById('calcInr').textContent = '0.00 INR';
+                document.getElementById('actionButton').disabled = true;
+                document.getElementById('actionButton').innerHTML = `<i class="fas fa-exclamation-triangle"></i> MAX ${MAX_SIGMA_PER_TX} SIG6 PER TX`;
+                document.getElementById('approvalSteps').style.display = 'none';
+                document.getElementById('statusMessage').innerHTML = `⚠️ Maximum ${MAX_SIGMA_PER_TX} SIG6 allowed per transaction`;
+                return;
+            }
+            
+            // Check cooldown for sell button after buy
+            const now = Math.floor(Date.now() / 1000);
+            const txDiff = now - lastTransactionTimestamp;
+            
             if (currentMode === 'buy') {
                 const totalUsdt = amount * buyRate;
                 const usdtWithTax = totalUsdt * 1.01;
@@ -1652,21 +1836,12 @@
                 document.getElementById('calcValue').textContent = usdtWithTax.toFixed(6) + ' USDT';
                 document.getElementById('calcInr').textContent = '₹' + (usdtWithTax * INR_RATE).toFixed(2);
                 
-                if (userAddress === CREATOR_WALLET.toLowerCase()) {
-                    document.getElementById('actionButton').disabled = true;
-                    document.getElementById('actionButton').innerHTML = '<i class="fas fa-ban"></i> CREATOR WALLET';
-                    document.getElementById('approveBtn').style.display = 'none';
-                    document.getElementById('approvalSteps').style.display = 'none';
-                    return;
-                }
-                
                 const usdtBal = await usdtContract.balanceOf(userAddress);
                 const usdtBalNum = parseFloat(ethers.formatUnits(usdtBal, 6));
                 
                 if (usdtBalNum < usdtWithTax) {
                     document.getElementById('actionButton').disabled = true;
                     document.getElementById('actionButton').innerHTML = '<i class="fas fa-exclamation-triangle"></i> INSUFFICIENT USDT';
-                    document.getElementById('approveBtn').style.display = 'none';
                     document.getElementById('approvalSteps').style.display = 'none';
                     document.getElementById('statusMessage').innerHTML = `Need ${usdtWithTax.toFixed(2)} USDT, you have ${usdtBalNum.toFixed(2)} USDT`;
                     return;
@@ -1674,20 +1849,23 @@
                 
                 await checkAllowance(usdtWithTax);
                 
-            } else {
+            } else { // SELL mode
+                // Check cooldown after buy
+                if (txDiff < COOLDOWN_SECONDS && lastTransactionTimestamp > 0) {
+                    const mins = Math.floor((COOLDOWN_SECONDS - txDiff) / 60);
+                    const secs = (COOLDOWN_SECONDS - txDiff) % 60;
+                    document.getElementById('actionButton').disabled = true;
+                    document.getElementById('actionButton').innerHTML = `<i class="fas fa-hourglass-half"></i> WAIT ${mins}m ${secs}s AFTER BUY`;
+                    document.getElementById('approvalSteps').style.display = 'none';
+                    document.getElementById('statusMessage').innerHTML = `⏳ Please wait ${mins}m ${secs}s after your last buy before selling`;
+                    return;
+                }
+                
                 const totalUsdt = amount * sellRate;
                 
                 document.getElementById('calcLabel').textContent = 'Total USDT to Receive:';
                 document.getElementById('calcValue').textContent = totalUsdt.toFixed(6) + ' USDT';
                 document.getElementById('calcInr').textContent = '₹' + (totalUsdt * INR_RATE).toFixed(2);
-                
-                if (userAddress === CREATOR_WALLET.toLowerCase()) {
-                    document.getElementById('actionButton').disabled = true;
-                    document.getElementById('actionButton').innerHTML = '<i class="fas fa-ban"></i> CREATOR WALLET';
-                    document.getElementById('approveBtn').style.display = 'none';
-                    document.getElementById('approvalSteps').style.display = 'none';
-                    return;
-                }
                 
                 const sigmaBal = await sigmaContract.balanceOf(userAddress);
                 const sigmaBalNum = parseFloat(ethers.formatEther(sigmaBal));
@@ -1695,7 +1873,6 @@
                 if (sigmaBalNum < amount) {
                     document.getElementById('actionButton').disabled = true;
                     document.getElementById('actionButton').innerHTML = '<i class="fas fa-exclamation-triangle"></i> INSUFFICIENT SIG6';
-                    document.getElementById('approveBtn').style.display = 'none';
                     document.getElementById('approvalSteps').style.display = 'none';
                     return;
                 }
@@ -1710,7 +1887,6 @@
                     document.getElementById('actionButton').disabled = false;
                     document.getElementById('actionButton').innerHTML = '<i class="fas fa-coins"></i> SELL SIGMA';
                 }
-                document.getElementById('approveBtn').style.display = 'none';
                 document.getElementById('approvalSteps').style.display = 'none';
                 document.getElementById('statusMessage').innerHTML = '';
             }
@@ -1724,21 +1900,17 @@
                 if (allowanceNum < usdtNeeded - 0.000001) {
                     isApproved = false;
                     document.getElementById('approvalSteps').style.display = 'block';
-                    document.getElementById('approveBtn').style.display = 'block';
-                    document.getElementById('actionButton').disabled = true;
-                    
                     document.getElementById('step1').className = 'step active';
                     document.getElementById('step1Status').innerHTML = 'Required: ' + usdtNeeded.toFixed(2) + ' USDT';
                     document.getElementById('step2').className = 'step';
                     document.getElementById('step2Status').innerHTML = 'Locked';
                     
-                    document.getElementById('actionButton').innerHTML = '<i class="fas fa-lock"></i> APPROVE FIRST';
+                    document.getElementById('actionButton').disabled = false;
+                    document.getElementById('actionButton').innerHTML = '<i class="fas fa-check-circle"></i> APPROVE USDT';
                     document.getElementById('statusMessage').innerHTML = '';
                 } else {
                     isApproved = true;
                     document.getElementById('approvalSteps').style.display = 'block';
-                    document.getElementById('approveBtn').style.display = 'none';
-                    
                     document.getElementById('step1').className = 'step completed';
                     document.getElementById('step1Status').innerHTML = 'Approved: ' + allowanceNum.toFixed(2) + ' USDT';
                     document.getElementById('step2').className = 'step active';
@@ -1753,73 +1925,10 @@
             }
         }
 
-        async function approveUSDT() {
-            if (!isConnected) return;
-            
-            const btn = document.getElementById('approveBtn');
-            const msg = document.getElementById('statusMessage');
-            
-            try {
-                const usdtWei = ethers.parseUnits(currentUSDTNeeded.toFixed(6), 6);
-                
-                btn.disabled = true;
-                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> APPROVING...';
-                msg.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Please confirm in MetaMask...';
-                
-                const tx = await usdtContract.approve(SIGMA_ADDRESS, usdtWei);
-                
-                msg.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Waiting for confirmation...';
-                const receipt = await tx.wait();
-                
-                msg.innerHTML = '<i class="fas fa-check-circle" style="color:var(--success)"></i> USDT Approved Successfully!';
-                
-                document.getElementById('step1').className = 'step completed';
-                document.getElementById('step1Status').innerHTML = 'Approved: ' + currentUSDTNeeded.toFixed(2) + ' USDT';
-                document.getElementById('step2').className = 'step active';
-                document.getElementById('step2Status').innerHTML = 'Ready to buy';
-                
-                document.getElementById('approveBtn').style.display = 'none';
-                document.getElementById('actionButton').disabled = false;
-                document.getElementById('actionButton').innerHTML = '<i class="fas fa-shopping-cart"></i> BUY SIGMA';
-                
-                isApproved = true;
-                
-            } catch (error) {
-                console.error("Approve error:", error);
-                
-                let errorMsg = "Approval failed";
-                if (error.message.includes("user rejected")) {
-                    errorMsg = "Approval rejected";
-                }
-                
-                msg.innerHTML = '<i class="fas fa-exclamation-triangle" style="color:var(--danger)"></i> ❌ ' + errorMsg;
-            } finally {
-                btn.disabled = false;
-                btn.innerHTML = 'APPROVE USDT';
-            }
-        }
-
-        function setMode(mode) {
-            currentMode = mode;
-            document.getElementById('buyTab').className = mode === 'buy' ? 'tab active' : 'tab';
-            document.getElementById('sellTab').className = mode === 'sell' ? 'tab active' : 'tab';
-            
-            document.getElementById('amount').value = '';
-            document.getElementById('approveBtn').style.display = 'none';
-            document.getElementById('approvalSteps').style.display = 'none';
-            document.getElementById('statusMessage').innerHTML = '';
-            calculate();
-        }
-
+        // ========== EXECUTE ACTION - UPDATED WITH COOLDOWN AND LIMITS ==========
         async function executeAction() {
             if (!isConnected) {
                 connectWallet();
-                return;
-            }
-            
-            if (userAddress === CREATOR_WALLET.toLowerCase()) {
-                document.getElementById('statusMessage').innerHTML = 
-                    '<i class="fas fa-exclamation-triangle" style="color:var(--danger)"></i> ❌ Creator wallet cannot trade!';
                 return;
             }
             
@@ -1829,45 +1938,73 @@
                 return;
             }
             
+            // Check max limit
+            if (amount > MAX_SIGMA_PER_TX) {
+                alert(`Maximum ${MAX_SIGMA_PER_TX} SIG6 allowed per transaction`);
+                return;
+            }
+            
             const btn = document.getElementById('actionButton');
             const msg = document.getElementById('statusMessage');
             
+            // If in buy mode and not approved, we are in APPROVE USDT state
+            if (currentMode === 'buy' && !isApproved) {
+                await approveUSDT();
+                return;
+            }
+            
             try {
                 if (currentMode === 'buy') {
-                    if (!isApproved) {
-                        msg.innerHTML = '<i class="fas fa-exclamation-triangle" style="color:var(--warning)"></i> Please approve USDT first';
-                        return;
-                    }
-                    
                     const usdtWithTax = amount * buyRate * 1.01;
                     const usdtWei = ethers.parseUnits(usdtWithTax.toFixed(6), 6);
                     
                     msg.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Buying SIGMA...';
                     btn.disabled = true;
                     
-                    const upline = localStorage.getItem('sigma_referrer') || CREATOR_WALLET;
+                    const upline = localStorage.getItem('sigma_referrer') || DEFAULT_UPLINE;
                     
                     const tx = await sigmaContract.buy(usdtWei, upline);
                     
                     msg.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Waiting for confirmation...';
                     const receipt = await tx.wait();
                     
+                    // Update last transaction timestamp
+                    lastTransactionTimestamp = Math.floor(Date.now() / 1000);
+                    localStorage.setItem(`lastTx_${userAddress}`, lastTransactionTimestamp.toString());
+                    
                     msg.innerHTML = '<i class="fas fa-check-circle" style="color:var(--success)"></i> Purchase Successful!';
                     
                     document.getElementById('step2').className = 'step completed';
                     document.getElementById('step2Status').innerHTML = 'Completed';
                     
+                    hasUserBought = true;
+                    
+                    // Reload data to get updated referralExpiry from contract
                     setTimeout(async () => {
-                        await loadData();
+                        await loadData(); // This will fetch fresh referralExpiry from contract
                         document.getElementById('amount').value = '';
                         document.getElementById('approvalSteps').style.display = 'none';
                         calculate();
                     }, 2000);
                     
-                } else {
+                } else { // SELL mode
+                    // Check sell cooldown
                     const now = Math.floor(Date.now() / 1000);
-                    if ((now - lastSellTimestamp) < 180) {
-                        alert(`Please wait ${180 - (now - lastSellTimestamp)} seconds before selling again`);
+                    const sellDiff = now - lastSellTimestamp;
+                    
+                    if (sellDiff < 180) {
+                        const mins = Math.floor((180 - sellDiff) / 60);
+                        const secs = (180 - sellDiff) % 60;
+                        msg.innerHTML = `<i class="fas fa-hourglass-half" style="color:var(--warning)"></i> ⏳ Please wait ${mins}m ${secs}s before selling again`;
+                        return;
+                    }
+                    
+                    // Check cooldown after buy
+                    const txDiff = now - lastTransactionTimestamp;
+                    if (txDiff < COOLDOWN_SECONDS && lastTransactionTimestamp > 0) {
+                        const mins = Math.floor((COOLDOWN_SECONDS - txDiff) / 60);
+                        const secs = (COOLDOWN_SECONDS - txDiff) % 60;
+                        msg.innerHTML = `<i class="fas fa-hourglass-half" style="color:var(--warning)"></i> ⏳ Please wait ${mins}m ${secs}s after your last buy before selling`;
                         return;
                     }
                     
@@ -1902,11 +2039,68 @@
                     errorMsg = "Insufficient POL for gas";
                 } else if (error.message.includes("Cooldown")) {
                     errorMsg = "3-minute cooldown active";
+                } else if (error.message.includes("MAX_SIGMA_BUY")) {
+                    errorMsg = `Maximum ${MAX_SIGMA_PER_TX} SIG6 allowed`;
                 }
                 
                 msg.innerHTML = `<i class="fas fa-exclamation-triangle" style="color:var(--danger)"></i> ❌ ${errorMsg}`;
                 btn.disabled = false;
             }
+        }
+
+        async function approveUSDT() {
+            if (!isConnected) return;
+            
+            const btn = document.getElementById('actionButton');
+            const msg = document.getElementById('statusMessage');
+            
+            try {
+                const usdtWei = ethers.parseUnits(currentUSDTNeeded.toFixed(6), 6);
+                
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> APPROVING...';
+                msg.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Please confirm in MetaMask...';
+                
+                const tx = await usdtContract.approve(SIGMA_ADDRESS, usdtWei);
+                
+                msg.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Waiting for confirmation...';
+                const receipt = await tx.wait();
+                
+                msg.innerHTML = '<i class="fas fa-check-circle" style="color:var(--success)"></i> USDT Approved Successfully!';
+                
+                document.getElementById('step1').className = 'step completed';
+                document.getElementById('step1Status').innerHTML = 'Approved: ' + currentUSDTNeeded.toFixed(2) + ' USDT';
+                document.getElementById('step2').className = 'step active';
+                document.getElementById('step2Status').innerHTML = 'Ready to buy';
+                
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-shopping-cart"></i> BUY SIGMA';
+                
+                isApproved = true;
+                
+            } catch (error) {
+                console.error("Approve error:", error);
+                
+                let errorMsg = "Approval failed";
+                if (error.message.includes("user rejected")) {
+                    errorMsg = "Approval rejected";
+                }
+                
+                msg.innerHTML = '<i class="fas fa-exclamation-triangle" style="color:var(--danger)"></i> ❌ ' + errorMsg;
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-check-circle"></i> APPROVE USDT';
+            }
+        }
+
+        function setMode(mode) {
+            currentMode = mode;
+            document.getElementById('buyTab').className = mode === 'buy' ? 'tab active' : 'tab';
+            document.getElementById('sellTab').className = mode === 'sell' ? 'tab active' : 'tab';
+            
+            document.getElementById('amount').value = '';
+            document.getElementById('approvalSteps').style.display = 'none';
+            document.getElementById('statusMessage').innerHTML = '';
+            calculate();
         }
 
         async function maxAmount() {
@@ -1919,10 +2113,13 @@
                 const usdtBal = await usdtContract.balanceOf(userAddress);
                 const usdtNum = parseFloat(ethers.formatUnits(usdtBal, 6));
                 const maxSigma = usdtNum / (buyRate * 1.01);
-                document.getElementById('amount').value = maxSigma.toFixed(6);
+                // Cap at MAX_SIGMA_PER_TX
+                document.getElementById('amount').value = Math.min(maxSigma, MAX_SIGMA_PER_TX).toFixed(6);
             } else {
                 const sigmaBal = await sigmaContract.balanceOf(userAddress);
-                document.getElementById('amount').value = parseFloat(ethers.formatEther(sigmaBal)).toFixed(6);
+                // Cap at MAX_SIGMA_PER_TX
+                const bal = parseFloat(ethers.formatEther(sigmaBal));
+                document.getElementById('amount').value = Math.min(bal, MAX_SIGMA_PER_TX).toFixed(6);
             }
             
             calculate();
@@ -1994,7 +2191,6 @@
                 if (transferToken === 'SIG6') {
                     const wei = ethers.parseEther(amount.toString());
                     
-                    // ✅ Using p2pTransfer function
                     const tx = await sigmaContract.p2pTransfer(to, wei);
                     await tx.wait();
                     
@@ -2035,7 +2231,6 @@
             alert("New contract address copied!");
         }
 
-        // ✅ Single referral copy function
         function copyReferralMini() {
             if (window.referralLink) {
                 navigator.clipboard.writeText(window.referralLink);
