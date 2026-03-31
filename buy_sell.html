@@ -833,21 +833,32 @@
 
     <script>
         // ===== UPDATED CONTRACT CONFIGURATION =====
-        const SIGMA_CONTRACT_ADDRESS = "0x068Aaba73Fd754F21140E2F13DA177ce7251A299";
+        const SIGMA_CONTRACT_ADDRESS = "0x846339d474AE98b219111eb969E27b6317aE5852";
         const USDT_ADDRESS = "0xc2132D05D31c914a87C6611C10748AEb04B58e8F"; // Polygon USDT
         
-        // USDT to INR conversion rate (approximate, you can fetch real rate from an API)
-        let usdtToInr = 95.0; // Example: 1 USDT = ₹85 tha, usko ₹95 kar diya on 19-March-2026
+        // USDT to INR conversion rate
+        let usdtToInr = 95.0;
         
         let provider, userAddress, sigmaContract;
         let currentTab = 'active';
-        let buyTransactions = []; // Bought events
-        let sellTransactions = []; // Sold events
-        let currentBuyRate = 0;    // currentRate from contract (buy rate)
-        let currentSellRate = 0;   // getSellRate()
+        let buyTransactions = [];
+        let sellTransactions = [];
+        let currentBuyRate = 0;
+        let currentSellRate = 0;
         
-        // ===== UPDATED ABI (from your contract) =====
-        const sigmaABI = [{"inputs":[{"internalType":"address","name":"_user","type":"address"},{"internalType":"address","name":"_upline","type":"address"}],"name":"adminSetUpline","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_usdt","type":"address"},{"internalType":"address","name":"_creator","type":"address"}],"stateMutability":"nonpayable","type":"constructor"},{"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"allowance","type":"uint256"},{"internalType":"uint256","name":"needed","type":"uint256"}],"name":"ERC20InsufficientAllowance","type":"error"},{"inputs":[{"internalType":"address","name":"sender","type":"address"},{"internalType":"uint256","name":"balance","type":"uint256"},{"internalType":"uint256","name":"needed","type":"uint256"}],"name":"ERC20InsufficientBalance","type":"error"},{"inputs":[{"internalType":"address","name":"approver","type":"address"}],"name":"ERC20InvalidApprover","type":"error"},{"inputs":[{"internalType":"address","name":"receiver","type":"address"}],"name":"ERC20InvalidReceiver","type":"error"},{"inputs":[{"internalType":"address","name":"sender","type":"address"}],"name":"ERC20InvalidSender","type":"error"},{"inputs":[{"internalType":"address","name":"spender","type":"address"}],"name":"ERC20InvalidSpender","type":"error"},{"inputs":[{"internalType":"address","name":"owner","type":"address"}],"name":"OwnableInvalidOwner","type":"error"},{"inputs":[{"internalType":"address","name":"account","type":"address"}],"name":"OwnableUnauthorizedAccount","type":"error"},{"inputs":[{"internalType":"address","name":"_to","type":"address"},{"internalType":"uint256","name":"_amount","type":"uint256"}],"name":"p2pTransfer","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"ReentrancyGuardReentrantCall","type":"error"},{"inputs":[{"internalType":"address","name":"token","type":"address"}],"name":"SafeERC20FailedOperation","type":"error"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"owner","type":"address"},{"indexed":true,"internalType":"address","name":"spender","type":"address"},{"indexed":false,"internalType":"uint256","name":"value","type":"uint256"}],"name":"Approval","type":"event"},{"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"value","type":"uint256"}],"name":"approve","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":false,"internalType":"uint256","name":"usdtAmount","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"sigmaAmount","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"rate","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"timestamp","type":"uint256"}],"name":"Bought","type":"event"},{"inputs":[{"internalType":"uint256","name":"_usdtAmount","type":"uint256"},{"internalType":"address","name":"_upline","type":"address"}],"name":"buy","outputs":[],"stateMutability":"nonpayable","type":"function"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"from","type":"address"},{"indexed":true,"internalType":"address","name":"to","type":"address"},{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"level","type":"uint256"},{"indexed":false,"internalType":"string","name":"reason","type":"string"},{"indexed":false,"internalType":"uint256","name":"timestamp","type":"uint256"}],"name":"IncomeLapsed","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"previousOwner","type":"address"},{"indexed":true,"internalType":"address","name":"newOwner","type":"address"}],"name":"OwnershipTransferred","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"from","type":"address"},{"indexed":true,"internalType":"address","name":"to","type":"address"},{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"level","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"timestamp","type":"uint256"}],"name":"ReferralPaid","type":"event"},{"inputs":[],"name":"renounceOwnership","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_sigmaAmount","type":"uint256"}],"name":"sell","outputs":[],"stateMutability":"nonpayable","type":"function"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":false,"internalType":"uint256","name":"sigmaAmount","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"usdtAmount","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"rate","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"timestamp","type":"uint256"}],"name":"Sold","type":"event"},{"inputs":[{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"value","type":"uint256"}],"name":"transfer","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"from","type":"address"},{"indexed":true,"internalType":"address","name":"to","type":"address"},{"indexed":false,"internalType":"uint256","name":"value","type":"uint256"}],"name":"Transfer","type":"event"},{"inputs":[{"internalType":"address","name":"from","type":"address"},{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"value","type":"uint256"}],"name":"transferFrom","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"owner","type":"address"},{"internalType":"address","name":"spender","type":"address"}],"name":"allowance","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"ath","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"atl","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"account","type":"address"}],"name":"balanceOf","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"BASE_RATE","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"creatorWallet","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"currentRate","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"dailyHistory","outputs":[{"internalType":"uint256","name":"open","type":"uint256"},{"internalType":"uint256","name":"high","type":"uint256"},{"internalType":"uint256","name":"low","type":"uint256"},{"internalType":"uint256","name":"close","type":"uint256"},{"internalType":"uint256","name":"timestamp","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"decimals","outputs":[{"internalType":"uint8","name":"","type":"uint8"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"getSellRate","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"INCREMENT","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_upline","type":"address"},{"internalType":"uint256","name":"_level","type":"uint256"}],"name":"isLevelUnlocked","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"lastHistoryDay","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"levelRewards","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"MAX_SIGMA_BUY","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"MIN_FOR_RENEWAL","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"MIN_HOLD_VALUE","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"name","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"owner","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"symbol","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"totalSupply","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"usdt","outputs":[{"internalType":"contract IERC20","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"users","outputs":[{"internalType":"address","name":"upline","type":"address"},{"internalType":"uint256","name":"referralExpiry","type":"uint256"},{"internalType":"uint256","name":"totalReferralEarned","type":"uint256"},{"internalType":"uint256","name":"lastBuyTimestamp","type":"uint256"},{"internalType":"uint256","name":"lastActionBlock","type":"uint256"},{"internalType":"uint256","name":"qualifiedDirectsCount","type":"uint256"},{"internalType":"bool","name":"hasBought","type":"bool"},{"internalType":"bool","name":"isInitialized","type":"bool"},{"internalType":"bool","name":"isCurrentlyQualified","type":"bool"}],"stateMutability":"view","type":"function"}];
+        // ===== UPDATED ABI (from your new contract) =====
+        const sigmaABI = [
+            "function currentRate() view returns (uint256)",
+            "function getSellRate() view returns (uint256)",
+            "function balanceOf(address) view returns (uint256)",
+            "function creator() view returns (address)",
+            "function usdt() view returns (address)",
+            "function totalSupply() view returns (uint256)",
+            "event TokensBought(address indexed user, uint256 amount, uint256 rate, uint256 usdtSpent)",
+            "event TokensSold(address indexed user, uint256 amount, uint256 rate, uint256 usdtReceived)",
+            "event Bought(address indexed user, uint256 usdtAmount, uint256 sigmaAmount, uint256 rate, uint256 timestamp)",
+            "event Sold(address indexed user, uint256 sigmaAmount, uint256 usdtAmount, uint256 rate, uint256 timestamp)"
+        ];
 
         // Create particles
         function createParticles() {
@@ -897,31 +908,18 @@
         
         function handleAccountsChanged(accounts) {
             if (accounts.length === 0) {
-                // User disconnected their wallet
                 userAddress = null;
                 document.getElementById('btn-text').textContent = 'Connect Wallet';
                 document.getElementById('connectBtn').classList.remove('connected');
                 localStorage.removeItem('sigma_wallet_connected');
                 
-                // Clear tables
                 document.getElementById('active-body').innerHTML = `
-                    <tr>
-                        <td colspan="7" class="empty-state">
-                            <i class="fas fa-wallet"></i><br>
-                            Please connect wallet to view data
-                        </td>
-                    </tr>
+                    <tr><td colspan="7" class="empty-state"><i class="fas fa-wallet"></i><br>Please connect wallet to view data</td></tr>
                 `;
                 document.getElementById('closed-body').innerHTML = `
-                    <tr>
-                        <td colspan="8" class="empty-state">
-                            <i class="fas fa-wallet"></i><br>
-                            Please connect wallet to view data
-                        </td>
-                    </tr>
+                    <tr><td colspan="8" class="empty-state"><i class="fas fa-wallet"></i><br>Please connect wallet to view data</td></tr>
                 `;
             } else {
-                // User switched account
                 userAddress = accounts[0];
                 const shortAddress = userAddress.slice(0,6) + "..." + userAddress.slice(-4);
                 document.getElementById('btn-text').textContent = shortAddress;
@@ -933,20 +931,10 @@
         async function loadData() {
             if (!userAddress) {
                 document.getElementById('active-body').innerHTML = `
-                    <tr>
-                        <td colspan="7" class="empty-state">
-                            <i class="fas fa-wallet"></i><br>
-                            Please connect wallet to view data
-                        </td>
-                    </tr>
+                    <tr><td colspan="7" class="empty-state"><i class="fas fa-wallet"></i><br>Please connect wallet to view data</td></tr>
                 `;
                 document.getElementById('closed-body').innerHTML = `
-                    <tr>
-                        <td colspan="8" class="empty-state">
-                            <i class="fas fa-wallet"></i><br>
-                            Please connect wallet to view data
-                        </td>
-                    </tr>
+                    <tr><td colspan="8" class="empty-state"><i class="fas fa-wallet"></i><br>Please connect wallet to view data</td></tr>
                 `;
                 return;
             }
@@ -954,42 +942,31 @@
             try {
                 // Show loading state
                 document.getElementById('active-body').innerHTML = `
-                    <tr>
-                        <td colspan="7" class="loading">
-                            <i class="fas fa-spinner fa-spin"></i><br>
-                            Loading data...
-                        </td>
-                    </tr>
+                    <tr><td colspan="7" class="loading"><i class="fas fa-spinner fa-spin"></i><br>Loading data...</td></tr>
                 `;
-                
                 document.getElementById('closed-body').innerHTML = `
-                    <tr>
-                        <td colspan="8" class="loading">
-                            <i class="fas fa-spinner fa-spin"></i><br>
-                            Loading data...
-                        </td>
-                    </tr>
+                    <tr><td colspan="8" class="loading"><i class="fas fa-spinner fa-spin"></i><br>Loading data...</td></tr>
                 `;
                 
                 // Get current rates from contract
                 const [currentRateBN, sellRateBN, sigmaBalance] = await Promise.all([
-                    sigmaContract.currentRate(),   // buy rate
-                    sigmaContract.getSellRate(),   // sell rate
+                    sigmaContract.currentRate(),
+                    sigmaContract.getSellRate(),
                     sigmaContract.balanceOf(userAddress)
                 ]);
                 
-                currentBuyRate = parseFloat(ethers.formatUnits(currentRateBN, 6)); // USDT with 6 decimals
+                currentBuyRate = parseFloat(ethers.formatUnits(currentRateBN, 6));
                 currentSellRate = parseFloat(ethers.formatUnits(sellRateBN, 6));
                 
                 // Get current block number
                 const currentBlock = await provider.getBlockNumber();
-                const fromBlock = Math.max(currentBlock - 3000000, 0); // Larger range
+                const fromBlock = Math.max(currentBlock - 3000000, 0);
                 
-                // Fetch Bought events (where user == userAddress)
+                // Fetch Bought events (Bought event from contract)
                 const buyFilter = sigmaContract.filters.Bought(userAddress);
                 const buyEvents = await sigmaContract.queryFilter(buyFilter, fromBlock, currentBlock);
                 
-                // Fetch Sold events (where user == userAddress)
+                // Fetch Sold events (Sold event from contract)
                 const sellFilter = sigmaContract.filters.Sold(userAddress);
                 const sellEvents = await sigmaContract.queryFilter(sellFilter, fromBlock, currentBlock);
                 
@@ -1014,11 +991,8 @@
             // Process Bought events
             for (const event of buyEvents) {
                 const args = event.args;
-                const txHash = event.transactionHash;
-                const block = await provider.getBlock(event.blockNumber);
-                
                 buyTransactions.push({
-                    hash: txHash,
+                    hash: event.transactionHash,
                     usdtAmount: parseFloat(ethers.formatUnits(args.usdtAmount, 6)),
                     sigmaAmount: parseFloat(ethers.formatUnits(args.sigmaAmount, 18)),
                     rate: parseFloat(ethers.formatUnits(args.rate, 6)),
@@ -1031,11 +1005,8 @@
             // Process Sold events
             for (const event of sellEvents) {
                 const args = event.args;
-                const txHash = event.transactionHash;
-                const block = await provider.getBlock(event.blockNumber);
-                
                 sellTransactions.push({
-                    hash: txHash,
+                    hash: event.transactionHash,
                     sigmaAmount: parseFloat(ethers.formatUnits(args.sigmaAmount, 18)),
                     usdtAmount: parseFloat(ethers.formatUnits(args.usdtAmount, 6)),
                     rate: parseFloat(ethers.formatUnits(args.rate, 6)),
@@ -1052,12 +1023,11 @@
         
         // FIFO method to find average buy rate for a sold amount
         function getAverageBuyRateForSell(sellAmount, sellTimestamp) {
-            // Get all buys before this sell, sorted oldest first
             const buysBefore = buyTransactions
                 .filter(b => b.timestamp < sellTimestamp)
                 .sort((a, b) => a.timestamp - b.timestamp);
             
-            if (buysBefore.length === 0) return currentBuyRate; // fallback
+            if (buysBefore.length === 0) return currentBuyRate;
             
             let remaining = sellAmount;
             let totalCost = 0;
@@ -1076,7 +1046,6 @@
         }
         
         function updateStats() {
-            // Calculate totals
             let totalBought = 0;
             let totalBoughtValue = 0;
             let totalSold = 0;
@@ -1092,38 +1061,29 @@
                 totalSoldValue += tx.sigmaAmount * tx.rate;
             });
             
-            // Current holdings
             const currentHoldings = totalBought - totalSold;
             const holdingsValue = currentHoldings * currentBuyRate;
             
-            // Average buy rate for holdings
             let avgBuyRate = 0;
             if (totalBought > 0) {
                 avgBuyRate = totalBoughtValue / totalBought;
             }
             
-            // Net P&L (unrealized)
             const netPL = holdingsValue - (currentHoldings * avgBuyRate);
             const plPercentage = totalBoughtValue > 0 ? (netPL / totalBoughtValue) * 100 : 0;
             
-            // Update stats cards
             document.getElementById('total-bought').textContent = totalBought.toFixed(2) + " SIG6";
             document.getElementById('total-bought-value').innerHTML = "$" + totalBoughtValue.toFixed(2) + " / ₹" + (totalBoughtValue * usdtToInr).toFixed(2);
-            document.getElementById('total-bought-value').className = `stat-change positive`;
             
             document.getElementById('total-sold').textContent = totalSold.toFixed(2) + " SIG6";
             document.getElementById('total-sold-value').innerHTML = "$" + totalSoldValue.toFixed(2) + " / ₹" + (totalSoldValue * usdtToInr).toFixed(2);
-            document.getElementById('total-sold-value').className = `stat-change negative`;
             
             document.getElementById('current-holdings').textContent = currentHoldings.toFixed(2) + " SIG6";
             document.getElementById('holdings-value').innerHTML = "$" + holdingsValue.toFixed(2) + " / ₹" + (holdingsValue * usdtToInr).toFixed(2);
-            document.getElementById('holdings-value').className = `stat-change ${holdingsValue > 0 ? 'positive' : ''}`;
             
             document.getElementById('net-pnl').innerHTML = "$" + netPL.toFixed(2) + " / ₹" + (netPL * usdtToInr).toFixed(2);
             document.getElementById('net-pnl').style.color = netPL >= 0 ? 'var(--profit)' : 'var(--loss)';
-            document.getElementById('pnl-percentage').textContent = 
-                (netPL >= 0 ? "+" : "") + plPercentage.toFixed(2) + "%";
-            document.getElementById('pnl-percentage').className = `stat-change ${plPercentage >= 0 ? 'positive' : 'negative'}`;
+            document.getElementById('pnl-percentage').textContent = (netPL >= 0 ? "+" : "") + plPercentage.toFixed(2) + "%";
         }
         
         function updateTables() {
@@ -1135,65 +1095,31 @@
             const tbody = document.getElementById('active-body');
             
             if (buyTransactions.length === 0) {
-                tbody.innerHTML = `
-                    <tr>
-                        <td colspan="7" class="empty-state">
-                            <i class="fas fa-chart-bar"></i><br>
-                            No active positions found
-                        </td>
-                    </tr>
-                `;
+                tbody.innerHTML = `<tr><td colspan="7" class="empty-state"><i class="fas fa-chart-bar"></i><br>No active positions found</td></tr>`;
                 return;
             }
             
             let html = '';
-            
             buyTransactions.forEach((tx, index) => {
                 const currentValue = tx.sigmaAmount * currentBuyRate;
                 const buyValue = tx.sigmaAmount * tx.rate;
                 const unrealizedPLPercent = ((currentValue - buyValue) / buyValue * 100).toFixed(2);
                 
-                const dateStr = tx.date.toLocaleDateString('en-GB', {
-                    day: '2-digit',
-                    month: 'short',
-                    year: 'numeric'
-                });
-                const timeStr = tx.date.toLocaleTimeString('en-US', {
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    hour12: true
-                });
+                const dateStr = tx.date.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+                const timeStr = tx.date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
                 
                 html += `
                     <tr>
                         <td>${index + 1}</td>
-                        <td>
-                            <div style="font-weight:600">${dateStr}</div>
-                            <div style="font-size:12px; color:#888">${timeStr}</div>
-                        </td>
-                        <td style="font-weight:700; color:var(--primary)">
-                            ${tx.sigmaAmount.toFixed(4)} SIG6
-                        </td>
-                        <td>
-                            <div>$${tx.rate.toFixed(4)}</div>
-                            <div class="inr-rate">₹${(tx.rate * usdtToInr).toFixed(2)}</div>
-                        </td>
-                        <td>
-                            <div>$${currentBuyRate.toFixed(4)}</div>
-                            <div class="inr-rate">₹${(currentBuyRate * usdtToInr).toFixed(2)}</div>
-                        </td>
-                        <td>
-                            <div class="${unrealizedPLPercent >= 0 ? 'badge-profit' : 'badge-loss'}" style="display:inline-block">
-                                ${unrealizedPLPercent >= 0 ? '+' : ''}${unrealizedPLPercent}%
-                            </div>
-                        </td>
-                        <td>
-                            <span class="badge badge-active">ACTIVE</span>
-                        </td>
+                        <td><div style="font-weight:600">${dateStr}</div><div style="font-size:12px; color:#888">${timeStr}</div></td>
+                        <td style="font-weight:700; color:var(--primary)">${tx.sigmaAmount.toFixed(4)} SIG6</td>
+                        <td><div>$${tx.rate.toFixed(4)}</div><div class="inr-rate">₹${(tx.rate * usdtToInr).toFixed(2)}</div></td>
+                        <td><div>$${currentBuyRate.toFixed(4)}</div><div class="inr-rate">₹${(currentBuyRate * usdtToInr).toFixed(2)}</div></td>
+                        <td><div class="${unrealizedPLPercent >= 0 ? 'badge-profit' : 'badge-loss'}" style="display:inline-block">${unrealizedPLPercent >= 0 ? '+' : ''}${unrealizedPLPercent}%</div></td>
+                        <td><span class="badge badge-active">ACTIVE</span></td>
                     </tr>
                 `;
             });
-            
             tbody.innerHTML = html;
         }
         
@@ -1201,86 +1127,41 @@
             const tbody = document.getElementById('closed-body');
             
             if (sellTransactions.length === 0) {
-                tbody.innerHTML = `
-                    <tr>
-                        <td colspan="8" class="empty-state">
-                            <i class="fas fa-history"></i><br>
-                            No closed positions found
-                        </td>
-                    </tr>
-                `;
+                tbody.innerHTML = `<tr><td colspan="8" class="empty-state"><i class="fas fa-history"></i><br>No closed positions found</td></tr>`;
                 return;
             }
             
             let html = '';
-            
             sellTransactions.forEach((tx, index) => {
-                // Find average buy rate for this sell (FIFO)
                 const avgBuyRate = getAverageBuyRateForSell(tx.sigmaAmount, tx.timestamp);
                 const plAmount = (tx.rate - avgBuyRate) * tx.sigmaAmount;
                 const plPercentage = avgBuyRate > 0 ? ((tx.rate - avgBuyRate) / avgBuyRate * 100).toFixed(2) : 0;
                 
-                const dateStr = tx.date.toLocaleDateString('en-GB', {
-                    day: '2-digit',
-                    month: 'short',
-                    year: 'numeric'
-                });
-                const timeStr = tx.date.toLocaleTimeString('en-US', {
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    hour12: true
-                });
+                const dateStr = tx.date.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+                const timeStr = tx.date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
                 
                 html += `
                     <tr>
                         <td>${index + 1}</td>
-                        <td>
-                            <div style="font-weight:600">${dateStr}</div>
-                            <div style="font-size:12px; color:#888">${timeStr}</div>
-                        </td>
-                        <td style="font-weight:700; color:${plAmount >= 0 ? 'var(--profit)' : 'var(--loss)'}">
-                            ${tx.sigmaAmount.toFixed(4)} SIG6
-                        </td>
-                        <td>
-                            <div>$${avgBuyRate.toFixed(4)}</div>
-                            <div class="inr-rate">₹${(avgBuyRate * usdtToInr).toFixed(2)}</div>
-                        </td>
-                        <td>
-                            <div>$${tx.rate.toFixed(4)}</div>
-                            <div class="inr-rate">₹${(tx.rate * usdtToInr).toFixed(2)}</div>
-                        </td>
-                        <td>
-                            <div class="${plAmount >= 0 ? 'pnl-positive' : 'pnl-negative'}" style="padding:4px 8px; border-radius:6px; display:inline-block">
-                                <i class="fas fa-${plAmount >= 0 ? 'arrow-up' : 'arrow-down'}"></i>
-                                $${Math.abs(plAmount).toFixed(2)}<br>
-                                <span style="font-size:11px">₹${Math.abs(plAmount * usdtToInr).toFixed(2)}</span>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="${plAmount >= 0 ? 'badge-profit' : 'badge-loss'}" style="display:inline-block">
-                                ${plAmount >= 0 ? '+' : ''}${plPercentage}%
-                            </div>
-                        </td>
-                        <td>
-                            <span class="badge badge-closed">CLOSED</span>
-                        </td>
+                        <td><div style="font-weight:600">${dateStr}</div><div style="font-size:12px; color:#888">${timeStr}</div></td>
+                        <td style="font-weight:700; color:${plAmount >= 0 ? 'var(--profit)' : 'var(--loss)'}">${tx.sigmaAmount.toFixed(4)} SIG6</td>
+                        <td><div>$${avgBuyRate.toFixed(4)}</div><div class="inr-rate">₹${(avgBuyRate * usdtToInr).toFixed(2)}</div></td>
+                        <td><div>$${tx.rate.toFixed(4)}</div><div class="inr-rate">₹${(tx.rate * usdtToInr).toFixed(2)}</div></td>
+                        <td><div class="${plAmount >= 0 ? 'pnl-positive' : 'pnl-negative'}" style="padding:4px 8px; border-radius:6px; display:inline-block"><i class="fas fa-${plAmount >= 0 ? 'arrow-up' : 'arrow-down'}"></i> $${Math.abs(plAmount).toFixed(2)}<br><span style="font-size:11px">₹${Math.abs(plAmount * usdtToInr).toFixed(2)}</span></div></td>
+                        <td><div class="${plAmount >= 0 ? 'badge-profit' : 'badge-loss'}" style="display:inline-block">${plAmount >= 0 ? '+' : ''}${plPercentage}%</div></td>
+                        <td><span class="badge badge-closed">CLOSED</span></td>
                     </tr>
                 `;
             });
-            
             tbody.innerHTML = html;
         }
         
         function showTab(tabName, event) {
             currentTab = tabName;
             
-            // Update active button
-            document.querySelectorAll('.action-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
+            document.querySelectorAll('.action-btn').forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
             
-            // Show selected tab
             document.getElementById('active-section').style.display = tabName === 'active' ? 'block' : 'none';
             document.getElementById('closed-section').style.display = tabName === 'closed' ? 'block' : 'none';
         }
@@ -1299,18 +1180,7 @@
                     const currentValue = tx.sigmaAmount * currentBuyRate;
                     const buyValue = tx.sigmaAmount * tx.rate;
                     const unrealizedPLPercent = ((currentValue - buyValue) / buyValue * 100).toFixed(2);
-                    const row = [
-                        index + 1,
-                        tx.date.toLocaleDateString(),
-                        tx.date.toLocaleTimeString(),
-                        tx.sigmaAmount.toFixed(4),
-                        tx.rate.toFixed(4),
-                        (tx.rate * usdtToInr).toFixed(2),
-                        currentBuyRate.toFixed(4),
-                        (currentBuyRate * usdtToInr).toFixed(2),
-                        unrealizedPLPercent + '%',
-                        'ACTIVE'
-                    ].join(',');
+                    const row = [index + 1, tx.date.toLocaleDateString(), tx.date.toLocaleTimeString(), tx.sigmaAmount.toFixed(4), tx.rate.toFixed(4), (tx.rate * usdtToInr).toFixed(2), currentBuyRate.toFixed(4), (currentBuyRate * usdtToInr).toFixed(2), unrealizedPLPercent + '%', 'ACTIVE'].join(',');
                     csvContent += row + "\n";
                 });
             } else {
@@ -1319,18 +1189,7 @@
                     const avgBuyRate = getAverageBuyRateForSell(tx.sigmaAmount, tx.timestamp);
                     const plAmount = (tx.rate - avgBuyRate) * tx.sigmaAmount;
                     const plPercentage = ((tx.rate - avgBuyRate) / avgBuyRate * 100).toFixed(2);
-                    const row = [
-                        index + 1,
-                        tx.date.toLocaleDateString(),
-                        tx.date.toLocaleTimeString(),
-                        tx.sigmaAmount.toFixed(4),
-                        avgBuyRate.toFixed(4),
-                        tx.rate.toFixed(4),
-                        plAmount.toFixed(2),
-                        (plAmount * usdtToInr).toFixed(2),
-                        plPercentage + '%',
-                        'CLOSED'
-                    ].join(',');
+                    const row = [index + 1, tx.date.toLocaleDateString(), tx.date.toLocaleTimeString(), tx.sigmaAmount.toFixed(4), avgBuyRate.toFixed(4), tx.rate.toFixed(4), plAmount.toFixed(2), (plAmount * usdtToInr).toFixed(2), plPercentage + '%', 'CLOSED'].join(',');
                     csvContent += row + "\n";
                 });
             }
@@ -1344,7 +1203,6 @@
             document.body.removeChild(link);
         }
         
-        // Auto-connect function
         async function autoConnect() {
             if (window.ethereum) {
                 try {
@@ -1352,36 +1210,27 @@
                     const accounts = await provider.listAccounts();
                     
                     if (accounts.length > 0) {
-                        // Wallet is already connected
                         userAddress = accounts[0].address;
-                        
                         sigmaContract = new ethers.Contract(SIGMA_CONTRACT_ADDRESS, sigmaABI, provider);
                         
-                        // Update connect button
                         const connectBtn = document.getElementById('connectBtn');
                         const shortAddress = userAddress.slice(0,6) + "..." + userAddress.slice(-4);
                         document.getElementById('btn-text').textContent = shortAddress;
                         connectBtn.classList.add('connected');
                         
-                        // Load data
                         await loadData();
                         
-                        // Setup event listeners for account changes
                         window.ethereum.on('accountsChanged', handleAccountsChanged);
                         window.ethereum.on('chainChanged', () => window.location.reload());
                     }
                 } catch (error) {
                     console.log("Auto-connect error:", error);
-                    // Silently fail - user can connect manually
                 }
             }
         }
         
-        // Initialize when page loads
         window.onload = function() {
             createParticles();
-            
-            // Try to auto-connect
             autoConnect();
         };
     </script>
