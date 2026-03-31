@@ -8,7 +8,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* ========== ROOT & BACKGROUND ========== */
         :root {
             --primary: #00ffcc;
             --secondary: #9d4edd;
@@ -22,151 +21,18 @@
             --gradient: linear-gradient(90deg, #00ffcc, #9d4edd, #ff2a6d, #00ffcc);
         }
         * { margin:0; padding:0; box-sizing:border-box; }
-        body {
-            background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif;
-            min-height: 100vh; overflow-x: hidden; position: relative;
-        }
+        body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; min-height: 100vh; overflow-x: hidden; }
         
-        /* ===== ENHANCED CRYPTO PREMIUM CRISS-CROSS BACKGROUND ===== */
-        .crypto-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -2;
-            opacity: 0.5;
-        }
-        
-        /* Primary grid - thin lines */
-        .crypto-bg::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background-image: 
-                /* Vertical lines */
-                repeating-linear-gradient(90deg, 
-                    transparent 0px, 
-                    transparent 49px,
-                    rgba(0, 255, 204, 0.15) 49px,
-                    rgba(0, 255, 204, 0.15) 50px),
-                /* Horizontal lines */
-                repeating-linear-gradient(0deg, 
-                    transparent 0px, 
-                    transparent 49px,
-                    rgba(157, 78, 221, 0.15) 49px,
-                    rgba(157, 78, 221, 0.15) 50px);
-            animation: gridMove 20s linear infinite;
-            transform-origin: center;
-        }
-        
-        /* Secondary diagonal grid - crisscross effect */
-        .crypto-bg::after {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background-image: 
-                /* Diagonal lines 45deg */
-                repeating-linear-gradient(45deg, 
-                    transparent 0px, 
-                    transparent 69px,
-                    rgba(255, 42, 109, 0.1) 69px,
-                    rgba(255, 42, 109, 0.1) 70px),
-                /* Diagonal lines -45deg */
-                repeating-linear-gradient(-45deg, 
-                    transparent 0px, 
-                    transparent 89px,
-                    rgba(0, 255, 204, 0.1) 89px,
-                    rgba(0, 255, 204, 0.1) 90px);
-            animation: diagonalMove 15s linear infinite reverse;
-            transform-origin: center;
-        }
-        
-        @keyframes gridMove {
-            0% {
-                transform: translate(0, 0) rotate(0deg);
-            }
-            100% {
-                transform: translate(50px, 50px) rotate(0.5deg);
-            }
-        }
-        
-        @keyframes diagonalMove {
-            0% {
-                transform: translate(0, 0) rotate(0deg);
-            }
-            100% {
-                transform: translate(-70px, -70px) rotate(-0.5deg);
-            }
-        }
-        
-        /* Floating particles for extra premium feel */
-        .crypto-particles {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            pointer-events: none;
-        }
-        
-        .particle {
-            position: absolute;
-            width: 2px;
-            height: 2px;
-            background: var(--primary);
-            border-radius: 50%;
-            opacity: 0.3;
-            box-shadow: 0 0 10px var(--primary);
-            animation: particleFloat 15s infinite linear;
-        }
-        
-        .particle:nth-child(3n) {
-            background: var(--secondary);
-            box-shadow: 0 0 10px var(--secondary);
-        }
-        
-        .particle:nth-child(5n) {
-            background: #ff2a6d;
-            box-shadow: 0 0 10px #ff2a6d;
-        }
-        
-        @keyframes particleFloat {
-            0% {
-                transform: translate(0, 0) scale(1);
-                opacity: 0.3;
-            }
-            25% {
-                transform: translate(100px, -100px) scale(1.5);
-                opacity: 0.6;
-            }
-            50% {
-                transform: translate(200px, 0) scale(1);
-                opacity: 0.3;
-            }
-            75% {
-                transform: translate(100px, 100px) scale(0.8);
-                opacity: 0.6;
-            }
-            100% {
-                transform: translate(0, 0) scale(1);
-                opacity: 0.3;
-            }
-        }
+        .crypto-bg { position: fixed; top:0; left:0; width:100%; height:100%; z-index:-2; opacity:0.5; }
+        .crypto-bg::before { content:''; position:absolute; top:-50%; left:-50%; width:200%; height:200%; background-image: repeating-linear-gradient(90deg, transparent 0px, transparent 49px, rgba(0,255,204,0.15) 49px, rgba(0,255,204,0.15) 50px), repeating-linear-gradient(0deg, transparent 0px, transparent 49px, rgba(157,78,221,0.15) 49px, rgba(157,78,221,0.15) 50px); animation:gridMove 20s linear infinite; }
+        .crypto-bg::after { content:''; position:absolute; top:-50%; left:-50%; width:200%; height:200%; background-image: repeating-linear-gradient(45deg, transparent 0px, transparent 69px, rgba(255,42,109,0.1) 69px, rgba(255,42,109,0.1) 70px), repeating-linear-gradient(-45deg, transparent 0px, transparent 89px, rgba(0,255,204,0.1) 89px, rgba(0,255,204,0.1) 90px); animation:diagonalMove 15s linear infinite reverse; }
+        @keyframes gridMove { 0% { transform:translate(0,0); } 100% { transform:translate(50px,50px) rotate(0.5deg); } }
+        @keyframes diagonalMove { 0% { transform:translate(0,0); } 100% { transform:translate(-70px,-70px) rotate(-0.5deg); } }
         
         .rainbow-border { position:fixed; top:0; left:0; width:100%; height:4px; background:var(--gradient); background-size:400% 400%; animation:rainbow 8s ease infinite; z-index:1000; }
-        .rainbow-glow { position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); width:800px; height:800px; background:radial-gradient(circle, rgba(157,78,221,0.15) 0%, rgba(0,255,204,0.1) 25%, rgba(0,11,16,0) 70%); border-radius:50%; z-index:-1; animation:pulse 6s ease-in-out infinite alternate; }
         @keyframes rainbow { 0% { background-position:0% 50%; } 50% { background-position:100% 50%; } 100% { background-position:0% 50%; } }
-        @keyframes pulse { 0% { opacity:0.5; transform:translate(-50%,-50%) scale(0.9); } 100% { opacity:0.8; transform:translate(-50%,-50%) scale(1.1); } }
         
-        .ticker-container { background:rgba(10,11,16,0.9); backdrop-filter:blur(10px); border-bottom:1px solid rgba(0,255,204,0.2); padding:10px 0; overflow:hidden; position:relative; z-index:10; }
+        .ticker-container { background:rgba(10,11,16,0.9); backdrop-filter:blur(10px); border-bottom:1px solid rgba(0,255,204,0.2); padding:10px 0; overflow:hidden; }
         .ticker-wrapper { display:flex; width:max-content; animation:ticker 30s linear infinite; }
         @keyframes ticker { 0% { transform:translateX(0); } 100% { transform:translateX(-50%); } }
         .ticker-item { display:flex; align-items:center; margin:0 30px; white-space:nowrap; }
@@ -178,192 +44,74 @@
         
         .container { max-width:1200px; margin:0 auto; padding:20px; display:grid; grid-template-columns:1fr 1fr; gap:30px; position:relative; z-index:1; }
         @media (max-width:992px) { .container { grid-template-columns:1fr; } }
-        .left-panel, .right-panel { display:flex; flex-direction:column; gap:20px; }
         
-        .connect-btn { background:linear-gradient(90deg, var(--primary), var(--secondary)); color:#000; border:none; border-radius:15px; padding:16px 30px; font-weight:800; font-size:16px; cursor:pointer; transition:all 0.3s; display:flex; align-items:center; justify-content:center; gap:10px; box-shadow:0 4px 20px rgba(0,255,204,0.3); animation:float 4s ease-in-out infinite; }
-        @keyframes float { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-10px); } }
-        .connect-btn:hover { transform:translateY(-3px); box-shadow:0 8px 25px rgba(0,255,204,0.5); }
+        .connect-btn { background:linear-gradient(90deg, var(--primary), var(--secondary)); color:#000; border:none; border-radius:15px; padding:16px 30px; font-weight:800; font-size:16px; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:10px; margin-bottom:20px; }
         .connect-btn.connected { background:rgba(0,255,204,0.1); color:var(--primary); border:1px solid var(--primary); }
         
-        .main-card { background:rgba(22,24,33,0.8); backdrop-filter:blur(10px); border-radius:24px; padding:30px; border:1px solid rgba(0,255,204,0.2); box-shadow:0 20px 40px rgba(0,0,0,0.5); position:relative; overflow:hidden; }
+        .main-card { background:rgba(22,24,33,0.8); backdrop-filter:blur(10px); border-radius:24px; padding:30px; border:1px solid rgba(0,255,204,0.2); position:relative; overflow:hidden; }
         .main-card::before { content:''; position:absolute; top:0; left:0; width:100%; height:4px; background:var(--gradient); background-size:400% 400%; animation:rainbow 8s ease infinite; }
         .header { text-align:center; margin-bottom:30px; }
-        .header h1 { background:var(--gradient); background-size:400% 400%; -webkit-background-clip:text; background-clip:text; color:transparent; font-size:42px; font-weight:800; letter-spacing:2px; margin-bottom:8px; animation:rainbow 8s ease infinite; }
-        .header p { color:#aaa; font-size:14px; letter-spacing:1px; }
+        .header h1 { background:var(--gradient); background-size:400% 400%; -webkit-background-clip:text; background-clip:text; color:transparent; font-size:42px; font-weight:800; animation:rainbow 8s ease infinite; }
         
         .stats-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:15px; margin-bottom:25px; }
-        .stat-box { background:rgba(255,255,255,0.03); padding:20px; border-radius:16px; border:1px solid rgba(45,47,62,0.5); transition:all 0.3s; }
-        .stat-box:hover { border-color:var(--primary); transform:translateY(-5px); box-shadow:0 10px 20px rgba(0,255,204,0.1); }
-        .stat-label { font-size:12px; color:#888; text-transform:uppercase; letter-spacing:1px; margin-bottom:8px; display:flex; align-items:center; gap:5px; }
-        .stat-value { font-size:22px; font-weight:700; color:var(--primary); }
-        .stat-value-inr { font-size:14px; color:#aaa; margin-top:5px; }
+        .stat-box { background:rgba(255,255,255,0.03); padding:20px; border-radius:16px; border:1px solid rgba(45,47,62,0.5); text-align:center; }
+        .stat-label { font-size:12px; color:#888; margin-bottom:8px; display:flex; align-items:center; justify-content:center; gap:5px; }
+        .stat-value { font-size:28px; font-weight:700; color:var(--primary); }
+        .stat-value-inr { font-size:14px; color:#ffaa00; margin-top:5px; }
         
         .tabs { display:flex; gap:10px; margin-bottom:25px; background:rgba(0,0,0,0.3); padding:6px; border-radius:16px; }
-        .tab { flex:1; padding:15px; text-align:center; cursor:pointer; border-radius:12px; font-weight:700; font-size:15px; color:#666; transition:all 0.3s; display:flex; align-items:center; justify-content:center; gap:8px; }
+        .tab { flex:1; padding:15px; text-align:center; cursor:pointer; border-radius:12px; font-weight:700; color:#666; transition:all 0.3s; display:flex; align-items:center; justify-content:center; gap:8px; }
         .tab.active { background:var(--primary); color:#000; box-shadow:0 4px 15px rgba(0,255,204,0.3); }
         
-        .input-area { background:rgba(0,0,0,0.3); border:1px solid var(--border); border-radius:18px; padding:20px; margin-bottom:20px; transition:all 0.3s; }
-        .input-area:focus-within { border-color:var(--primary); box-shadow:0 0 0 2px rgba(0,255,204,0.1); }
+        .input-area { background:rgba(0,0,0,0.3); border:1px solid var(--border); border-radius:18px; padding:20px; margin-bottom:20px; }
         .input-header { display:flex; justify-content:space-between; font-size:13px; color:#888; margin-bottom:12px; }
         input { background:transparent; border:none; color:white; font-size:32px; width:100%; outline:none; font-weight:600; }
         
-        .calc-box { background:rgba(0,255,204,0.05); border:1px dashed var(--primary); border-radius:16px; padding:20px; font-size:14px; margin-bottom:20px; min-height:100px; }
+        .calc-box { background:rgba(0,255,204,0.05); border:1px dashed var(--primary); border-radius:16px; padding:20px; margin-bottom:20px; }
         .row { display:flex; justify-content:space-between; margin-bottom:10px; }
         
-        .action-btn { width:100%; padding:20px; border-radius:16px; border:none; font-weight:800; font-size:17px; cursor:pointer; transition:all 0.3s; margin-top:10px; text-transform:uppercase; background:var(--gradient); background-size:400% 400%; color:#000; animation:rainbow 8s ease infinite; }
-        .action-btn:hover { transform:translateY(-3px); box-shadow:0 8px 25px rgba(0,255,204,0.4); }
-        .action-btn:disabled { opacity:0.5; cursor:not-allowed; transform:none; }
+        .action-btn { width:100%; padding:20px; border-radius:16px; border:none; font-weight:800; font-size:17px; cursor:pointer; background:var(--gradient); background-size:400% 400%; color:#000; animation:rainbow 8s ease infinite; }
+        .action-btn:disabled { opacity:0.5; cursor:not-allowed; }
         
-        .approval-steps {
-            background: rgba(0,0,0,0.3);
-            border-radius: 16px;
-            padding: 20px;
-            margin: 15px 0;
-            border: 1px solid var(--primary);
-        }
-        .step {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            padding: 10px;
-            border-radius: 12px;
-            margin-bottom: 10px;
-        }
-        .step:last-child {
-            margin-bottom: 0;
-        }
-        .step-number {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            background: var(--primary);
-            color: #000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 800;
-        }
-        .step.completed .step-number {
-            background: var(--success);
-        }
-        .step.completed .step-text {
-            color: var(--success);
-        }
-        .step.active .step-number {
-            background: var(--warning);
-            animation: pulse 1s infinite;
-        }
-        .step-text {
-            flex: 1;
-            font-size: 14px;
-            font-weight: 600;
-        }
-        .step-status {
-            font-size: 12px;
-            color: #888;
-        }
+        .approval-steps { background:rgba(0,0,0,0.3); border-radius:16px; padding:20px; margin:15px 0; border:1px solid var(--primary); }
+        .step { display:flex; align-items:center; gap:15px; padding:10px; border-radius:12px; margin-bottom:10px; }
+        .step-number { width:30px; height:30px; border-radius:50%; background:var(--primary); color:#000; display:flex; align-items:center; justify-content:center; font-weight:800; }
+        .step.completed .step-number { background:var(--success); }
+        .step.active .step-number { background:var(--warning); }
+        .step-text { flex:1; font-size:14px; font-weight:600; }
         
         .contract-box { background:rgba(0,0,0,0.3); padding:20px; border-radius:16px; border:1px solid var(--secondary); margin-top:20px; display:flex; align-items:center; gap:15px; }
-        .contract-info { flex:1; }
-        .contract-label { font-size:12px; color:#888; margin-bottom:5px; display:flex; align-items:center; gap:8px; }
         .contract-address { font-size:14px; color:var(--secondary); font-family:monospace; word-break:break-all; }
-        .copy-btn { background:linear-gradient(90deg, var(--secondary), #7b2cbf); color:white; border:none; border-radius:12px; padding:12px 20px; font-weight:600; font-size:13px; cursor:pointer; transition:all 0.3s; display:flex; align-items:center; gap:8px; white-space:nowrap; }
-        .copy-btn:hover { background:linear-gradient(90deg, #7b2cbf, var(--secondary)); transform:translateY(-2px); box-shadow:0 5px 15px rgba(157,78,221,0.3); }
+        .copy-btn { background:linear-gradient(90deg, var(--secondary), #7b2cbf); color:white; border:none; border-radius:12px; padding:12px 20px; cursor:pointer; }
         
-        /* Referral section directly under contract address */
-        .referral-mini-box {
-            background: rgba(0,0,0,0.3);
-            padding: 15px 20px;
-            border-radius: 16px;
-            border: 1px dashed var(--primary);
-            margin-top: 15px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-        .referral-mini-info {
-            flex: 1;
-        }
-        .referral-mini-label {
-            font-size: 11px;
-            color: #888;
-            margin-bottom: 5px;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-        .referral-mini-address {
-            font-size: 13px;
-            color: var(--primary);
-            font-family: monospace;
-            word-break: break-all;
-        }
-        .referral-mini-copy {
-            background: var(--primary);
-            color: #000;
-            border: none;
-            border-radius: 12px;
-            padding: 10px 16px;
-            font-weight: 700;
-            font-size: 12px;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            white-space: nowrap;
-        }
-        .referral-mini-copy:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,255,204,0.3);
-        }
-        
-        .balance-footer { margin-top:25px; padding-top:20px; border-top:1px solid var(--border); font-size:14px; }
+        .balance-footer { margin-top:25px; padding-top:20px; border-top:1px solid var(--border); }
         .balance-item { display:flex; justify-content:space-between; margin-bottom:10px; padding-bottom:10px; border-bottom:1px solid rgba(255,255,255,0.05); }
-        .balance-item:last-child { border-bottom:none; margin-bottom:0; padding-bottom:0; }
-        .balance-info { display:flex; flex-direction:column; align-items:flex-end; }
-        .balance-inr { font-size:12px; color:#ffaa00; font-weight:600; margin-top:2px; }
         
-        .menu-card { background:rgba(22,24,33,0.8); backdrop-filter:blur(10px); border-radius:24px; padding:30px; border:1px solid rgba(157,78,221,0.2); box-shadow:0 20px 40px rgba(0,0,0,0.5); }
-        .menu-card h2 { color:var(--secondary); font-size:24px; margin-bottom:25px; text-align:center; }
-        .menu-grid { display:grid; grid-template-columns:1fr; gap:15px; }
-        .menu-btn { background:rgba(255,255,255,0.03); border:1px solid rgba(157,78,221,0.3); border-radius:16px; padding:18px; color:white; font-weight:600; font-size:16px; cursor:pointer; transition:all 0.3s; display:flex; align-items:center; justify-content:flex-start; gap:15px; text-align:left; }
+        .menu-card { background:rgba(22,24,33,0.8); backdrop-filter:blur(10px); border-radius:24px; padding:30px; border:1px solid rgba(157,78,221,0.2); }
+        .menu-grid { display:grid; gap:15px; }
+        .menu-btn { background:rgba(255,255,255,0.03); border:1px solid rgba(157,78,221,0.3); border-radius:16px; padding:18px; color:white; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:15px; }
         .menu-btn i { font-size:20px; color:var(--secondary); }
-        .menu-btn:hover { background:rgba(157,78,221,0.1); border-color:var(--secondary); transform:translateX(5px); }
         
         .transfer-panel { background:rgba(22,24,33,0.8); backdrop-filter:blur(10px); border-radius:24px; padding:30px; border:1px solid var(--primary); margin-top:20px; }
-        .transfer-panel h3 { color:var(--primary); margin-bottom:20px; display:flex; align-items:center; gap:10px; }
         .token-selector { display:flex; gap:10px; margin-bottom:20px; }
-        .token-opt { flex:1; background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:40px; padding:12px; text-align:center; cursor:pointer; transition:all 0.2s; }
-        .token-opt.active { background:var(--primary); color:#000; font-weight:700; border-color:var(--primary); }
+        .token-opt { flex:1; background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:40px; padding:12px; text-align:center; cursor:pointer; }
+        .token-opt.active { background:var(--primary); color:#000; }
         .addr-row { display:flex; gap:8px; margin:15px 0; align-items:center; background:rgba(0,0,0,0.3); padding:8px 16px; border-radius:40px; }
-        .addr-row input { font-size:14px; padding:8px 0; }
-        .small-copy { background:transparent; border:none; color:var(--primary); cursor:pointer; font-size:18px; }
-        .bal-tag { color:#aaa; font-size:13px; margin-bottom:5px; }
-        .max-btn { color:var(--primary); font-weight:600; cursor:pointer; }
         .transfer-btn { width:100%; background:linear-gradient(90deg, #00ff88, #00cc66); border:none; border-radius:16px; padding:16px; font-weight:800; color:#000; margin-top:15px; cursor:pointer; }
-        
         .cooldown-badge { background:rgba(255,170,0,0.15); border-radius:30px; padding:4px 12px; font-size:12px; color:var(--warning); display:inline-flex; align-items:center; gap:5px; margin-left:10px; }
-        .cooldown-danger { color:var(--danger); background:rgba(255,77,77,0.15); }
         
-        #statusMessage { font-size:13px; text-align:center; margin-top:15px; min-height:20px; color:var(--primary); font-weight:600; }
-        
-        @media (max-width:768px) { .container { padding:15px; } .main-card, .menu-card { padding:20px; } .header h1 { font-size:32px; } .stat-value { font-size:18px; } input { font-size:26px; } }
+        @media (max-width:768px) { .container { padding:15px; } .header h1 { font-size:32px; } .stat-value { font-size:22px; } }
     </style>
 </head>
 <body>
-    <!-- Enhanced Crypto Premium Criss-Cross Background -->
     <div class="crypto-bg"></div>
-    <div class="crypto-particles" id="cryptoParticles"></div>
     <div class="rainbow-border"></div>
-    <div class="rainbow-glow"></div>
     
     <div class="ticker-container">
         <div class="ticker-wrapper" id="tickerWrapper"></div>
     </div>
     
     <div class="container">
-        <!-- LEFT PANEL -->
         <div class="left-panel">
             <button class="connect-btn" id="connectBtn" onclick="connectWallet()">
                 <i class="fas fa-wallet"></i> <span id="btnText">Connect Wallet</span>
@@ -388,268 +136,129 @@
                     </div>
                 </div>
                 
-                <!-- Cooldown Badges -->
-                <div style="display:flex; gap:15px; justify-content:center; margin-bottom:10px; flex-wrap:wrap;">
+                <div style="display:flex; gap:15px; justify-content:center; margin-bottom:10px;">
                     <span id="sellCooldownBadge" class="cooldown-badge"><i class="fas fa-hourglass-half"></i> Sell cooldown: --</span>
-                    <span id="buyCooldownBadge" class="cooldown-badge"><i class="fas fa-calendar-alt"></i> 30-day: --</span>
-                    <span id="buySellCooldownBadge" class="cooldown-badge" style="display:none;"></span>
                 </div>
                 
-                <!-- Approval Steps (Hidden by default, shown only when needed) -->
                 <div class="approval-steps" id="approvalSteps" style="display: none;">
-                    <div class="step" id="step1">
-                        <div class="step-number">1</div>
-                        <div class="step-text">Approve USDT</div>
-                        <div class="step-status" id="step1Status">Pending</div>
-                    </div>
-                    <div class="step" id="step2">
-                        <div class="step-number">2</div>
-                        <div class="step-text">Buy SIGMA</div>
-                        <div class="step-status" id="step2Status">Locked</div>
-                    </div>
+                    <div class="step" id="step1"><div class="step-number">1</div><div class="step-text">Approve USDT</div><div class="step-status" id="step1Status">Pending</div></div>
+                    <div class="step" id="step2"><div class="step-number">2</div><div class="step-text">Buy SIGMA</div><div class="step-status" id="step2Status">Locked</div></div>
                 </div>
                 
                 <div class="tabs">
-                    <div class="tab active" onclick="setMode('buy')" id="buyTab">
-                        <i class="fas fa-shopping-cart"></i> BUY
-                    </div>
-                    <div class="tab" onclick="setMode('sell')" id="sellTab">
-                        <i class="fas fa-coins"></i> SELL
-                    </div>
+                    <div class="tab active" onclick="setMode('buy')" id="buyTab"><i class="fas fa-shopping-cart"></i> BUY</div>
+                    <div class="tab" onclick="setMode('sell')" id="sellTab"><i class="fas fa-coins"></i> SELL</div>
                 </div>
                 
                 <div class="input-area">
-                    <div class="input-header">
-                        <span>Amount in SIG6</span>
-                        <span style="color:var(--primary); cursor:pointer" onclick="maxAmount()">
-                            <i class="fas fa-maximize"></i> MAX
-                        </span>
-                    </div>
+                    <div class="input-header"><span>Amount in SIG6</span><span style="color:var(--primary); cursor:pointer" onclick="maxAmount()"><i class="fas fa-maximize"></i> MAX</span></div>
                     <input type="number" id="amount" placeholder="0.00" step="any" oninput="calculate()">
                 </div>
                 
-                <div class="calc-box" id="calculationBox">
-                    <div class="row" id="calcTotalRow">
-                        <span id="calcLabel">Total USDT to Pay:</span>
-                        <span id="calcValue" style="color:var(--primary); font-weight:800">0.00 USDT</span>
-                    </div>
-                    <div class="row">
-                        <span>≈ INR:</span>
-                        <span id="calcInr" style="color:#ffaa00">0.00 INR</span>
-                    </div>
-                    <div class="row" id="uplineRow">
-                        <span style="color:#888">Upline:</span>
-                        <span id="uplineAddress" style="font-size:12px">None</span>
-                    </div>
+                <div class="calc-box">
+                    <div class="row"><span id="calcLabel">Total USDT to Pay:</span><span id="calcValue" style="color:var(--primary); font-weight:800">0.00 USDT</span></div>
+                    <div class="row"><span>≈ INR:</span><span id="calcInr" style="color:#ffaa00">0.00 INR</span></div>
                 </div>
                 
-                <!-- MAIN ACTION BUTTON (Single button: changes text based on state) -->
-                <button class="action-btn" id="actionButton" onclick="executeAction()" disabled>
-                    <i class="fas fa-lock"></i> CONNECT WALLET
-                </button>
-                
+                <button class="action-btn" id="actionButton" onclick="executeAction()" disabled><i class="fas fa-lock"></i> CONNECT WALLET</button>
                 <div id="statusMessage"></div>
                 
                 <div class="contract-box">
-                    <div class="contract-info">
-                        <div class="contract-label"><i class="fas fa-file-contract"></i> CONTRACT (UPDATED)</div>
-                        <div class="contract-address">0x39D585521Ca149B2cD9d63e0B8A433Ea9F873FEc</div>
-                    </div>
+                    <div class="contract-info"><div class="contract-label"><i class="fas fa-file-contract"></i> CONTRACT</div>
+                    <div class="contract-address">0x39D585521Ca149B2cD9d63e0B8A433Ea9F873FEc</div></div>
                     <button class="copy-btn" onclick="copyContract()"><i class="fas fa-copy"></i> COPY</button>
                 </div>
                 
-                <!-- REFERRAL BOX - Only visible when SIG6 balance > 0 -->
-                <div class="referral-mini-box" id="referralMiniBox" style="display: none;">
-                    <div class="referral-mini-info">
-                        <div class="referral-mini-label"><i class="fas fa-link"></i> YOUR REFERRAL LINK</div>
-                        <div class="referral-mini-address" id="referralMiniAddress">Not connected</div>
-                    </div>
-                    <button class="referral-mini-copy" onclick="copyReferralMini()">
-                        <i class="fas fa-copy"></i> COPY
-                    </button>
-                </div>
-                
                 <div class="balance-footer">
-                    <div class="balance-item">
-                        <span><i class="fas fa-dollar-sign"></i> USDT Balance:</span>
-                        <span id="usdtBalance">--</span>
-                    </div>
-                    <div class="balance-item">
-                        <span><i class="fas fa-coins"></i> SIG6 Balance:</span>
-                        <div class="balance-info">
-                            <span id="sigmaBalance">--</span>
-                            <span id="sigmaBalanceInr" class="balance-inr">--</span>
-                        </div>
-                    </div>
-                    <div class="balance-item">
-                        <span><i class="fas fa-gas-pump"></i> POL Balance:</span>
-                        <span id="polBalance">--</span>
-                    </div>
-                    <div style="display:flex; justify-content:space-between; margin-top:15px; background:rgba(255,255,255,0.02); padding:12px; border-radius:40px;">
-                        <span style="color:#aaa"><i class="fas fa-id-card"></i> Your Wallet</span>
-                        <span style="font-family:monospace; font-size:13px" id="walletAddress">Not connected</span>
-                        <button onclick="copyWallet()" style="background:none; border:none; color:var(--primary); cursor:pointer">
-                            <i class="fas fa-copy"></i>
-                        </button>
-                    </div>
+                    <div class="balance-item"><span><i class="fas fa-dollar-sign"></i> USDT Balance:</span><span id="usdtBalance">--</span></div>
+                    <div class="balance-item"><span><i class="fas fa-coins"></i> SIG6 Balance:</span><span id="sigmaBalance">--</span></div>
+                    <div class="balance-item"><span><i class="fas fa-gas-pump"></i> POL Balance:</span><span id="polBalance">--</span></div>
                 </div>
             </div>
         </div>
         
-        <!-- RIGHT PANEL -->
         <div class="right-panel">
             <div class="menu-card">
-                <h2><i class="fas fa-bars"></i> MENU</h2>
+                <h2 style="color:var(--secondary); margin-bottom:25px; text-align:center;"><i class="fas fa-bars"></i> MENU</h2>
                 <div class="menu-grid">
-                    <button class="menu-btn" onclick="window.location.href='team.html'"><i class="fas fa-users"></i><div><div>Team</div><div style="font-size:12px; color:#aaa;">Referral network</div></div></button>
-                    <button class="menu-btn" onclick="window.location.href='income.html'"><i class="fas fa-chart-line"></i><div><div>Income</div><div style="font-size:12px; color:#aaa;">Rewards report</div></div></button>
-                    <button class="menu-btn" onclick="window.location.href='buy_sell.html'"><i class="fas fa-exchange-alt"></i><div><div>Buy/Sell History</div><div style="font-size:12px; color:#aaa;">Complete Open/Close report</div></div></button>
-                    <button class="menu-btn" onclick="window.location.href='transfer.html'"><i class="fas fa-history"></i><div><div>Transfers</div><div style="font-size:12px; color:#aaa;">P2P history</div></div></button>
-                    <button class="menu-btn" onclick="window.location.href='price.html'"><i class="fas fa-chart-line"></i><div><div>Price History</div><div style="font-size:12px; color:#aaa;">Rate & volume history</div></div></button>
-                    <button class="menu-btn" onclick="window.location.href='utility.html'"><i class="fas fa-cogs"></i><div><div>Utility</div><div style="font-size:12px; color:#aaa;">Tools & features</div></div></button>
-                    <button class="menu-btn" onclick="window.location.href='plan.html'"><i class="fas fa-crown"></i><div><div>Details</div><div style="font-size:12px; color:#aaa;">Offical SIGMA Details</div></div></button>
+                    <button class="menu-btn" onclick="window.location.href='team.html'"><i class="fas fa-users"></i> Team</button>
+                    <button class="menu-btn" onclick="window.location.href='income.html'"><i class="fas fa-chart-line"></i> Income</button>
+                    <button class="menu-btn" onclick="window.location.href='buy_sell.html'"><i class="fas fa-exchange-alt"></i> Buy/Sell History</button>
+                    <button class="menu-btn" onclick="window.location.href='transfer.html'"><i class="fas fa-history"></i> Transfers</button>
+                    <button class="menu-btn" onclick="window.location.href='price.html'"><i class="fas fa-chart-line"></i> Price History</button>
+                    <button class="menu-btn" onclick="window.location.href='utility.html'"><i class="fas fa-cogs"></i> Utility</button>
+                    <button class="menu-btn" onclick="window.location.href='plan.html'"><i class="fas fa-crown"></i> Details</button>
                 </div>
             </div>
             
-            <!-- WALLET TRANSFER PANEL -->
             <div class="transfer-panel">
-                <h3><i class="fas fa-exchange-alt"></i> WALLET TRANSFER</h3>
+                <h3 style="color:var(--primary); margin-bottom:20px;"><i class="fas fa-exchange-alt"></i> WALLET TRANSFER</h3>
                 <div class="token-selector">
                     <div class="token-opt active" onclick="setTransferToken('SIG6')">SIG6</div>
                     <div class="token-opt" onclick="setTransferToken('USDT')">USDT</div>
                     <div class="token-opt" onclick="setTransferToken('POL')">POL</div>
                 </div>
-                <div class="addr-row">
-                    <input type="text" id="recipientAddress" placeholder="0x... recipient">
-                    <button class="small-copy" onclick="pasteAddress()" title="Paste"><i class="fas fa-paste"></i></button>
-                </div>
-                <div class="addr-row" style="justify-content:space-between">
-                    <span class="bal-tag" id="transferBalance">Balance: --</span>
-                    <span class="max-btn" onclick="maxTransfer()">MAX</span>
-                </div>
-                <input type="number" id="transferAmount" placeholder="0.00" style="font-size:28px; padding:10px 0;" step="any">
-                <button class="transfer-btn" id="transferButton" onclick="executeTransfer()">
-                    <i class="fas fa-paper-plane"></i> TRANSFER
-                </button>
+                <div class="addr-row"><input type="text" id="recipientAddress" placeholder="0x... recipient"><button class="small-copy" onclick="pasteAddress()" style="background:none; border:none; color:var(--primary);"><i class="fas fa-paste"></i></button></div>
+                <div class="addr-row" style="justify-content:space-between"><span class="bal-tag" id="transferBalance">Balance: --</span><span class="max-btn" style="color:var(--primary); cursor:pointer" onclick="maxTransfer()">MAX</span></div>
+                <input type="number" id="transferAmount" placeholder="0.00" style="font-size:28px; width:100%; background:transparent; border:none; color:white; outline:none;" step="any">
+                <button class="transfer-btn" onclick="executeTransfer()"><i class="fas fa-paper-plane"></i> TRANSFER</button>
                 <div style="font-size:12px; margin-top:10px; color:#aaa" id="transferStatus"></div>
             </div>
         </div>
     </div>
 
     <script>
-        // ========== UPDATED CONTRACT CONFIGURATION ==========
+        // ========== CONTRACT CONFIGURATION ==========
         const SIGMA_ADDRESS = "0x39D585521Ca149B2cD9d63e0B8A433Ea9F873FEc";
         const USDT_ADDRESS = "0xc2132D05D31c914a87C6611C10748AEb04B58e8F";
         
-        // UPDATED COMPLETE ABI FROM NEW CONTRACT
         const SIGMA_ABI = [
-            {"inputs":[{"internalType":"uint256","name":"_amount","type":"uint256"}],"name":"addTreasuryUSDT","outputs":[],"stateMutability":"nonpayable","type":"function"},
             {"inputs":[{"internalType":"address","name":"_upline","type":"address"},{"internalType":"uint256","name":"_usdtAmount","type":"uint256"}],"name":"buySigma","outputs":[],"stateMutability":"nonpayable","type":"function"},
-            {"inputs":[{"internalType":"address","name":"_usdt","type":"address"}],"stateMutability":"nonpayable","type":"constructor"},
-            {"inputs":[],"name":"ReentrancyGuardReentrantCall","type":"error"},
-            {"inputs":[{"internalType":"address","name":"token","type":"address"}],"name":"SafeERC20FailedOperation","type":"error"},
-            {"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":false,"internalType":"uint256","name":"usdtAmount","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"tokensMinted","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"currentRate","type":"uint256"}],"name":"Buy","type":"event"},
-            {"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"}],"name":"ICOBonusPaid","type":"event"},
-            {"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"},{"indexed":false,"internalType":"string","name":"reason","type":"string"}],"name":"IncomeLapsed","type":"event"},
-            {"inputs":[{"internalType":"address","name":"_user","type":"address"},{"internalType":"address","name":"_upline","type":"address"},{"internalType":"uint256","name":"_balance","type":"uint256"}],"name":"migrateUser","outputs":[],"stateMutability":"nonpayable","type":"function"},
-            {"inputs":[{"internalType":"address","name":"_to","type":"address"},{"internalType":"uint256","name":"_amount","type":"uint256"}],"name":"mintFreeSigma","outputs":[],"stateMutability":"nonpayable","type":"function"},
-            {"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"from","type":"address"},{"indexed":true,"internalType":"address","name":"to","type":"address"},{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"level","type":"uint256"}],"name":"ReferralPaid","type":"event"},
-            {"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":false,"internalType":"uint256","name":"tokensBurned","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"usdtReceived","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"currentRate","type":"uint256"}],"name":"Sell","type":"event"},
             {"inputs":[{"internalType":"uint256","name":"_tokenAmount","type":"uint256"}],"name":"sellSigma","outputs":[],"stateMutability":"nonpayable","type":"function"},
-            {"inputs":[{"internalType":"address","name":"_newCreator","type":"address"}],"name":"setCreator","outputs":[],"stateMutability":"nonpayable","type":"function"},
-            {"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":true,"internalType":"address","name":"upline","type":"address"},{"indexed":false,"internalType":"uint256","name":"balance","type":"uint256"}],"name":"UserMigrated","type":"event"},
-            {"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"balanceOf","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
-            {"inputs":[],"name":"baseRate","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
-            {"inputs":[],"name":"COOLDOWN_TIME","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
-            {"inputs":[],"name":"creator","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},
-            {"inputs":[],"name":"creatorWallet","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},
-            {"inputs":[],"name":"decimals","outputs":[{"internalType":"uint8","name":"","type":"uint8"}],"stateMutability":"view","type":"function"},
-            {"inputs":[{"internalType":"address","name":"","type":"address"},{"internalType":"uint256","name":"","type":"uint256"}],"name":"directReferrals","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},
             {"inputs":[],"name":"getCurrentBuyRate","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
             {"inputs":[],"name":"getCurrentSellRate","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
-            {"inputs":[{"internalType":"address","name":"_user","type":"address"}],"name":"getDownlines","outputs":[{"internalType":"address[]","name":"","type":"address[]"}],"stateMutability":"view","type":"function"},
-            {"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"hasBoughtBefore","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},
-            {"inputs":[],"name":"increment","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
-            {"inputs":[{"internalType":"address","name":"_user","type":"address"}],"name":"isUserActive","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},
-            {"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"lastBuyTimestamp","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+            {"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"balanceOf","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
             {"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"lastSellTimestamp","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
-            {"inputs":[],"name":"MAX_SELL_LIMIT","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
-            {"inputs":[],"name":"MIN_HOLDING_USDT","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
-            {"inputs":[],"name":"name","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},
-            {"inputs":[],"name":"owner","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},
             {"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"stats","outputs":[{"internalType":"uint256","name":"icoBonus","type":"uint256"},{"internalType":"uint256","name":"referralIncome","type":"uint256"},{"internalType":"uint256","name":"lapsedIncome","type":"uint256"}],"stateMutability":"view","type":"function"},
-            {"inputs":[],"name":"symbol","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},
-            {"inputs":[],"name":"totalSupply","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
-            {"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"upline","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},
-            {"inputs":[],"name":"usdtToken","outputs":[{"internalType":"contract IERC20","name":"","type":"address"}],"stateMutability":"view","type":"function"}
+            {"inputs":[{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"value","type":"uint256"}],"name":"transfer","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},
+            {"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":false,"internalType":"uint256","name":"usdtAmount","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"tokensMinted","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"currentRate","type":"uint256"}],"name":"Buy","type":"event"},
+            {"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":false,"internalType":"uint256","name":"tokensBurned","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"usdtReceived","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"currentRate","type":"uint256"}],"name":"Sell","type":"event"}
         ];
 
         const USDT_ABI = [
             "function balanceOf(address) view returns (uint256)",
             "function allowance(address,address) view returns (uint256)",
-            "function approve(address,uint256) external returns (bool)",
-            "function transfer(address,uint256) external returns (bool)"
+            "function approve(address,uint256) returns (bool)",
+            "function transfer(address,uint256) returns (bool)"
         ];
 
-        // State
-        let provider, signer, userAddress;
-        let sigmaContract, usdtContract;
+        let provider, signer, userAddress, sigmaContract, usdtContract;
         let currentMode = 'buy';
         let buyRate = 0, sellRate = 0;
         let isConnected = false;
         let transferToken = 'SIG6';
-        let lastBuyTimestamp = 0;
         let lastSellTimestamp = 0;
-        let cooldownInterval;
         let currentUSDTNeeded = 0;
         let isApproved = false;
-        let hasUserBought = false;
         let lastTransactionTimestamp = 0;
         const COOLDOWN_SECONDS = 180;
-        let referralExpiry = 0;
-
         const INR_RATE = 95;
         const DEFAULT_UPLINE = "0x0000000000000000000000000000000000000000";
         const MAX_SIGMA_PER_TX = 1000;
 
         window.onload = async () => {
-            createParticles();
             setupTicker();
-            handleUplineFromURL();
             if (window.ethereum) {
                 provider = new ethers.BrowserProvider(window.ethereum);
                 const accounts = await provider.send("eth_accounts", []);
                 if (accounts.length > 0) await connectWallet();
             }
-            startCooldownTimer();
-            setInterval(() => {
-                if (isConnected) loadData();
-            }, 15000);
+            setInterval(() => { if (isConnected) loadData(); }, 15000);
         };
-
-        function startCooldownTimer() {
-            if (cooldownInterval) clearInterval(cooldownInterval);
-            cooldownInterval = setInterval(() => {
-                if (isConnected) updateCooldownUI();
-            }, 1000);
-        }
-
-        function createParticles() {
-            const container = document.getElementById('cryptoParticles');
-            for (let i = 0; i < 30; i++) {
-                const p = document.createElement('div');
-                p.className = 'particle';
-                p.style.left = Math.random() * 100 + '%';
-                p.style.top = Math.random() * 100 + '%';
-                p.style.animationDelay = Math.random() * 20 + 's';
-                container.appendChild(p);
-            }
-        }
 
         function setupTicker() {
             const wrapper = document.getElementById('tickerWrapper');
-            const symbols = ['BTC', 'ETH', 'BNB', 'SOL', 'ADA', 'DOT', 'MATIC', 'LINK'];
-            wrapper.innerHTML = '';
+            const symbols = ['BTC', 'ETH', 'BNB', 'SOL', 'ADA', 'MATIC'];
             for (let i = 0; i < 20; i++) {
                 const symbol = symbols[i % symbols.length];
                 const price = (Math.random() * 1000 + 100).toFixed(2);
@@ -659,16 +268,8 @@
             }
         }
 
-        function handleUplineFromURL() {
-            const params = new URLSearchParams(window.location.search);
-            const ref = params.get('ref');
-            if (ref && ethers.isAddress(ref)) localStorage.setItem('sigma_referrer', ref);
-            const storedRef = localStorage.getItem('sigma_referrer');
-            document.getElementById('uplineAddress').textContent = storedRef ? storedRef.slice(0,8)+'...'+storedRef.slice(-6) : 'None (contract default)';
-        }
-
         async function connectWallet() {
-            if (!window.ethereum) { alert("MetaMask not installed!"); window.open("https://metamask.io/download/", "_blank"); return; }
+            if (!window.ethereum) { alert("MetaMask not installed!"); return; }
             try {
                 provider = new ethers.BrowserProvider(window.ethereum);
                 const network = await provider.getNetwork();
@@ -684,61 +285,47 @@
                 isConnected = true;
                 document.getElementById('connectBtn').classList.add('connected');
                 document.getElementById('btnText').textContent = userAddress.slice(0,6)+'...'+userAddress.slice(-4);
-                document.getElementById('walletAddress').textContent = userAddress.slice(0,8)+'...'+userAddress.slice(-6);
-                const lastTx = localStorage.getItem(`lastTx_${userAddress}`);
-                if (lastTx) lastTransactionTimestamp = parseInt(lastTx);
                 await loadData();
-                window.ethereum.on('accountsChanged', handleAccountsChanged);
-                window.ethereum.on('chainChanged', () => window.location.reload());
+                window.ethereum.on('accountsChanged', (accs) => { if (accs.length) { userAddress = accs[0]; loadData(); } });
             } catch (error) { alert("Connection failed: " + error.message); }
-        }
-
-        async function handleAccountsChanged(accounts) {
-            if (accounts.length) {
-                userAddress = accounts[0].toLowerCase();
-                document.getElementById('btnText').textContent = userAddress.slice(0,6)+'...'+userAddress.slice(-4);
-                await loadData();
-            } else disconnectWallet();
-        }
-
-        function disconnectWallet() {
-            isConnected = false;
-            document.getElementById('connectBtn').classList.remove('connected');
-            document.getElementById('btnText').textContent = 'Connect Wallet';
-            document.getElementById('actionButton').disabled = true;
-            document.getElementById('actionButton').innerHTML = '<i class="fas fa-lock"></i> CONNECT WALLET';
-            document.getElementById('approvalSteps').style.display = 'none';
-            document.getElementById('referralMiniBox').style.display = 'none';
         }
 
         async function loadData() {
             if (!isConnected || !userAddress) return;
             try {
-                const [rate, sRate, sigmaBal, usdtBal, polBal] = await Promise.all([
-                    sigmaContract.getCurrentBuyRate ? sigmaContract.getCurrentBuyRate() : sigmaContract.currentRate ? sigmaContract.currentRate() : Promise.resolve(0),
-                    sigmaContract.getCurrentSellRate ? sigmaContract.getCurrentSellRate() : sigmaContract.getSellRate ? sigmaContract.getSellRate() : Promise.resolve(0),
-                    sigmaContract.balanceOf(userAddress),
-                    usdtContract.balanceOf(userAddress),
-                    provider.getBalance(userAddress)
-                ]);
-                buyRate = parseFloat(ethers.formatUnits(rate, 6));
-                sellRate = parseFloat(ethers.formatUnits(sRate, 6));
+                // FIXED: Properly handle decimals - rates come with 6 decimals (USDT format)
+                const rawBuyRate = await sigmaContract.getCurrentBuyRate();
+                const rawSellRate = await sigmaContract.getCurrentSellRate();
+                
+                // Convert from 6 decimals to actual USDT value (divide by 1,000,000)
+                buyRate = Number(ethers.formatUnits(rawBuyRate, 6));
+                sellRate = Number(ethers.formatUnits(rawSellRate, 6));
+                
+                // Display with proper formatting - should show like 0.41315
                 document.getElementById('buyRate').textContent = buyRate.toFixed(6) + ' USDT';
                 document.getElementById('sellRate').textContent = sellRate.toFixed(6) + ' USDT';
                 document.getElementById('buyRateInr').textContent = '≈ ₹' + (buyRate * INR_RATE).toFixed(2);
                 document.getElementById('sellRateInr').textContent = '≈ ₹' + (sellRate * INR_RATE).toFixed(2);
-                const usdtBalNum = parseFloat(ethers.formatUnits(usdtBal, 6));
+                
+                // Balances
+                const sigmaBal = await sigmaContract.balanceOf(userAddress);
+                const usdtBal = await usdtContract.balanceOf(userAddress);
+                const polBal = await provider.getBalance(userAddress);
+                
                 const sigmaBalNum = parseFloat(ethers.formatEther(sigmaBal));
+                const usdtBalNum = parseFloat(ethers.formatUnits(usdtBal, 6));
                 const polBalNum = parseFloat(ethers.formatEther(polBal));
+                
                 document.getElementById('usdtBalance').textContent = usdtBalNum.toFixed(2) + ' USDT';
-                document.getElementById('sigmaBalance').textContent = sigmaBalNum.toFixed(2) + ' SIG6';
-                document.getElementById('sigmaBalanceInr').textContent = '≈ ₹' + (sigmaBalNum * sellRate * INR_RATE).toFixed(2);
+                document.getElementById('sigmaBalance').textContent = sigmaBalNum.toFixed(4) + ' SIG6';
                 document.getElementById('polBalance').textContent = polBalNum.toFixed(4) + ' POL';
-                if (sigmaBalNum > 0 && userAddress) {
-                    document.getElementById('referralMiniBox').style.display = 'flex';
-                    document.getElementById('referralMiniAddress').textContent = userAddress.slice(0,10)+'...'+userAddress.slice(-8);
-                    window.referralLink = window.location.origin + window.location.pathname + '?ref=' + userAddress;
-                } else document.getElementById('referralMiniBox').style.display = 'none';
+                
+                // Get last sell timestamp
+                try {
+                    const sellTime = await sigmaContract.lastSellTimestamp(userAddress);
+                    lastSellTimestamp = Number(sellTime);
+                } catch(e) { lastSellTimestamp = 0; }
+                
                 updateCooldownUI();
                 calculate();
             } catch (error) { console.error("Load error:", error); }
@@ -752,15 +339,8 @@
             if (sellRemaining > 0) {
                 const mins = Math.floor(sellRemaining / 60), secs = sellRemaining % 60;
                 sellBadge.innerHTML = `<i class="fas fa-hourglass-half"></i> Sell cooldown: ${mins}m ${secs}s`;
-                sellBadge.className = 'cooldown-badge cooldown-danger';
-            } else { sellBadge.innerHTML = `<i class="fas fa-check-circle" style="color:var(--success)"></i> Sell ready`; sellBadge.className = 'cooldown-badge'; }
-            const buyBadge = document.getElementById('buyCooldownBadge');
-            if (!userAddress) buyBadge.innerHTML = `<i class="fas fa-calendar-alt"></i> 30-day: --`;
-            else if (referralExpiry === 0) buyBadge.innerHTML = `<i class="fas fa-calendar-alt"></i> No active referral`;
-            else {
-                const timeLeft = referralExpiry - now;
-                if (timeLeft <= 0) { buyBadge.innerHTML = `<i class="fas fa-check-circle" style="color:var(--success)"></i> 30-day expired`; buyBadge.className = 'cooldown-badge'; }
-                else { const daysLeft = Math.ceil(timeLeft / 86400); buyBadge.innerHTML = `<i class="fas fa-exclamation-triangle"></i> 30-day: ${daysLeft}d left`; buyBadge.className = 'cooldown-badge cooldown-danger'; }
+            } else {
+                sellBadge.innerHTML = `<i class="fas fa-check-circle" style="color:var(--success)"></i> Sell ready`;
             }
         }
 
@@ -772,22 +352,16 @@
                 document.getElementById('calcInr').textContent = '0.00 INR';
                 document.getElementById('actionButton').disabled = true;
                 document.getElementById('actionButton').innerHTML = '<i class="fas fa-lock"></i> ENTER AMOUNT';
-                document.getElementById('approvalSteps').style.display = 'none';
                 return;
             }
-            if (amount > MAX_SIGMA_PER_TX) {
-                document.getElementById('actionButton').disabled = true;
-                document.getElementById('actionButton').innerHTML = `<i class="fas fa-exclamation-triangle"></i> MAX ${MAX_SIGMA_PER_TX} SIG6 PER TX`;
-                document.getElementById('approvalSteps').style.display = 'none';
-                document.getElementById('statusMessage').innerHTML = `⚠️ Maximum ${MAX_SIGMA_PER_TX} SIG6 allowed per transaction`;
-                return;
-            }
+            
             if (currentMode === 'buy') {
-                const totalUsdt = amount * buyRate * 1.01;
+                const totalUsdt = amount * buyRate * 1.01; // 1% tax
                 currentUSDTNeeded = totalUsdt;
                 document.getElementById('calcLabel').textContent = 'Total USDT to Pay:';
                 document.getElementById('calcValue').textContent = totalUsdt.toFixed(6) + ' USDT';
                 document.getElementById('calcInr').textContent = '₹' + (totalUsdt * INR_RATE).toFixed(2);
+                
                 const usdtBal = await usdtContract.balanceOf(userAddress);
                 const usdtBalNum = parseFloat(ethers.formatUnits(usdtBal, 6));
                 if (usdtBalNum < totalUsdt) {
@@ -801,6 +375,7 @@
                 document.getElementById('calcLabel').textContent = 'Total USDT to Receive:';
                 document.getElementById('calcValue').textContent = totalUsdt.toFixed(6) + ' USDT';
                 document.getElementById('calcInr').textContent = '₹' + (totalUsdt * INR_RATE).toFixed(2);
+                
                 const sigmaBal = await sigmaContract.balanceOf(userAddress);
                 const sigmaBalNum = parseFloat(ethers.formatEther(sigmaBal));
                 if (sigmaBalNum < amount) {
@@ -808,6 +383,7 @@
                     document.getElementById('actionButton').innerHTML = '<i class="fas fa-exclamation-triangle"></i> INSUFFICIENT SIG6';
                     return;
                 }
+                
                 const now = Math.floor(Date.now() / 1000);
                 const sellDiff = now - lastSellTimestamp;
                 if (sellDiff < 180) {
@@ -837,9 +413,8 @@
                 isApproved = true;
                 document.getElementById('approvalSteps').style.display = 'block';
                 document.getElementById('step1').className = 'step completed';
-                document.getElementById('step1Status').innerHTML = 'Approved: ' + allowanceNum.toFixed(2) + ' USDT';
+                document.getElementById('step1Status').innerHTML = 'Approved';
                 document.getElementById('step2').className = 'step active';
-                document.getElementById('step2Status').innerHTML = 'Ready to buy';
                 document.getElementById('actionButton').disabled = false;
                 document.getElementById('actionButton').innerHTML = '<i class="fas fa-shopping-cart"></i> BUY SIGMA';
             }
@@ -849,77 +424,155 @@
             if (!isConnected) { connectWallet(); return; }
             const amount = parseFloat(document.getElementById('amount').value);
             if (isNaN(amount) || amount <= 0) { alert("Enter valid amount"); return; }
-            if (amount > MAX_SIGMA_PER_TX) { alert(`Maximum ${MAX_SIGMA_PER_TX} SIG6 allowed per transaction`); return; }
+            
             if (currentMode === 'buy' && !isApproved) { await approveUSDT(); return; }
+            
             const btn = document.getElementById('actionButton');
             const msg = document.getElementById('statusMessage');
+            
             try {
                 if (currentMode === 'buy') {
                     const usdtWithTax = amount * buyRate * 1.01;
                     const usdtWei = ethers.parseUnits(usdtWithTax.toFixed(6), 6);
                     msg.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Buying SIGMA...';
                     btn.disabled = true;
-                    const upline = localStorage.getItem('sigma_referrer') || DEFAULT_UPLINE;
+                    const upline = DEFAULT_UPLINE;
                     const tx = await sigmaContract.buySigma(upline, usdtWei);
-                    msg.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Waiting for confirmation...';
                     await tx.wait();
-                    lastTransactionTimestamp = Math.floor(Date.now() / 1000);
-                    localStorage.setItem(`lastTx_${userAddress}`, lastTransactionTimestamp.toString());
                     msg.innerHTML = '<i class="fas fa-check-circle" style="color:var(--success)"></i> Purchase Successful!';
-                    setTimeout(async () => { await loadData(); document.getElementById('amount').value = ''; calculate(); }, 2000);
+                    setTimeout(() => { loadData(); document.getElementById('amount').value = ''; calculate(); }, 2000);
                 } else {
                     const now = Math.floor(Date.now() / 1000);
                     const sellDiff = now - lastSellTimestamp;
-                    if (sellDiff < 180) { msg.innerHTML = `<i class="fas fa-hourglass-half"></i> ⏳ Please wait ${180-sellDiff}s before selling again`; return; }
+                    if (sellDiff < 180) {
+                        msg.innerHTML = `<i class="fas fa-hourglass-half"></i> Please wait ${180-sellDiff}s before selling again`;
+                        return;
+                    }
                     const sigmaWei = ethers.parseEther(amount.toString());
                     msg.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Selling SIGMA...';
                     btn.disabled = true;
                     const tx = await sigmaContract.sellSigma(sigmaWei);
-                    msg.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Waiting for confirmation...';
                     await tx.wait();
-                    lastSellTimestamp = Math.floor(Date.now() / 1000);
-                    localStorage.setItem(`lastSell_${userAddress}`, lastSellTimestamp.toString());
                     msg.innerHTML = '<i class="fas fa-check-circle" style="color:var(--success)"></i> Sale Successful!';
-                    setTimeout(async () => { await loadData(); document.getElementById('amount').value = ''; calculate(); }, 2000);
+                    setTimeout(() => { loadData(); document.getElementById('amount').value = ''; calculate(); }, 2000);
                 }
             } catch (error) {
                 console.error(error);
-                msg.innerHTML = `<i class="fas fa-exclamation-triangle" style="color:var(--danger)"></i> ❌ Transaction failed`;
+                msg.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Transaction failed';
                 btn.disabled = false;
             }
         }
 
         async function approveUSDT() {
-            if (!isConnected) return;
             const btn = document.getElementById('actionButton');
             const msg = document.getElementById('statusMessage');
             try {
                 const usdtWei = ethers.parseUnits(currentUSDTNeeded.toFixed(6), 6);
                 btn.disabled = true;
                 btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> APPROVING...';
-                msg.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Please confirm in MetaMask...';
                 const tx = await usdtContract.approve(SIGMA_ADDRESS, usdtWei);
                 await tx.wait();
-                msg.innerHTML = '<i class="fas fa-check-circle" style="color:var(--success)"></i> USDT Approved Successfully!';
+                msg.innerHTML = '<i class="fas fa-check-circle"></i> USDT Approved!';
                 document.getElementById('step1').className = 'step completed';
-                document.getElementById('step1Status').innerHTML = 'Approved: ' + currentUSDTNeeded.toFixed(2) + ' USDT';
                 document.getElementById('step2').className = 'step active';
                 btn.disabled = false;
                 btn.innerHTML = '<i class="fas fa-shopping-cart"></i> BUY SIGMA';
                 isApproved = true;
-            } catch (error) { msg.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Approval failed'; btn.disabled = false; }
+            } catch (error) {
+                msg.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Approval failed';
+                btn.disabled = false;
+            }
         }
 
-        function setMode(mode) { currentMode = mode; document.getElementById('buyTab').className = mode==='buy'?'tab active':'tab'; document.getElementById('sellTab').className = mode==='sell'?'tab active':'tab'; document.getElementById('amount').value = ''; document.getElementById('approvalSteps').style.display = 'none'; calculate(); }
-        async function maxAmount() { if (!isConnected) return; if (currentMode === 'buy') { const usdtBal = await usdtContract.balanceOf(userAddress); const usdtNum = parseFloat(ethers.formatUnits(usdtBal, 6)); const maxSigma = usdtNum / (buyRate * 1.01); document.getElementById('amount').value = Math.min(maxSigma, MAX_SIGMA_PER_TX).toFixed(6); } else { const sigmaBal = await sigmaContract.balanceOf(userAddress); const bal = parseFloat(ethers.formatEther(sigmaBal)); document.getElementById('amount').value = Math.min(bal, MAX_SIGMA_PER_TX).toFixed(6); } calculate(); }
-        function setTransferToken(token) { transferToken = token; document.querySelectorAll('.token-opt').forEach(el => el.classList.remove('active')); event.target.classList.add('active'); updateTransferBalance(); }
-        async function updateTransferBalance() { if (!isConnected) return; let balance = 0; if (transferToken === 'SIG6') { const bal = await sigmaContract.balanceOf(userAddress); balance = parseFloat(ethers.formatEther(bal)); } else if (transferToken === 'USDT') { const bal = await usdtContract.balanceOf(userAddress); balance = parseFloat(ethers.formatUnits(bal, 6)); } else { const bal = await provider.getBalance(userAddress); balance = parseFloat(ethers.formatEther(bal)); } document.getElementById('transferBalance').textContent = `Balance: ${balance.toFixed(6)} ${transferToken}`; }
-        function maxTransfer() { const balText = document.getElementById('transferBalance').textContent; const match = balText.match(/Balance: ([\d.]+)/); if (match) document.getElementById('transferAmount').value = match[1]; }
-        function pasteAddress() { navigator.clipboard.readText().then(text => { document.getElementById('recipientAddress').value = text; }); }
-        async function executeTransfer() { if (!isConnected) return; const to = document.getElementById('recipientAddress').value.trim(); if (!ethers.isAddress(to)) { document.getElementById('transferStatus').textContent = 'Invalid address'; return; } const amount = parseFloat(document.getElementById('transferAmount').value); if (isNaN(amount) || amount <= 0) return; const btn = document.getElementById('transferButton'); btn.disabled = true; document.getElementById('transferStatus').innerHTML = '<i class="fas fa-spinner fa-spin"></i> Transferring...'; try { if (transferToken === 'SIG6') { const tx = await sigmaContract.transfer(to, ethers.parseEther(amount.toString())); await tx.wait(); } else if (transferToken === 'USDT') { const tx = await usdtContract.transfer(to, ethers.parseUnits(amount.toString(), 6)); await tx.wait(); } else { const tx = await signer.sendTransaction({ to, value: ethers.parseEther(amount.toString()) }); await tx.wait(); } document.getElementById('transferStatus').innerHTML = '<i class="fas fa-check-circle" style="color:var(--success)"></i> Transfer successful!'; setTimeout(() => { document.getElementById('transferStatus').innerHTML = ''; document.getElementById('transferAmount').value = ''; document.getElementById('recipientAddress').value = ''; updateTransferBalance(); }, 3000); } catch (error) { document.getElementById('transferStatus').innerHTML = '<i class="fas fa-exclamation-triangle"></i> Transfer failed'; } finally { btn.disabled = false; } }
+        function setMode(mode) {
+            currentMode = mode;
+            document.getElementById('buyTab').className = mode === 'buy' ? 'tab active' : 'tab';
+            document.getElementById('sellTab').className = mode === 'sell' ? 'tab active' : 'tab';
+            document.getElementById('amount').value = '';
+            document.getElementById('approvalSteps').style.display = 'none';
+            calculate();
+        }
+
+        async function maxAmount() {
+            if (!isConnected) return;
+            if (currentMode === 'buy') {
+                const usdtBal = await usdtContract.balanceOf(userAddress);
+                const usdtNum = parseFloat(ethers.formatUnits(usdtBal, 6));
+                const maxSigma = usdtNum / (buyRate * 1.01);
+                document.getElementById('amount').value = Math.min(maxSigma, MAX_SIGMA_PER_TX).toFixed(6);
+            } else {
+                const sigmaBal = await sigmaContract.balanceOf(userAddress);
+                const bal = parseFloat(ethers.formatEther(sigmaBal));
+                document.getElementById('amount').value = Math.min(bal, MAX_SIGMA_PER_TX).toFixed(6);
+            }
+            calculate();
+        }
+
+        function setTransferToken(token) {
+            transferToken = token;
+            document.querySelectorAll('.token-opt').forEach(el => el.classList.remove('active'));
+            event.target.classList.add('active');
+            updateTransferBalance();
+        }
+
+        async function updateTransferBalance() {
+            if (!isConnected) return;
+            let balance = 0;
+            if (transferToken === 'SIG6') {
+                const bal = await sigmaContract.balanceOf(userAddress);
+                balance = parseFloat(ethers.formatEther(bal));
+            } else if (transferToken === 'USDT') {
+                const bal = await usdtContract.balanceOf(userAddress);
+                balance = parseFloat(ethers.formatUnits(bal, 6));
+            } else {
+                const bal = await provider.getBalance(userAddress);
+                balance = parseFloat(ethers.formatEther(bal));
+            }
+            document.getElementById('transferBalance').textContent = `Balance: ${balance.toFixed(6)} ${transferToken}`;
+        }
+
+        function maxTransfer() {
+            const balText = document.getElementById('transferBalance').textContent;
+            const match = balText.match(/Balance: ([\d.]+)/);
+            if (match) document.getElementById('transferAmount').value = match[1];
+        }
+
+        function pasteAddress() {
+            navigator.clipboard.readText().then(text => {
+                document.getElementById('recipientAddress').value = text;
+            });
+        }
+
+        async function executeTransfer() {
+            if (!isConnected) return;
+            const to = document.getElementById('recipientAddress').value.trim();
+            if (!ethers.isAddress(to)) { document.getElementById('transferStatus').textContent = 'Invalid address'; return; }
+            const amount = parseFloat(document.getElementById('transferAmount').value);
+            if (isNaN(amount) || amount <= 0) return;
+            
+            const btn = document.getElementById('transferButton');
+            btn.disabled = true;
+            document.getElementById('transferStatus').innerHTML = '<i class="fas fa-spinner fa-spin"></i> Transferring...';
+            try {
+                if (transferToken === 'SIG6') {
+                    const tx = await sigmaContract.transfer(to, ethers.parseEther(amount.toString()));
+                    await tx.wait();
+                } else if (transferToken === 'USDT') {
+                    const tx = await usdtContract.transfer(to, ethers.parseUnits(amount.toString(), 6));
+                    await tx.wait();
+                } else {
+                    const tx = await signer.sendTransaction({ to, value: ethers.parseEther(amount.toString()) });
+                    await tx.wait();
+                }
+                document.getElementById('transferStatus').innerHTML = '<i class="fas fa-check-circle" style="color:var(--success)"></i> Transfer successful!';
+                setTimeout(() => { updateTransferBalance(); document.getElementById('transferAmount').value = ''; document.getElementById('recipientAddress').value = ''; }, 2000);
+            } catch (error) {
+                document.getElementById('transferStatus').innerHTML = '<i class="fas fa-exclamation-triangle"></i> Transfer failed';
+            }
+            btn.disabled = false;
+        }
+
         function copyContract() { navigator.clipboard.writeText(SIGMA_ADDRESS); alert("Contract address copied!"); }
-        function copyReferralMini() { if (window.referralLink) { navigator.clipboard.writeText(window.referralLink); alert("Referral link copied!"); } }
-        function copyWallet() { if (userAddress) { navigator.clipboard.writeText(userAddress); alert("Wallet address copied!"); } }
     </script>
 </body>
 </html>
