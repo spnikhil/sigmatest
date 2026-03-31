@@ -533,166 +533,48 @@
         ::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); border-radius: 4px; }
         ::-webkit-scrollbar-thumb { background: var(--gradient); border-radius: 4px; animation: rainbow 8s ease infinite; }
 
-        /* ===== MOBILE RESPONSIVE STYLES ===== */
         @media screen and (max-width: 1200px) {
-            .stats-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
-            .level1-stats {
-                grid-column: span 2;
-            }
-            
-            .card-title {
-                font-size: 20px;
-            }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .level1-stats { grid-column: span 2; }
+            .card-title { font-size: 20px; }
         }
         
         @media screen and (max-width: 768px) {
-            .container {
-                padding: 15px;
-            }
-            
-            .header h1 {
-                font-size: 32px;
-            }
-            
-            .header p {
-                font-size: 14px;
-            }
-            
-            .stats-grid {
-                grid-template-columns: 1fr;
-                gap: 15px;
-            }
-            
-            .level1-stats {
-                grid-column: span 1;
-                flex-direction: column;
-                padding: 15px;
-            }
-            
-            .level1-stat-item {
-                width: 100%;
-                border-bottom: 1px solid rgba(0,255,204,0.2);
-                padding-bottom: 15px;
-            }
-            
-            .level1-stat-item:last-child {
-                border-bottom: none;
-                padding-bottom: 0;
-            }
-            
-            .level1-stat-number {
-                font-size: 28px;
-            }
-            
-            .filters-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .filter-buttons {
-                flex-direction: column;
-            }
-            
-            .filter-btn {
-                width: 100%;
-            }
-            
-            .card-header {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            
-            .card-actions {
-                width: 100%;
-                justify-content: space-between;
-            }
-            
-            .action-btn {
-                flex: 1;
-                justify-content: center;
-                font-size: 12px;
-                padding: 8px 12px;
-            }
-            
-            .connect-btn {
-                padding: 8px 15px;
-                font-size: 12px;
-            }
-            
-            .nav-container {
-                flex-direction: column;
-            }
-            
-            .nav-btn {
-                width: 100%;
-                justify-content: center;
-            }
-            
-            .back-btn {
-                width: 100%;
-                justify-content: center;
-            }
-            
-            .stat-value {
-                font-size: 24px;
-            }
-            
-            .wallet-address {
-                font-size: 11px;
-                padding: 5px 8px;
-            }
-            
-            .results-count {
-                width: 100%;
-                text-align: center;
-            }
+            .container { padding: 15px; }
+            .header h1 { font-size: 32px; }
+            .header p { font-size: 14px; }
+            .stats-grid { grid-template-columns: 1fr; gap: 15px; }
+            .level1-stats { grid-column: span 1; flex-direction: column; padding: 15px; }
+            .level1-stat-item { width: 100%; border-bottom: 1px solid rgba(0,255,204,0.2); padding-bottom: 15px; }
+            .level1-stat-item:last-child { border-bottom: none; padding-bottom: 0; }
+            .level1-stat-number { font-size: 28px; }
+            .filters-grid { grid-template-columns: 1fr; }
+            .filter-buttons { flex-direction: column; }
+            .filter-btn { width: 100%; }
+            .card-header { flex-direction: column; align-items: flex-start; }
+            .card-actions { width: 100%; justify-content: space-between; }
+            .action-btn { flex: 1; justify-content: center; font-size: 12px; padding: 8px 12px; }
+            .connect-btn { padding: 8px 15px; font-size: 12px; }
+            .nav-container { flex-direction: column; }
+            .nav-btn { width: 100%; justify-content: center; }
+            .back-btn { width: 100%; justify-content: center; }
+            .stat-value { font-size: 24px; }
+            .wallet-address { font-size: 11px; padding: 5px 8px; }
+            .results-count { width: 100%; text-align: center; }
         }
         
         @media screen and (max-width: 480px) {
-            .header h1 {
-                font-size: 24px;
-            }
-            
-            .stat-card {
-                padding: 15px;
-            }
-            
-            .stat-value {
-                font-size: 20px;
-            }
-            
-            .stat-title {
-                font-size: 12px;
-            }
-            
-            .card-title {
-                font-size: 18px;
-            }
-            
-            .card-actions {
-                flex-wrap: wrap;
-            }
-            
-            .action-btn {
-                width: 100%;
-                margin-bottom: 5px;
-            }
-            
-            .level-badge {
-                min-width: 60px;
-                font-size: 11px;
-                padding: 4px 8px;
-            }
-            
-            .crown-badge {
-                margin-left: 0;
-                margin-top: 5px;
-            }
+            .header h1 { font-size: 24px; }
+            .stat-card { padding: 15px; }
+            .stat-value { font-size: 20px; }
+            .stat-title { font-size: 12px; }
+            .card-title { font-size: 18px; }
+            .card-actions { flex-wrap: wrap; }
+            .action-btn { width: 100%; margin-bottom: 5px; }
+            .level-badge { min-width: 60px; font-size: 11px; padding: 4px 8px; }
+            .crown-badge { margin-left: 0; margin-top: 5px; }
         }
 
-        /* Table horizontal scroll hint */
         .table-responsive::after {
             content: '← Swipe to scroll →';
             display: none;
@@ -705,9 +587,7 @@
         }
         
         @media screen and (max-width: 1200px) {
-            .table-responsive::after {
-                display: block;
-            }
+            .table-responsive::after { display: block; }
         }
     </style>
 </head>
@@ -731,7 +611,6 @@
             <p>Your Team Network • Live Balances</p>
         </div>
         
-        <!-- Stats Grid -->
         <div class="stats-grid">
             <div class="stat-card">
                 <div class="stat-title"><i class="fas fa-users"></i> Total Team</div>
@@ -758,7 +637,6 @@
             </div>
         </div>
         
-        <!-- Level 1 Detailed Stats -->
         <div class="level1-stats" id="level1-stats" style="display: none;">
             <div class="level1-stat-item">
                 <div class="level1-stat-label">TOTAL LEVEL 1</div>
@@ -845,943 +723,22 @@
     </div>
 
     <script>
-        const SIGMA_ADDR = "0x068Aaba73Fd754F21140E2F13DA177ce7251A299";
-        const CREATOR_WALLET = "0xb579377DDe2C03b2b46B5b12453F4dbAddB06f2E";
+        // ===== UPDATED CONTRACT ADDRESS =====
+        const SIGMA_ADDR = "0x846339d474AE98b219111eb969E27b6317aE5852";
+        const CREATOR_WALLET = "0xDf572e4D93582a9b2EEA65BDb0C588FB5fD4EC4b".toLowerCase();
         
+        // ===== UPDATED ABI (minimal required functions) =====
         const SIGMA_ABI = [
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "_user",
-				"type": "address"
-			},
-			{
-				"internalType": "address",
-				"name": "_upline",
-				"type": "address"
-			}
-		],
-		"name": "adminSetUpline",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "_usdt",
-				"type": "address"
-			},
-			{
-				"internalType": "address",
-				"name": "_creator",
-				"type": "address"
-			}
-		],
-		"stateMutability": "nonpayable",
-		"type": "constructor"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "spender",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "allowance",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "needed",
-				"type": "uint256"
-			}
-		],
-		"name": "ERC20InsufficientAllowance",
-		"type": "error"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "sender",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "balance",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "needed",
-				"type": "uint256"
-			}
-		],
-		"name": "ERC20InsufficientBalance",
-		"type": "error"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "approver",
-				"type": "address"
-			}
-		],
-		"name": "ERC20InvalidApprover",
-		"type": "error"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "receiver",
-				"type": "address"
-			}
-		],
-		"name": "ERC20InvalidReceiver",
-		"type": "error"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "sender",
-				"type": "address"
-			}
-		],
-		"name": "ERC20InvalidSender",
-		"type": "error"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "spender",
-				"type": "address"
-			}
-		],
-		"name": "ERC20InvalidSpender",
-		"type": "error"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "owner",
-				"type": "address"
-			}
-		],
-		"name": "OwnableInvalidOwner",
-		"type": "error"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "account",
-				"type": "address"
-			}
-		],
-		"name": "OwnableUnauthorizedAccount",
-		"type": "error"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "_to",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_amount",
-				"type": "uint256"
-			}
-		],
-		"name": "p2pTransfer",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "ReentrancyGuardReentrantCall",
-		"type": "error"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "token",
-				"type": "address"
-			}
-		],
-		"name": "SafeERC20FailedOperation",
-		"type": "error"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "owner",
-				"type": "address"
-			},
-			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "spender",
-				"type": "address"
-			},
-			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "value",
-				"type": "uint256"
-			}
-		],
-		"name": "Approval",
-		"type": "event"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "spender",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "value",
-				"type": "uint256"
-			}
-		],
-		"name": "approve",
-		"outputs": [
-			{
-				"internalType": "bool",
-				"name": "",
-				"type": "bool"
-			}
-		],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "user",
-				"type": "address"
-			},
-			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "usdtAmount",
-				"type": "uint256"
-			},
-			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "sigmaAmount",
-				"type": "uint256"
-			},
-			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "rate",
-				"type": "uint256"
-			},
-			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "timestamp",
-				"type": "uint256"
-			}
-		],
-		"name": "Bought",
-		"type": "event"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "_usdtAmount",
-				"type": "uint256"
-			},
-			{
-				"internalType": "address",
-				"name": "_upline",
-				"type": "address"
-			}
-		],
-		"name": "buy",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "from",
-				"type": "address"
-			},
-			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "to",
-				"type": "address"
-			},
-			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "amount",
-				"type": "uint256"
-			},
-			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "level",
-				"type": "uint256"
-			},
-			{
-				"indexed": false,
-				"internalType": "string",
-				"name": "reason",
-				"type": "string"
-			},
-			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "timestamp",
-				"type": "uint256"
-			}
-		],
-		"name": "IncomeLapsed",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "previousOwner",
-				"type": "address"
-			},
-			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "newOwner",
-				"type": "address"
-			}
-		],
-		"name": "OwnershipTransferred",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "from",
-				"type": "address"
-			},
-			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "to",
-				"type": "address"
-			},
-			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "amount",
-				"type": "uint256"
-			},
-			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "level",
-				"type": "uint256"
-			},
-			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "timestamp",
-				"type": "uint256"
-			}
-		],
-		"name": "ReferralPaid",
-		"type": "event"
-	},
-	{
-		"inputs": [],
-		"name": "renounceOwnership",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "_sigmaAmount",
-				"type": "uint256"
-			}
-		],
-		"name": "sell",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "user",
-				"type": "address"
-			},
-			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "sigmaAmount",
-				"type": "uint256"
-			},
-			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "usdtAmount",
-				"type": "uint256"
-			},
-			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "rate",
-				"type": "uint256"
-			},
-			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "timestamp",
-				"type": "uint256"
-			}
-		],
-		"name": "Sold",
-		"type": "event"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "to",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "value",
-				"type": "uint256"
-			}
-		],
-		"name": "transfer",
-		"outputs": [
-			{
-				"internalType": "bool",
-				"name": "",
-				"type": "bool"
-			}
-		],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "from",
-				"type": "address"
-			},
-			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "to",
-				"type": "address"
-			},
-			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "value",
-				"type": "uint256"
-			}
-		],
-		"name": "Transfer",
-		"type": "event"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "from",
-				"type": "address"
-			},
-			{
-				"internalType": "address",
-				"name": "to",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "value",
-				"type": "uint256"
-			}
-		],
-		"name": "transferFrom",
-		"outputs": [
-			{
-				"internalType": "bool",
-				"name": "",
-				"type": "bool"
-			}
-		],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "newOwner",
-				"type": "address"
-			}
-		],
-		"name": "transferOwnership",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "owner",
-				"type": "address"
-			},
-			{
-				"internalType": "address",
-				"name": "spender",
-				"type": "address"
-			}
-		],
-		"name": "allowance",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "ath",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "atl",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "account",
-				"type": "address"
-			}
-		],
-		"name": "balanceOf",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "BASE_RATE",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "creatorWallet",
-		"outputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "currentRate",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"name": "dailyHistory",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "open",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "high",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "low",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "close",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "timestamp",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "decimals",
-		"outputs": [
-			{
-				"internalType": "uint8",
-				"name": "",
-				"type": "uint8"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "getSellRate",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "INCREMENT",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "_upline",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_level",
-				"type": "uint256"
-			}
-		],
-		"name": "isLevelUnlocked",
-		"outputs": [
-			{
-				"internalType": "bool",
-				"name": "",
-				"type": "bool"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "lastHistoryDay",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"name": "levelRewards",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "MAX_SIGMA_BUY",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "MIN_FOR_RENEWAL",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "MIN_HOLD_VALUE",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "name",
-		"outputs": [
-			{
-				"internalType": "string",
-				"name": "",
-				"type": "string"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "owner",
-		"outputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "symbol",
-		"outputs": [
-			{
-				"internalType": "string",
-				"name": "",
-				"type": "string"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "totalSupply",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "usdt",
-		"outputs": [
-			{
-				"internalType": "contract IERC20",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"name": "users",
-		"outputs": [
-			{
-				"internalType": "address",
-				"name": "upline",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "referralExpiry",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "totalReferralEarned",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "lastBuyTimestamp",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "lastActionBlock",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "qualifiedDirectsCount",
-				"type": "uint256"
-			},
-			{
-				"internalType": "bool",
-				"name": "hasBought",
-				"type": "bool"
-			},
-			{
-				"internalType": "bool",
-				"name": "isInitialized",
-				"type": "bool"
-			},
-			{
-				"internalType": "bool",
-				"name": "isCurrentlyQualified",
-				"type": "bool"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	}
-];
+            "function currentRate() view returns (uint256)",
+            "function getSellRate() view returns (uint256)",
+            "function balanceOf(address) view returns (uint256)",
+            "function creator() view returns (address)",
+            "function usdt() view returns (address)",
+            "function totalSupply() view returns (uint256)",
+            "function users(address) view returns (address upline, uint256 directCount, uint256 lastBuyTimestamp, uint256 totalReferralEarned, uint256 lastActionTime, bool hasBoughtBefore)",
+            "event Transfer(address indexed from, address indexed to, uint256 value)",
+            "event Bought(address indexed user, uint256 usdtAmount, uint256 sigmaAmount, uint256 rate, uint256 timestamp)"
+        ];
 
         let provider, signer, userAddress, sigmaContract;
         let teamMembers = [];
@@ -1839,10 +796,8 @@
             }
         }
 
-        // ===== COMPLETE FIXED: Load all addresses including admin added users =====
         async function loadAllAddresses() {
             try {
-                // 1. Events se addresses collect karo
                 const transferFilter = sigmaContract.filters.Transfer();
                 const transferEvents = await sigmaContract.queryFilter(transferFilter, 0, 'latest');
                 
@@ -1862,16 +817,13 @@
                 
                 boughtEvents.forEach(e => addressSet.add(e.args.user.toLowerCase()));
                 
-                // 2. Sab addresses ko array me convert karo
                 let addresses = Array.from(addressSet);
                 console.log(`📊 Found ${addresses.length} addresses from events`);
                 
-                // 3. Har address ke upline ko bhi add karo recursively
                 const allUplines = new Set();
                 let previousSize = 0;
                 let currentSize = addresses.length;
                 
-                // Recursive upline discovery - tab tak chalao jab tak naye upline milna band na ho jayein
                 while (previousSize !== currentSize) {
                     previousSize = currentSize;
                     
@@ -1892,13 +844,10 @@
                     allUplines.forEach(upline => addressSet.add(upline));
                     addresses = Array.from(addressSet);
                     currentSize = addresses.length;
-                    
-                    console.log(`📊 After upline discovery: ${currentSize} addresses`);
                 }
                 
-                console.log(`📊 Total unique addresses after including all uplines: ${addresses.length}`);
+                console.log(`📊 Total unique addresses: ${addresses.length}`);
                 
-                // 5. Ab sab addresses ka data fetch karo
                 allUsersData = [];
                 const batchSize = 50;
                 
@@ -1914,44 +863,33 @@
                             const balance = parseFloat(ethers.formatEther(balanceBN));
                             
                             let upline = "0x0000000000000000000000000000000000000000";
-                            let qualifiedDirectsCount = 0;
+                            let directCount = 0;
                             let lastBuyTimestamp = 0;
-                            let hasBought = false;
-                            let isInitialized = false;
+                            let hasBoughtBefore = false;
                             
                             if (userStruct) {
                                 upline = userStruct.upline?.toLowerCase() || "0x0000000000000000000000000000000000000000";
-                                qualifiedDirectsCount = Number(userStruct.qualifiedDirectsCount);
+                                directCount = Number(userStruct.directCount);
                                 lastBuyTimestamp = Number(userStruct.lastBuyTimestamp);
-                                hasBought = userStruct.hasBought;
-                                isInitialized = userStruct.isInitialized;
+                                hasBoughtBefore = userStruct.hasBoughtBefore;
                             }
-                            
-                            // Calculate total directs count (approximation - we can't get full array length without extra ABI)
-                            // For now, we'll use qualifiedDirectsCount as base and estimate
-                            // In a perfect world, we'd have a getDirectsCount function
-                            const totalDirectsCount = qualifiedDirectsCount; // This will be updated if we can fetch more
                             
                             return { 
                                 address: addr, 
                                 balance, 
                                 upline, 
-                                qualifiedDirectsCount,
-                                totalDirectsCount,
+                                directCount,
                                 lastBuyTimestamp,
-                                hasBought,
-                                isInitialized
+                                hasBoughtBefore
                             };
                         } catch {
                             return { 
                                 address: addr, 
                                 balance: 0, 
                                 upline: "0x0000000000000000000000000000000000000000", 
-                                qualifiedDirectsCount: 0,
-                                totalDirectsCount: 0,
+                                directCount: 0,
                                 lastBuyTimestamp: 0,
-                                hasBought: false,
-                                isInitialized: false
+                                hasBoughtBefore: false
                             };
                         }
                     });
@@ -1963,8 +901,6 @@
                 }
                 
                 console.log(`✅ Final data loaded for ${allUsersData.length} addresses`);
-                console.log(`✅ Users with upline: ${allUsersData.filter(u => u.upline !== "0x0000000000000000000000000000000000000000").length}`);
-                console.log(`✅ Users with balance > 0: ${allUsersData.filter(u => u.balance > 0).length}`);
                 
             } catch (error) {
                 console.error("Error loading addresses:", error);
@@ -1975,15 +911,13 @@
             if (currentLevel > maxLevel) return [];
             
             const members = [];
-            // Find all users whose upline is startAddress - this includes ALL members
             const directDownline = allUsersData.filter(u => u.upline === startAddress);
             
             for (const member of directDownline) {
                 members.push({ 
                     ...member, 
                     level: currentLevel,
-                    // Use qualifiedDirectsCount for display, but note that this only counts active directs
-                    directCount: member.qualifiedDirectsCount
+                    directCount: member.directCount
                 });
                 const subMembers = getDownline(member.address, currentLevel + 1, maxLevel);
                 members.push(...subMembers);
@@ -1997,10 +931,10 @@
             
             try {
                 document.getElementById('team-body').innerHTML = `
-                    <tr><td colspan="10" class="loading">
+                    叭<td colspan="10" class="loading">
                         <i class="fas fa-spinner fa-spin"></i><br>
                         Loading your team structure...
-                    </td></tr>
+                    </td>`
                 `;
 
                 try {
@@ -2013,12 +947,10 @@
                     document.getElementById('sell-rate').textContent = `Sell: ${sellRate.toFixed(4)} USDT`;
                 } catch (e) {}
 
-                // Get ALL downline members
                 teamMembers = getDownline(userAddress, 1, 10);
                 
                 console.log(`✅ Found ${teamMembers.length} team members under your wallet`);
                 
-                // Add computed properties
                 teamMembers = teamMembers.map(m => ({
                     ...m,
                     usdtValue: m.balance * sellRate,
@@ -2035,10 +967,10 @@
             } catch (error) {
                 console.error("Error loading team:", error);
                 document.getElementById('team-body').innerHTML = `
-                    <tr><td colspan="10" class="empty-state">
+                    叭<td colspan="10" class="empty-state">
                         <i class="fas fa-exclamation-triangle"></i><br>
                         Error: ${error.message}
-                    </td></tr>
+                    </td>`
                 `;
             } finally {
                 isLoading = false;
@@ -2061,7 +993,6 @@
             document.getElementById('team-sigma').textContent = totalSigma.toFixed(2) + ' SIG6';
             document.getElementById('team-sigma-usdt').innerHTML = '$' + totalUsdt.toFixed(2) + ' USDT';
             
-            // Level 1 detailed stats
             const level1Members = teamMembers.filter(m => m.level === 1);
             const level1Active = level1Members.filter(m => m.isActive).length;
             const level1Inactive = level1Members.filter(m => !m.isActive).length;
@@ -2125,7 +1056,7 @@
                     });
                 }
                 
-                const crownHtml = member.qualifiedDirectsCount >= 10 ? 
+                const crownHtml = member.directCount >= 10 ? 
                     `<span class="crown-icon"><i class="fas fa-crown"></i></span>` : '';
                 
                 const addressDisplay = `
@@ -2142,9 +1073,8 @@
                 const statusClass = member.isActive ? 'level-1' : 'level-5';
                 const statusText = member.isActive ? 'Active' : 'Inactive';
                 
-                // Directs display with qualified count
-                const directsDisplay = member.qualifiedDirectsCount > 0 ? 
-                    `${member.qualifiedDirectsCount} <span class="qualified-badge">(qualified)</span>` : 
+                const directsDisplay = member.directCount > 0 ? 
+                    `${member.directCount} <span class="qualified-badge">(directs)</span>` : 
                     '0';
                 
                 html += `<tr>
@@ -2159,8 +1089,8 @@
                     <td>${dateDisplay}</td>
                     <td><span class="wallet-address" style="font-size:12px">${uplineShort}</span></td>
                     <td style="text-align: center;">
-                        ${member.qualifiedDirectsCount} 
-                        ${member.qualifiedDirectsCount >= 10 ? '<i class="fas fa-crown" style="color:gold; margin-left:5px;"></i>' : ''}
+                        ${member.directCount} 
+                        ${member.directCount >= 10 ? '<i class="fas fa-crown" style="color:gold; margin-left:5px;"></i>' : ''}
                     </td>
                     <td><span class="level-badge ${statusClass}">${statusText}</span></td>
                     <td><button class="action-btn" style="padding:6px 12px" onclick="viewMember('${member.address}')"><i class="fas fa-eye"></i></button></td>
@@ -2230,15 +1160,15 @@
         
         function viewMember(addr) { 
             const m = teamMembers.find(m => m.address === addr);
-            if(m) alert(`Member: ${addr}\nLevel: ${m.level}\nBalance: ${m.balance.toFixed(2)} SIG6\nValue: $${m.usdtValue.toFixed(2)}\nQualified Directs: ${m.qualifiedDirectsCount}\nStatus: ${m.isActive ? 'Active' : 'Inactive'}`);
+            if(m) alert(`Member: ${addr}\nLevel: ${m.level}\nBalance: ${m.balance.toFixed(2)} SIG6\nValue: $${m.usdtValue.toFixed(2)}\nDirects: ${m.directCount}\nStatus: ${m.isActive ? 'Active' : 'Inactive'}`);
         }
 
         function exportData() {
             if (!teamMembers.length) return;
-            let csv = "Level,Address,Balance (SIG6),USDT Value,Status,Join Date,Upline,Qualified Directs\n";
+            let csv = "Level,Address,Balance (SIG6),USDT Value,Status,Join Date,Upline,Directs\n";
             teamMembers.forEach(m => {
                 const joinDate = m.lastBuyTimestamp > 0 ? new Date(m.lastBuyTimestamp * 1000).toLocaleString() : '';
-                csv += `${m.level},${m.address},${m.balance.toFixed(2)},${m.usdtValue.toFixed(2)},${m.isActive ? 'Active' : 'Inactive'},${joinDate},${m.upline},${m.qualifiedDirectsCount}\n`;
+                csv += `${m.level},${m.address},${m.balance.toFixed(2)},${m.usdtValue.toFixed(2)},${m.isActive ? 'Active' : 'Inactive'},${joinDate},${m.upline},${m.directCount}\n`;
             });
             const blob = new Blob([csv], { type: 'text/csv' });
             const url = URL.createObjectURL(blob);
