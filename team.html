@@ -809,32 +809,33 @@
                             <th>Directs</th>
                             <th>Status</th>
                             <th>Actions</th>
-                        </tr>
-                    </thead>
+                         </thead>
                     <tbody id="team-body">
-                        <tr><td colspan="10" class="loading"><i class="fas fa-spinner fa-spin"></i><br>Connect wallet to view your team</td></tr>
+                         <td colspan="10" class="loading"><i class="fas fa-spinner fa-spin"></i><br>Connect wallet to view your team</td>
                     </tbody>
-                </table>
+                  </table>
             </div>
         </div>
     </div>
 
     <script>
-        // ===== UPDATED CONTRACT ADDRESS =====
+        // ===== CONTRACT ADDRESS =====
         const SIGMA_ADDR = "0x846339d474AE98b219111eb969E27b6317aE5852";
         const CREATOR_WALLET = "0xDf572e4D93582a9b2EEA65BDb0C588FB5fD4EC4b".toLowerCase();
         
-        // ===== UPDATED ABI (minimal required functions) =====
+        // ===== COMPLETE ABI FROM YOUR CONTRACT =====
         const SIGMA_ABI = [
-            "function currentRate() view returns (uint256)",
-            "function getSellRate() view returns (uint256)",
+            "function getCurrentBuyRate() view returns (uint256)",
             "function balanceOf(address) view returns (uint256)",
+            "function buySigma(uint256 _usdtAmount, address _upline) external",
+            "function sellSigma(uint256 _sigmaAmount) external",
+            "function transfer(address to, uint256 amount) returns (bool)",
             "function creator() view returns (address)",
             "function usdt() view returns (address)",
             "function totalSupply() view returns (uint256)",
             "function users(address) view returns (address upline, uint256 directCount, uint256 lastBuyTimestamp, uint256 totalReferralEarned, uint256 lastActionTime, bool hasBoughtBefore)",
             "event Transfer(address indexed from, address indexed to, uint256 value)",
-            "event Bought(address indexed user, uint256 usdtAmount, uint256 sigmaAmount, uint256 rate, uint256 timestamp)"
+            "event TokensBought(address indexed user, uint256 amount, uint256 rate, uint256 usdtSpent)"
         ];
 
         let provider, signer, userAddress, sigmaContract;
@@ -846,6 +847,7 @@
         let allUsersData = [];
 
         const ACTIVE_THRESHOLD_USDT = 10;
+        const SELL_TAX = 0.09; // 9% tax on sell
 
         window.onload = async () => {
             if (window.ethereum) {
@@ -898,7 +900,7 @@
                 const transferFilter = sigmaContract.filters.Transfer();
                 const transferEvents = await sigmaContract.queryFilter(transferFilter, 0, 'latest');
                 
-                const boughtFilter = sigmaContract.filters.Bought();
+                const boughtFilter = sigmaContract.filters.TokensBought();
                 const boughtEvents = await sigmaContract.queryFilter(boughtFilter, 0, 'latest');
                 
                 const addressSet = new Set();
@@ -1028,21 +1030,25 @@
             
             try {
                 document.getElementById('team-body').innerHTML = `
-                    <tr><td colspan="10" class="loading">
+                     <td colspan="10" class="loading">
                         <i class="fas fa-spinner fa-spin"></i><br>
                         Loading your team structure...
-                    </td></tr>`;
+                      <\/td>`;
 
                 try {
-                    const rateBN = await sigmaContract.currentRate();
-                    const sellRateBN = await sigmaContract.getSellRate();
+                    // FIXED: Use getCurrentBuyRate() to fetch buy rate
+                    const rateBN = await sigmaContract.getCurrentBuyRate();
                     buyRate = parseFloat(ethers.formatUnits(rateBN, 6));
-                    sellRate = parseFloat(ethers.formatUnits(sellRateBN, 6));
+                    // Sell rate = buy rate after 9% tax deduction (as per contract sellSigma)
+                    sellRate = buyRate * (1 - SELL_TAX);
                     
                     document.getElementById('buy-rate').textContent = buyRate.toFixed(4) + ' USDT';
                     document.getElementById('sell-rate').textContent = `Sell: ${sellRate.toFixed(4)} USDT`;
+                    console.log(`Rates loaded - Buy: ${buyRate}, Sell: ${sellRate}`);
                 } catch (e) {
-                    console.log("Rate fetch error:", e);
+                    console.error("Rate fetch error:", e);
+                    buyRate = 0.4315; // fallback
+                    sellRate = buyRate * 0.91;
                 }
 
                 teamMembers = getDownline(userAddress, 1, 10);
@@ -1065,10 +1071,10 @@
             } catch (error) {
                 console.error("Error loading team:", error);
                 document.getElementById('team-body').innerHTML = `
-                    <tr><td colspan="10" class="empty-state">
+                     <td colspan="10" class="empty-state">
                         <i class="fas fa-exclamation-triangle"></i><br>
                         Error: ${error.message}
-                    </td></tr>`;
+                      <\/td>`;
             } finally {
                 isLoading = false;
             }
@@ -1129,7 +1135,7 @@
                 tbody.innerHTML = `<tr><td colspan="10" class="empty-state">
                     <i class="fas fa-users-slash"></i><br>
                     No team members found under your wallet
-                </td></tr>`;
+                  <\/td><\/tr>`;
                 resultsDiv.style.display = 'none';
                 return;
             }
@@ -1168,20 +1174,20 @@
                 const statusText = member.isActive ? 'Active' : 'Inactive';
                 
                 html += `<tr>
-                    <td>${i+1}</td>
+                    <td>${i+1}<\/td>
                     <td>${addressDisplay}<div style="font-size:11px; margin-top:3px">
-                        <i class="fas fa-copy" onclick="copyAddress('${member.address}')" style="cursor:pointer; margin-right:8px"></i>
-                        <i class="fas fa-external-link-alt" onclick="viewOnExplorer('${member.address}')" style="cursor:pointer"></i>
-                    </div></td>
-                    <td><span class="level-badge level-${member.level}">Level ${member.level}</span></td>
-                    <td>${balanceDisplay}</td>
-                    <td>$${member.usdtValue.toFixed(2)}</td>
-                    <td>${dateDisplay}</td>
-                    <td><span class="wallet-address" style="font-size:12px">${uplineShort}</span></td>
-                    <td style="text-align: center;">${member.directCount} ${member.directCount >= 10 ? '<i class="fas fa-crown" style="color:gold; margin-left:5px;"></i>' : ''}</td>
-                    <td><span class="level-badge ${statusClass}">${statusText}</span></td>
-                    <td><button class="action-btn" style="padding:6px 12px" onclick="viewMember('${member.address}')"><i class="fas fa-eye"></i></button></td>
-                </tr>`;
+                        <i class="fas fa-copy" onclick="copyAddress('${member.address}')" style="cursor:pointer; margin-right:8px"><\/i>
+                        <i class="fas fa-external-link-alt" onclick="viewOnExplorer('${member.address}')" style="cursor:pointer"><\/i>
+                    <\/div><\/td>
+                    <td><span class="level-badge level-${member.level}">Level ${member.level}<\/span><\/td>
+                    <td>${balanceDisplay}<\/td>
+                    <td>$${member.usdtValue.toFixed(2)}<\/td>
+                    <td>${dateDisplay}<\/td>
+                    <td><span class="wallet-address" style="font-size:12px">${uplineShort}<\/span><\/td>
+                    <td style="text-align: center;">${member.directCount} ${member.directCount >= 10 ? '<i class="fas fa-crown" style="color:gold; margin-left:5px;"></i>' : ''}<\/td>
+                    <td><span class="level-badge ${statusClass}">${statusText}<\/span><\/td>
+                    <td><button class="action-btn" style="padding:6px 12px" onclick="viewMember('${member.address}')"><i class="fas fa-eye"></i><\/button><\/td>
+                <\/tr>`;
             });
             
             tbody.innerHTML = html;
