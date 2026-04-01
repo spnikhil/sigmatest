@@ -156,7 +156,6 @@
         
         .calc-box { background:rgba(0,255,204,0.05); border:1px dashed var(--primary); border-radius:16px; padding:20px; font-size:14px; margin-bottom:20px; min-height:100px; }
         .row { display:flex; justify-content:space-between; margin-bottom:10px; }
-        .tax-info { font-size:11px; color:#ffaa00; margin-top:8px; padding-top:8px; border-top:1px dashed rgba(0,255,204,0.3); }
         
         .action-btn { width:100%; padding:20px; border-radius:16px; border:none; font-weight:800; font-size:17px; cursor:pointer; transition:all 0.3s; margin-top:10px; text-transform:uppercase; background:var(--gradient); background-size:400% 400%; color:#000; animation:rainbow 8s ease infinite; }
         .action-btn:hover { transform:translateY(-3px); box-shadow:0 8px 25px rgba(0,255,204,0.4); }
@@ -368,10 +367,10 @@
                 
                 <div class="tabs">
                     <div class="tab active" onclick="setMode('buy')" id="buyTab">
-                        <i class="fas fa-shopping-cart"></i> BUY <span style="font-size:10px;">(5% tax)</span>
+                        <i class="fas fa-shopping-cart"></i> BUY
                     </div>
                     <div class="tab" onclick="setMode('sell')" id="sellTab">
-                        <i class="fas fa-coins"></i> SELL <span style="font-size:10px;">(9% tax)</span>
+                        <i class="fas fa-coins"></i> SELL
                     </div>
                 </div>
                 
@@ -389,11 +388,6 @@
                     <div class="row" id="calcTotalRow">
                         <span id="calcLabel">Total USDT to Pay:</span>
                         <span id="calcValue" style="color:var(--primary); font-weight:800">0.00 USDT</span>
-                    </div>
-                    <div class="tax-info" id="taxInfo"></div>
-                    <div class="row">
-                        <span>≈ INR:</span>
-                        <span id="calcInr" style="color:#ffaa00">0.00 INR</span>
                     </div>
                     <div class="row" id="uplineRow">
                         <span style="color:#888">Upline:</span>
@@ -439,7 +433,7 @@
                         <span><i class="fas fa-coins"></i> SIG6 Balance:</span>
                         <div class="balance-info">
                             <span id="sigmaBalance">--</span>
-                            <span id="sigmaBalanceInr" class="balance-inr">--</span>
+                            <span id="sigmaBalanceInr" class="balance-inr">(Approx ₹--)</span>
                         </div>
                     </div>
                     <div class="balance-item">
@@ -465,9 +459,9 @@
                     <button class="menu-btn" onclick="window.location.href='income.html'"><i class="fas fa-chart-line"></i><div><div>Income</div><div style="font-size:12px; color:#aaa;">Rewards report</div></div></button>
                     <button class="menu-btn" onclick="window.location.href='buy_sell.html'"><i class="fas fa-exchange-alt"></i><div><div>Buy/Sell History</div><div style="font-size:12px; color:#aaa;">Complete Open/Close report</div></div></button>
                     <button class="menu-btn" onclick="window.location.href='transfer.html'"><i class="fas fa-history"></i><div><div>Transfers</div><div style="font-size:12px; color:#aaa;">P2P history</div></div></button>
-                    <button class="menu-btn" onclick="alert('Price History - Coming soon')"><i class="fas fa-chart-line"></i><div><div>Price History</div><div style="font-size:12px; color:#aaa;">Rate & volume history</div></div></button>
-                    <button class="menu-btn" onclick="alert('Utility - Coming soon')"><i class="fas fa-cogs"></i><div><div>Utility</div><div style="font-size:12px; color:#aaa;">Tools & features</div></div></button>
-                    <button class="menu-btn" onclick="alert('Details - Coming soon')"><i class="fas fa-crown"></i><div><div>Details</div><div style="font-size:12px; color:#aaa;">Official SIGMA Details</div></div></button>
+                    <button class="menu-btn" onclick="window.location.href='price.html'"><i class="fas fa-chart-line"></i><div><div>Price History</div><div style="font-size:12px; color:#aaa;">Rate & volume history</div></div></button>
+                    <button class="menu-btn" onclick="window.location.href='utility.html'"><i class="fas fa-cogs"></i><div><div>Utility</div><div style="font-size:12px; color:#aaa;">Tools & features</div></div></button>
+                    <button class="menu-btn" onclick="window.location.href='plan.html'"><i class="fas fa-crown"></i><div><div>Details</div><div style="font-size:12px; color:#aaa;">Official SIGMA Details</div></div></button>
                 </div>
             </div>
             
@@ -487,7 +481,7 @@
                     <span class="max-btn" onclick="maxTransfer()">MAX</span>
                 </div>
                 <input type="number" id="transferAmount" placeholder="0.00" style="font-size:28px; padding:10px 0; background:transparent; border:none; color:white; outline:none; width:100%;" step="any">
-                <button class="transfer-btn" id="transferButton" onclick="executeTransfer()">
+                <button class="transfer-btn" id="transferButton" onclick="window.location.href='transfer.html'">
                     <i class="fas fa-paper-plane"></i> TRANSFER
                 </button>
                 <div style="font-size:12px; margin-top:10px; color:#aaa" id="transferStatus"></div>
@@ -663,7 +657,7 @@
                 document.getElementById('usdtBalance').textContent = parseFloat(ethers.formatUnits(usdtBal, 6)).toFixed(2) + ' USDT';
                 const sigmaBalanceNum = parseFloat(ethers.formatEther(sigmaBal));
                 document.getElementById('sigmaBalance').textContent = sigmaBalanceNum.toFixed(2) + ' SIG6';
-                document.getElementById('sigmaBalanceInr').textContent = '≈ ₹' + (sigmaBalanceNum * sellRate * INR_RATE).toFixed(2);
+                document.getElementById('sigmaBalanceInr').textContent = '(Approx ₹' + (sigmaBalanceNum * sellRate * INR_RATE).toFixed(2) + ')';
                 document.getElementById('polBalance').textContent = parseFloat(ethers.formatEther(polBal)).toFixed(4) + ' POL';
                 
                 if (sigmaBalanceNum > 0 && userAddress) {
@@ -726,12 +720,9 @@
         async function calculate() {
             if (!isConnected) return;
             const amount = parseFloat(document.getElementById('amount').value);
-            const taxInfo = document.getElementById('taxInfo');
             
             if (isNaN(amount) || amount <= 0) {
                 document.getElementById('calcValue').textContent = '0.00 USDT';
-                document.getElementById('calcInr').textContent = '0.00 INR';
-                taxInfo.innerHTML = '';
                 document.getElementById('actionButton').disabled = true;
                 return;
             }
@@ -746,28 +737,9 @@
                 const sigmaDesired = amount;
                 const baseUsdt = sigmaDesired * buyRate;
                 currentUSDTNeeded = baseUsdt / (1 - BUY_TAX);
-                const taxAmount = currentUSDTNeeded * BUY_TAX;
-                const netForMint = currentUSDTNeeded - taxAmount;
-                const sigmaReceived = netForMint / buyRate;
                 
                 document.getElementById('calcLabel').textContent = '💰 You Pay:';
                 document.getElementById('calcValue').textContent = currentUSDTNeeded.toFixed(6) + ' USDT';
-                document.getElementById('calcInr').textContent = '₹' + (currentUSDTNeeded * INR_RATE).toFixed(2);
-                
-                let bonusHtml = '';
-                if (!hasBoughtBefore) {
-                    const icoBonus = sigmaReceived * 0.10;
-                    bonusHtml = `<div style="margin-top:5px;">🎉 ICO BONUS (First Purchase): <span style="color:var(--success);">+${icoBonus.toFixed(6)} SIG6</span></div>`;
-                }
-                
-                taxInfo.innerHTML = `
-                    <div>📊 <span style="color:var(--primary);">CONTRACT BREAKDOWN:</span></div>
-                    <div>💸 Total Payment: ${currentUSDTNeeded.toFixed(6)} USDT</div>
-                    <div>🏦 5% Tax to Treasury: <span style="color:#ffaa00;">- ${taxAmount.toFixed(6)} USDT</span></div>
-                    <div>✨ Net for Minting: ${netForMint.toFixed(6)} USDT</div>
-                    <div>🎯 SIGMA Received: <span style="color:var(--primary);">${sigmaReceived.toFixed(6)} SIG6</span> @ ${buyRate.toFixed(6)} USDT</div>
-                    ${bonusHtml}
-                `;
                 
                 const usdtBal = await usdtContract.balanceOf(userAddress);
                 if (parseFloat(ethers.formatUnits(usdtBal, 6)) < currentUSDTNeeded) {
@@ -786,15 +758,6 @@
                 
                 document.getElementById('calcLabel').textContent = '💰 You Receive:';
                 document.getElementById('calcValue').textContent = netUsdt.toFixed(6) + ' USDT';
-                document.getElementById('calcInr').textContent = '₹' + (netUsdt * INR_RATE).toFixed(2);
-                
-                taxInfo.innerHTML = `
-                    <div>📊 <span style="color:var(--primary);">CONTRACT BREAKDOWN:</span></div>
-                    <div>📈 Gross Value: ${grossUsdt.toFixed(6)} USDT @ ${buyRate.toFixed(6)} USDT/SIG6</div>
-                    <div>🏦 9% Tax to Treasury: <span style="color:#ffaa00;">- ${taxAmount.toFixed(6)} USDT</span></div>
-                    <div>✨ You Receive: <span style="color:var(--primary);">${netUsdt.toFixed(6)} USDT</span></div>
-                    <div>📉 Effective Rate: ${sellRate.toFixed(6)} USDT/SIG6</div>
-                `;
                 
                 const sigmaBal = await sigmaContract.balanceOf(userAddress);
                 if (parseFloat(ethers.formatEther(sigmaBal)) < sigmaToSell) {
@@ -817,7 +780,7 @@
                     document.getElementById('actionButton').innerHTML = `⏱️ COOLDOWN ${mins}m ${secs}s`;
                 } else {
                     document.getElementById('actionButton').disabled = false;
-                    document.getElementById('actionButton').innerHTML = 'SELL SIGMA (9% tax)';
+                    document.getElementById('actionButton').innerHTML = 'SELL SIGMA';
                 }
                 document.getElementById('approvalSteps').style.display = 'none';
             }
@@ -844,7 +807,7 @@
                 document.getElementById('step2').className = 'step active';
                 document.getElementById('step2Status').innerHTML = 'Ready to buy';
                 document.getElementById('actionButton').disabled = false;
-                document.getElementById('actionButton').innerHTML = 'BUY SIGMA (5% tax)';
+                document.getElementById('actionButton').innerHTML = 'BUY SIGMA';
             }
         }
 
@@ -863,7 +826,7 @@
                 if (currentMode === 'buy') {
                     const usdtWei = ethers.parseUnits(currentUSDTNeeded.toFixed(6), 6);
                     const upline = localStorage.getItem('sigma_referrer') || DEFAULT_UPLINE;
-                    msg.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Buying SIGMA... (5% tax to treasury)';
+                    msg.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Buying SIGMA...';
                     btn.disabled = true;
                     const tx = await sigmaContract.buySigma(usdtWei, upline);
                     await tx.wait();
@@ -880,7 +843,7 @@
                         return; 
                     }
                     const sigmaWei = ethers.parseEther(amount.toString());
-                    msg.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Selling SIGMA... (9% tax to treasury)';
+                    msg.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Selling SIGMA...';
                     btn.disabled = true;
                     const tx = await sigmaContract.sellSigma(sigmaWei);
                     await tx.wait();
@@ -910,7 +873,7 @@
                 document.getElementById('step2').className = 'step active';
                 isApproved = true;
                 btn.disabled = false;
-                btn.innerHTML = 'BUY SIGMA (5% tax)';
+                btn.innerHTML = 'BUY SIGMA';
                 setTimeout(() => { msg.innerHTML = ''; }, 2000);
             } catch(e) { msg.innerHTML = 'Approval failed'; btn.disabled = false; }
         }
@@ -950,22 +913,6 @@
         }
         function maxTransfer() { const m = document.getElementById('transferBalance').textContent.match(/Balance: ([\d.]+)/); if(m) document.getElementById('transferAmount').value = m[1]; }
         function pasteAddress() { navigator.clipboard.readText().then(t => document.getElementById('recipientAddress').value = t); }
-        async function executeTransfer() {
-            if (!isConnected) return;
-            const to = document.getElementById('recipientAddress').value.trim();
-            if (!ethers.isAddress(to)) { document.getElementById('transferStatus').textContent = 'Invalid address'; return; }
-            const amount = parseFloat(document.getElementById('transferAmount').value);
-            if (isNaN(amount) || amount <= 0) return;
-            const btn = event.target; btn.disabled = true;
-            try {
-                if (transferToken === 'SIG6') await (await sigmaContract.transfer(to, ethers.parseEther(amount.toString()))).wait();
-                else if (transferToken === 'USDT') await (await usdtContract.transfer(to, ethers.parseUnits(amount.toString(), 6))).wait();
-                else await (await signer.sendTransaction({ to, value: ethers.parseEther(amount.toString()) })).wait();
-                document.getElementById('transferStatus').innerHTML = '<i class="fas fa-check-circle" style="color:var(--success)"></i> Transfer successful!';
-                setTimeout(() => { document.getElementById('transferStatus').innerHTML = ''; updateTransferBalance(); }, 3000);
-            } catch(e) { document.getElementById('transferStatus').innerHTML = 'Transfer failed'; }
-            btn.disabled = false;
-        }
         
         function copyContract() { navigator.clipboard.writeText(SIGMA_ADDRESS); alert("Contract address copied!"); }
         function copyReferralMini() { if(window.referralLink) { navigator.clipboard.writeText(window.referralLink); alert("Referral link copied! Share with friends to earn rewards!"); } }
