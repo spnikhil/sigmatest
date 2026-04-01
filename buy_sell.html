@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>SIGMA SIX | Trade History</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.umd.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -23,11 +23,7 @@
             --loss: #ff4d4d;
         }
         
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body {
             background-color: var(--bg);
@@ -38,7 +34,6 @@
             position: relative;
         }
         
-        /* Rainbow Border Top */
         .rainbow-border {
             position: fixed;
             top: 0;
@@ -51,7 +46,6 @@
             z-index: 1000;
         }
         
-        /* Crypto Particles Animation */
         .particles-container {
             position: fixed;
             width: 100%;
@@ -94,7 +88,6 @@
             100% { background-position: 0% 50%; }
         }
         
-        /* Glass Effect Background */
         .glass-bg {
             position: fixed;
             top: 0;
@@ -145,7 +138,6 @@
             margin: 0 auto;
         }
         
-        /* Connect Button */
         .connect-btn {
             position: fixed;
             top: 15px;
@@ -186,7 +178,6 @@
             border: 1px solid var(--primary);
         }
         
-        /* Stats Cards */
         .stats-container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -250,15 +241,9 @@
             font-weight: 600;
         }
         
-        .stat-change.positive {
-            color: var(--profit);
-        }
+        .stat-change.positive { color: var(--profit); }
+        .stat-change.negative { color: var(--loss); }
         
-        .stat-change.negative {
-            color: var(--loss);
-        }
-        
-        /* Main Card Styling */
         .main-card {
             background: rgba(22, 24, 33, 0.7);
             backdrop-filter: blur(10px);
@@ -288,6 +273,7 @@
             align-items: center;
             gap: 15px;
             margin-bottom: 25px;
+            flex-wrap: wrap;
         }
         
         .card-icon {
@@ -315,7 +301,6 @@
             margin-top: 5px;
         }
         
-        /* Table Styling */
         .table-responsive {
             overflow-x: auto;
             border-radius: 16px;
@@ -356,7 +341,6 @@
             background: rgba(255, 255, 255, 0.03);
         }
         
-        /* Badges */
         .badge {
             padding: 6px 12px;
             border-radius: 20px;
@@ -394,17 +378,6 @@
             font-weight: 800;
         }
         
-        /* P&L Indicators */
-        .pnl-indicator {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 15px;
-            border-radius: 10px;
-            font-weight: 700;
-            font-size: 14px;
-        }
-        
         .pnl-positive {
             background: rgba(0, 255, 136, 0.1);
             color: var(--profit);
@@ -417,7 +390,6 @@
             border: 1px solid rgba(255, 77, 77, 0.3);
         }
         
-        /* Loading and Empty States */
         .loading {
             text-align: center;
             padding: 60px 20px;
@@ -445,7 +417,6 @@
             opacity: 0.5;
         }
         
-        /* Action Buttons */
         .action-buttons {
             display: flex;
             gap: 15px;
@@ -484,7 +455,6 @@
             font-weight: 700;
         }
         
-        /* Navigation */
         .nav-container {
             display: flex;
             gap: 10px;
@@ -513,14 +483,6 @@
             color: var(--primary);
         }
         
-        .nav-btn.active {
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
-            color: #000;
-            border: none;
-            font-weight: 700;
-        }
-        
-        /* Back Button */
         .back-btn {
             display: inline-flex;
             align-items: center;
@@ -541,12 +503,14 @@
             transform: translateX(-5px);
         }
         
-        /* Responsive Design */
+        .inr-rate {
+            font-size: 11px;
+            color: #888;
+            margin-top: 2px;
+        }
+        
         @media (max-width: 768px) {
-            .container {
-                padding: 10px;
-            }
-            
+            .container { padding: 10px; }
             .connect-btn {
                 position: relative;
                 top: auto;
@@ -556,188 +520,73 @@
                 max-width: 100%;
                 justify-content: center;
             }
-            
-            .stats-container {
-                grid-template-columns: 1fr;
-                gap: 15px;
-            }
-            
-            .stat-card {
-                padding: 20px;
-            }
-            
-            .stat-value {
-                font-size: 28px;
-            }
-            
-            .main-card {
-                padding: 20px;
-            }
-            
-            th, td {
-                padding: 12px 10px;
-                font-size: 13px;
-            }
-            
-            .card-title {
-                font-size: 20px;
-            }
-            
-            .card-icon {
-                width: 40px;
-                height: 40px;
-                font-size: 18px;
-            }
+            .stats-container { grid-template-columns: 1fr; gap: 15px; }
+            .stat-card { padding: 20px; }
+            .stat-value { font-size: 28px; }
+            .main-card { padding: 20px; }
+            th, td { padding: 12px 10px; font-size: 13px; }
+            .card-title { font-size: 20px; }
+            .card-icon { width: 40px; height: 40px; font-size: 18px; }
         }
         
         @media (max-width: 480px) {
-            .header h1 {
-                font-size: 28px;
-            }
-            
-            .header p {
-                font-size: 14px;
-            }
-            
-            .action-buttons {
-                flex-direction: column;
-            }
-            
-            .action-btn {
-                width: 100%;
-            }
-            
-            th, td {
-                padding: 10px 8px;
-                font-size: 12px;
-            }
-            
-            .badge {
-                padding: 4px 8px;
-                font-size: 11px;
-            }
+            .header h1 { font-size: 28px; }
+            .header p { font-size: 14px; }
+            .action-buttons { flex-direction: column; }
+            .action-btn { width: 100%; }
+            th, td { padding: 10px 8px; font-size: 12px; }
+            .badge { padding: 4px 8px; font-size: 11px; }
         }
         
-        /* Scrollbar Styling */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.2); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb { background: var(--gradient); border-radius: 4px; animation: rainbow 8s ease infinite; }
         
-        ::-webkit-scrollbar-track {
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 4px;
-        }
-        
-        ::-webkit-scrollbar-thumb {
-            background: var(--gradient);
-            border-radius: 4px;
-            background-size: 400% 400%;
-            animation: rainbow 8s ease infinite;
-        }
-        
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--primary);
-        }
-        
-        /* Fade In Animation */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
         
-        .fade-in {
-            animation: fadeIn 0.5s ease-out;
-        }
-        
-        /* Copy Button */
-        .copy-address {
-            cursor: pointer;
-            color: var(--primary);
-            background: rgba(0, 255, 204, 0.1);
-            padding: 4px 8px;
-            border-radius: 6px;
-            font-size: 11px;
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            transition: all 0.2s;
-            border: 1px solid transparent;
-        }
-        
-        .copy-address:hover {
-            background: rgba(0, 255, 204, 0.2);
-            border-color: var(--primary);
-        }
-        
-        .copy-address i {
-            font-size: 12px;
-        }
-
-        /* INR rate small text */
-        .inr-rate {
-            font-size: 11px;
-            color: #888;
-            margin-top: 2px;
-        }
+        .fade-in { animation: fadeIn 0.5s ease-out; }
     </style>
 </head>
 <body>
-    <!-- Rainbow Border -->
     <div class="rainbow-border"></div>
-    
-    <!-- Crypto Particles Animation -->
     <div class="particles-container" id="particles"></div>
-    
-    <!-- Glass Effect Background -->
     <div class="glass-bg"></div>
     
-    <!-- Connect Button -->
     <button class="connect-btn" id="connectBtn" onclick="connectWallet()">
         <i class="fas fa-wallet"></i> <span id="btn-text">Connect Wallet</span>
     </button>
     
-    <!-- Main Container -->
     <div class="container">
-        <!-- Navigation -->
         <div class="nav-container">
-            <a href="index.html" class="back-btn">
-                <i class="fas fa-arrow-left"></i> Back to Dashboard
-            </a>
-            <button class="nav-btn" onclick="loadData()">
-                <i class="fas fa-sync-alt"></i> Refresh Data
-            </button>
-            <button class="nav-btn" onclick="exportData()">
-                <i class="fas fa-download"></i> Export CSV
-            </button>
+            <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
+            <button class="nav-btn" onclick="loadData()"><i class="fas fa-sync-alt"></i> Refresh Data</button>
+            <button class="nav-btn" onclick="exportData()"><i class="fas fa-download"></i> Export CSV</button>
         </div>
         
-        <!-- Header -->
         <div class="header">
             <h1>TRADE HISTORY</h1>
             <p>Complete Buy & Sell History with Real-time P&L Tracking (USDT & INR)</p>
         </div>
         
-        <!-- Stats Overview -->
         <div class="stats-container">
             <div class="stat-card fade-in">
                 <div class="stat-title"><i class="fas fa-shopping-cart"></i> Total SIGMA Bought</div>
                 <div class="stat-value" id="total-bought">0 SIG6</div>
                 <div class="stat-change positive" id="total-bought-value">$0.00 / ₹0</div>
             </div>
-            
             <div class="stat-card fade-in">
                 <div class="stat-title"><i class="fas fa-coins"></i> Total SIGMA Sold</div>
                 <div class="stat-value" id="total-sold">0 SIG6</div>
                 <div class="stat-change negative" id="total-sold-value">$0.00 / ₹0</div>
             </div>
-            
             <div class="stat-card fade-in">
                 <div class="stat-title"><i class="fas fa-chart-line"></i> Current Holdings</div>
                 <div class="stat-value" id="current-holdings">0 SIG6</div>
                 <div class="stat-change" id="holdings-value">$0.00 / ₹0</div>
             </div>
-            
             <div class="stat-card fade-in">
                 <div class="stat-title"><i class="fas fa-money-bill-wave"></i> Net P&L</div>
                 <div class="stat-value" id="net-pnl">$0.00</div>
@@ -745,7 +594,6 @@
             </div>
         </div>
         
-        <!-- Action Buttons - Only 2 Options -->
         <div class="action-buttons">
             <button class="action-btn active" onclick="showTab('active', event)">
                 <i class="fas fa-chart-bar"></i> Active Positions (Buy History)
@@ -755,90 +603,38 @@
             </button>
         </div>
         
-        <!-- Active Positions Section (Buy History) -->
         <div class="main-card fade-in" id="active-section">
             <div class="card-header">
-                <div class="card-icon">
-                    <i class="fas fa-chart-bar"></i>
-                </div>
-                <div>
-                    <div class="card-title">ACTIVE POSITIONS</div>
-                    <div class="card-subtitle">All your SIGMA purchases with current valuation (USDT & INR)</div>
-                </div>
+                <div class="card-icon"><i class="fas fa-chart-bar"></i></div>
+                <div><div class="card-title">ACTIVE POSITIONS</div><div class="card-subtitle">All your SIGMA purchases with current valuation (USDT & INR)</div></div>
             </div>
-            
             <div class="table-responsive">
                 <table id="active-table">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Date & Time</th>
-                            <th>Sigma Quantity</th>
-                            <th>Buy Rate</th>
-                            <th>Current Rate</th>
-                            <th>P&L %</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody id="active-body">
-                        <tr>
-                            <td colspan="7" class="loading">
-                                <i class="fas fa-spinner fa-spin"></i><br>
-                                Loading active positions... Please connect wallet
-                            </td>
-                        </tr>
-                    </tbody>
+                    <thead> <tr> <th>#</th> <th>Date & Time</th> <th>Sigma Quantity</th> <th>Buy Rate</th> <th>Current Rate</th> <th>P&L %</th> <th>Status</th> </tr> </thead>
+                    <tbody id="active-body"> <tr><td colspan="7" class="loading"><i class="fas fa-spinner fa-spin"></i><br>Loading active positions... Please connect wallet</td></tr> </tbody>
                 </table>
             </div>
         </div>
         
-        <!-- Closed Positions Section (Sell History) -->
         <div class="main-card fade-in" id="closed-section" style="display: none;">
             <div class="card-header">
-                <div class="card-icon">
-                    <i class="fas fa-history"></i>
-                </div>
-                <div>
-                    <div class="card-title">CLOSED POSITIONS</div>
-                    <div class="card-subtitle">All your SIGMA sales with profit/loss calculation (USDT & INR)</div>
-                </div>
+                <div class="card-icon"><i class="fas fa-history"></i></div>
+                <div><div class="card-title">CLOSED POSITIONS</div><div class="card-subtitle">All your SIGMA sales with profit/loss calculation (USDT & INR)</div></div>
             </div>
-            
             <div class="table-responsive">
                 <table id="closed-table">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Date & Time</th>
-                            <th>Sigma Quantity</th>
-                            <th>Buy Rate</th>
-                            <th>Sell Rate</th>
-                            <th>P&L Amount</th>
-                            <th>P&L %</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody id="closed-body">
-                        <tr>
-                            <td colspan="8" class="loading">
-                                <i class="fas fa-spinner fa-spin"></i><br>
-                                Loading closed positions...
-                            </td>
-                        </tr>
-                    </tbody>
+                    <thead> <tr> <th>#</th> <th>Date & Time</th> <th>Sigma Quantity</th> <th>Buy Rate</th> <th>Sell Rate</th> <th>P&L Amount</th> <th>P&L %</th> <th>Status</th> </tr> </thead>
+                    <tbody id="closed-body"> <tr><td colspan="8" class="loading"><i class="fas fa-spinner fa-spin"></i><br>Loading closed positions...</td></tr> </tbody>
                 </table>
             </div>
         </div>
     </div>
 
     <script>
-        // ===== UPDATED CONTRACT CONFIGURATION =====
+        // ===== CONTRACT CONFIGURATION =====
         const SIGMA_CONTRACT_ADDRESS = "0x846339d474AE98b219111eb969E27b6317aE5852";
-        const USDT_ADDRESS = "0xc2132D05D31c914a87C6611C10748AEb04B58e8F"; // Polygon USDT
         
-        // USDT to INR conversion rate
         let usdtToInr = 95.0;
-        
         let provider, userAddress, sigmaContract;
         let currentTab = 'active';
         let buyTransactions = [];
@@ -846,60 +642,47 @@
         let currentBuyRate = 0;
         let currentSellRate = 0;
         
-        // ===== UPDATED ABI (from your new contract) =====
+        // ===== COMPLETE ABI - CORRECT FUNCTIONS =====
         const sigmaABI = [
-            "function currentRate() view returns (uint256)",
-            "function getSellRate() view returns (uint256)",
+            "function getCurrentBuyRate() view returns (uint256)",
+            "function sellSigma(uint256 _sigmaAmount) external",
+            "function buySigma(uint256 _usdtAmount, address _upline) external",
             "function balanceOf(address) view returns (uint256)",
-            "function creator() view returns (address)",
-            "function usdt() view returns (address)",
-            "function totalSupply() view returns (uint256)",
+            "function transfer(address to, uint256 amount) returns (bool)",
+            "function users(address) view returns (address upline, uint256 directCount, uint256 lastBuyTimestamp, uint256 totalReferralEarned, uint256 lastActionTime, bool hasBoughtBefore)",
             "event TokensBought(address indexed user, uint256 amount, uint256 rate, uint256 usdtSpent)",
-            "event TokensSold(address indexed user, uint256 amount, uint256 rate, uint256 usdtReceived)",
-            "event Bought(address indexed user, uint256 usdtAmount, uint256 sigmaAmount, uint256 rate, uint256 timestamp)",
-            "event Sold(address indexed user, uint256 sigmaAmount, uint256 usdtAmount, uint256 rate, uint256 timestamp)"
+            "event TokensSold(address indexed user, uint256 amount, uint256 rate, uint256 usdtReceived)"
         ];
 
-        // Create particles
         function createParticles() {
-            const particlesContainer = document.getElementById('particles');
+            const container = document.getElementById('particles');
             for(let i = 1; i <= 10; i++) {
                 const particle = document.createElement('div');
                 particle.className = 'particle';
                 particle.style.animationDelay = `${i * 2}s`;
-                particlesContainer.appendChild(particle);
+                container.appendChild(particle);
             }
         }
         
         async function connectWallet() {
-            if (!window.ethereum) {
-                alert("Please install MetaMask to use this feature");
-                return;
-            }
-            
+            if (!window.ethereum) { alert("Please install MetaMask"); return; }
             try {
                 provider = new ethers.BrowserProvider(window.ethereum);
                 const accounts = await provider.send("eth_requestAccounts", []);
-                userAddress = accounts[0];
+                userAddress = accounts[0].toLowerCase();
                 
                 sigmaContract = new ethers.Contract(SIGMA_CONTRACT_ADDRESS, sigmaABI, provider);
                 
-                // Update connect button
                 const connectBtn = document.getElementById('connectBtn');
                 const shortAddress = userAddress.slice(0,6) + "..." + userAddress.slice(-4);
                 document.getElementById('btn-text').textContent = shortAddress;
                 connectBtn.classList.add('connected');
                 
-                // Save connection status
                 localStorage.setItem('sigma_wallet_connected', 'true');
-                
-                // Load data
                 await loadData();
                 
-                // Setup event listeners for account changes
                 window.ethereum.on('accountsChanged', handleAccountsChanged);
                 window.ethereum.on('chainChanged', () => window.location.reload());
-                
             } catch (error) {
                 console.error("Connection error:", error);
                 alert("Failed to connect wallet: " + error.message);
@@ -912,15 +695,10 @@
                 document.getElementById('btn-text').textContent = 'Connect Wallet';
                 document.getElementById('connectBtn').classList.remove('connected');
                 localStorage.removeItem('sigma_wallet_connected');
-                
-                document.getElementById('active-body').innerHTML = `
-                    <tr><td colspan="7" class="empty-state"><i class="fas fa-wallet"></i><br>Please connect wallet to view data</td></tr>
-                `;
-                document.getElementById('closed-body').innerHTML = `
-                    <tr><td colspan="8" class="empty-state"><i class="fas fa-wallet"></i><br>Please connect wallet to view data</td></tr>
-                `;
+                document.getElementById('active-body').innerHTML = '<tr><td colspan="7" class="empty-state"><i class="fas fa-wallet"></i><br>Please connect wallet to view data</td></tr>';
+                document.getElementById('closed-body').innerHTML = '<tr><td colspan="8" class="empty-state"><i class="fas fa-wallet"></i><br>Please connect wallet to view data</td></tr>';
             } else {
-                userAddress = accounts[0];
+                userAddress = accounts[0].toLowerCase();
                 const shortAddress = userAddress.slice(0,6) + "..." + userAddress.slice(-4);
                 document.getElementById('btn-text').textContent = shortAddress;
                 document.getElementById('connectBtn').classList.add('connected');
@@ -930,57 +708,45 @@
         
         async function loadData() {
             if (!userAddress) {
-                document.getElementById('active-body').innerHTML = `
-                    <tr><td colspan="7" class="empty-state"><i class="fas fa-wallet"></i><br>Please connect wallet to view data</td></tr>
-                `;
-                document.getElementById('closed-body').innerHTML = `
-                    <tr><td colspan="8" class="empty-state"><i class="fas fa-wallet"></i><br>Please connect wallet to view data</td></tr>
-                `;
+                document.getElementById('active-body').innerHTML = '<tr><td colspan="7" class="empty-state"><i class="fas fa-wallet"></i><br>Please connect wallet to view data</td></tr>';
+                document.getElementById('closed-body').innerHTML = '<tr><td colspan="8" class="empty-state"><i class="fas fa-wallet"></i><br>Please connect wallet to view data</td></tr>';
                 return;
             }
             
             try {
-                // Show loading state
-                document.getElementById('active-body').innerHTML = `
-                    <tr><td colspan="7" class="loading"><i class="fas fa-spinner fa-spin"></i><br>Loading data...</td></tr>
-                `;
-                document.getElementById('closed-body').innerHTML = `
-                    <tr><td colspan="8" class="loading"><i class="fas fa-spinner fa-spin"></i><br>Loading data...</td></tr>
-                `;
+                document.getElementById('active-body').innerHTML = '<tr><td colspan="7" class="loading"><i class="fas fa-spinner fa-spin"></i><br>Loading data...</td></tr>';
+                document.getElementById('closed-body').innerHTML = '<tr><td colspan="8" class="loading"><i class="fas fa-spinner fa-spin"></i><br>Loading data...</td></tr>';
                 
-                // Get current rates from contract
-                const [currentRateBN, sellRateBN, sigmaBalance] = await Promise.all([
-                    sigmaContract.currentRate(),
-                    sigmaContract.getSellRate(),
-                    sigmaContract.balanceOf(userAddress)
+                // Get current buy rate
+                try {
+                    const rateBN = await sigmaContract.getCurrentBuyRate();
+                    currentBuyRate = parseFloat(ethers.formatUnits(rateBN, 6));
+                } catch(e) {
+                    console.log("Rate fetch error:", e);
+                    currentBuyRate = 0;
+                }
+                
+                const currentBlock = await provider.getBlockNumber();
+                const fromBlock = Math.max(currentBlock - 5000000, 0);
+                
+                // Fetch TokensBought events
+                const buyFilter = sigmaContract.filters.TokensBought(userAddress);
+                const sellFilter = sigmaContract.filters.TokensSold(userAddress);
+                
+                const [buyEvents, sellEvents] = await Promise.all([
+                    sigmaContract.queryFilter(buyFilter, fromBlock, currentBlock),
+                    sigmaContract.queryFilter(sellFilter, fromBlock, currentBlock)
                 ]);
                 
-                currentBuyRate = parseFloat(ethers.formatUnits(currentRateBN, 6));
-                currentSellRate = parseFloat(ethers.formatUnits(sellRateBN, 6));
-                
-                // Get current block number
-                const currentBlock = await provider.getBlockNumber();
-                const fromBlock = Math.max(currentBlock - 3000000, 0);
-                
-                // Fetch Bought events (Bought event from contract)
-                const buyFilter = sigmaContract.filters.Bought(userAddress);
-                const buyEvents = await sigmaContract.queryFilter(buyFilter, fromBlock, currentBlock);
-                
-                // Fetch Sold events (Sold event from contract)
-                const sellFilter = sigmaContract.filters.Sold(userAddress);
-                const sellEvents = await sigmaContract.queryFilter(sellFilter, fromBlock, currentBlock);
-                
-                // Process events
                 await processTradeEvents(buyEvents, sellEvents);
                 
-                // Update UI
                 updateStats();
                 updateTables();
                 
             } catch (error) {
                 console.error("Error loading data:", error);
-                document.getElementById('active-body').innerHTML = `<tr><td colspan="7" class="empty-state"><i class="fas fa-exclamation-circle"></i><br>Error: ${error.message}</td></tr>`;
-                document.getElementById('closed-body').innerHTML = `<tr><td colspan="8" class="empty-state"><i class="fas fa-exclamation-circle"></i><br>Error: ${error.message}</td></tr>`;
+                document.getElementById('active-body').innerHTML = '<tr><td colspan="7" class="empty-state"><i class="fas fa-exclamation-circle"></i><br>Error: ' + error.message + '</td></tr>';
+                document.getElementById('closed-body').innerHTML = '<tr><td colspan="8" class="empty-state"><i class="fas fa-exclamation-circle"></i><br>Error: ' + error.message + '</td></tr>';
             }
         }
         
@@ -988,40 +754,50 @@
             buyTransactions = [];
             sellTransactions = [];
             
-            // Process Bought events
             for (const event of buyEvents) {
                 const args = event.args;
                 buyTransactions.push({
                     hash: event.transactionHash,
-                    usdtAmount: parseFloat(ethers.formatUnits(args.usdtAmount, 6)),
-                    sigmaAmount: parseFloat(ethers.formatUnits(args.sigmaAmount, 18)),
+                    usdtAmount: parseFloat(ethers.formatUnits(args.usdtSpent, 6)),
+                    sigmaAmount: parseFloat(ethers.formatUnits(args.amount, 18)),
                     rate: parseFloat(ethers.formatUnits(args.rate, 6)),
-                    timestamp: Number(args.timestamp),
-                    date: new Date(Number(args.timestamp) * 1000),
+                    timestamp: await getBlockTimestamp(event.blockNumber),
+                    date: await getBlockDate(event.blockNumber),
                     blockNumber: event.blockNumber
                 });
             }
             
-            // Process Sold events
             for (const event of sellEvents) {
                 const args = event.args;
                 sellTransactions.push({
                     hash: event.transactionHash,
-                    sigmaAmount: parseFloat(ethers.formatUnits(args.sigmaAmount, 18)),
-                    usdtAmount: parseFloat(ethers.formatUnits(args.usdtAmount, 6)),
+                    sigmaAmount: parseFloat(ethers.formatUnits(args.amount, 18)),
+                    usdtAmount: parseFloat(ethers.formatUnits(args.usdtReceived, 6)),
                     rate: parseFloat(ethers.formatUnits(args.rate, 6)),
-                    timestamp: Number(args.timestamp),
-                    date: new Date(Number(args.timestamp) * 1000),
+                    timestamp: await getBlockTimestamp(event.blockNumber),
+                    date: await getBlockDate(event.blockNumber),
                     blockNumber: event.blockNumber
                 });
             }
             
-            // Sort by timestamp (newest first for display)
             buyTransactions.sort((a, b) => b.timestamp - a.timestamp);
             sellTransactions.sort((a, b) => b.timestamp - a.timestamp);
         }
         
-        // FIFO method to find average buy rate for a sold amount
+        async function getBlockTimestamp(blockNumber) {
+            try {
+                const block = await provider.getBlock(blockNumber);
+                return block.timestamp;
+            } catch { return 0; }
+        }
+        
+        async function getBlockDate(blockNumber) {
+            try {
+                const block = await provider.getBlock(blockNumber);
+                return new Date(block.timestamp * 1000);
+            } catch { return new Date(); }
+        }
+        
         function getAverageBuyRateForSell(sellAmount, sellTimestamp) {
             const buysBefore = buyTransactions
                 .filter(b => b.timestamp < sellTimestamp)
@@ -1046,10 +822,8 @@
         }
         
         function updateStats() {
-            let totalBought = 0;
-            let totalBoughtValue = 0;
-            let totalSold = 0;
-            let totalSoldValue = 0;
+            let totalBought = 0, totalBoughtValue = 0;
+            let totalSold = 0, totalSoldValue = 0;
             
             buyTransactions.forEach(tx => {
                 totalBought += tx.sigmaAmount;
@@ -1063,24 +837,16 @@
             
             const currentHoldings = totalBought - totalSold;
             const holdingsValue = currentHoldings * currentBuyRate;
-            
-            let avgBuyRate = 0;
-            if (totalBought > 0) {
-                avgBuyRate = totalBoughtValue / totalBought;
-            }
-            
+            const avgBuyRate = totalBought > 0 ? totalBoughtValue / totalBought : 0;
             const netPL = holdingsValue - (currentHoldings * avgBuyRate);
             const plPercentage = totalBoughtValue > 0 ? (netPL / totalBoughtValue) * 100 : 0;
             
             document.getElementById('total-bought').textContent = totalBought.toFixed(2) + " SIG6";
             document.getElementById('total-bought-value').innerHTML = "$" + totalBoughtValue.toFixed(2) + " / ₹" + (totalBoughtValue * usdtToInr).toFixed(2);
-            
             document.getElementById('total-sold').textContent = totalSold.toFixed(2) + " SIG6";
             document.getElementById('total-sold-value').innerHTML = "$" + totalSoldValue.toFixed(2) + " / ₹" + (totalSoldValue * usdtToInr).toFixed(2);
-            
             document.getElementById('current-holdings').textContent = currentHoldings.toFixed(2) + " SIG6";
             document.getElementById('holdings-value').innerHTML = "$" + holdingsValue.toFixed(2) + " / ₹" + (holdingsValue * usdtToInr).toFixed(2);
-            
             document.getElementById('net-pnl').innerHTML = "$" + netPL.toFixed(2) + " / ₹" + (netPL * usdtToInr).toFixed(2);
             document.getElementById('net-pnl').style.color = netPL >= 0 ? 'var(--profit)' : 'var(--loss)';
             document.getElementById('pnl-percentage').textContent = (netPL >= 0 ? "+" : "") + plPercentage.toFixed(2) + "%";
@@ -1093,110 +859,91 @@
         
         function updateActiveTable() {
             const tbody = document.getElementById('active-body');
-            
             if (buyTransactions.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="7" class="empty-state"><i class="fas fa-chart-bar"></i><br>No active positions found</td></tr>`;
+                tbody.innerHTML = '叭<td colspan="7" class="empty-state"><i class="fas fa-chart-bar"></i><br>No active positions found</td></tr>';
                 return;
             }
             
             let html = '';
-            buyTransactions.forEach((tx, index) => {
+            buyTransactions.forEach((tx, i) => {
                 const currentValue = tx.sigmaAmount * currentBuyRate;
                 const buyValue = tx.sigmaAmount * tx.rate;
                 const unrealizedPLPercent = ((currentValue - buyValue) / buyValue * 100).toFixed(2);
-                
                 const dateStr = tx.date.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
                 const timeStr = tx.date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
                 
-                html += `
-                    <tr>
-                        <td>${index + 1}</td>
-                        <td><div style="font-weight:600">${dateStr}</div><div style="font-size:12px; color:#888">${timeStr}</div></td>
-                        <td style="font-weight:700; color:var(--primary)">${tx.sigmaAmount.toFixed(4)} SIG6</td>
-                        <td><div>$${tx.rate.toFixed(4)}</div><div class="inr-rate">₹${(tx.rate * usdtToInr).toFixed(2)}</div></td>
-                        <td><div>$${currentBuyRate.toFixed(4)}</div><div class="inr-rate">₹${(currentBuyRate * usdtToInr).toFixed(2)}</div></td>
-                        <td><div class="${unrealizedPLPercent >= 0 ? 'badge-profit' : 'badge-loss'}" style="display:inline-block">${unrealizedPLPercent >= 0 ? '+' : ''}${unrealizedPLPercent}%</div></td>
-                        <td><span class="badge badge-active">ACTIVE</span></td>
-                    </tr>
-                `;
+                html += `<tr>
+                    <td>${i+1}</td>
+                    <td><div style="font-weight:600">${dateStr}</div><div style="font-size:12px; color:#888">${timeStr}</div></td>
+                    <td style="font-weight:700; color:var(--primary)">${tx.sigmaAmount.toFixed(4)} SIG6</td>
+                    <td><div>$${tx.rate.toFixed(4)}</div><div class="inr-rate">₹${(tx.rate * usdtToInr).toFixed(2)}</div></td>
+                    <td><div>$${currentBuyRate.toFixed(4)}</div><div class="inr-rate">₹${(currentBuyRate * usdtToInr).toFixed(2)}</div></td>
+                    <td><div class="${unrealizedPLPercent >= 0 ? 'badge-profit' : 'badge-loss'}" style="display:inline-block">${unrealizedPLPercent >= 0 ? '+' : ''}${unrealizedPLPercent}%</div></td>
+                    <td><span class="badge badge-active">ACTIVE</span></td>
+                </tr>`;
             });
             tbody.innerHTML = html;
         }
         
         function updateClosedTable() {
             const tbody = document.getElementById('closed-body');
-            
             if (sellTransactions.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="8" class="empty-state"><i class="fas fa-history"></i><br>No closed positions found</td></tr>`;
+                tbody.innerHTML = '叭<td colspan="8" class="empty-state"><i class="fas fa-history"></i><br>No closed positions found</td></tr>';
                 return;
             }
             
             let html = '';
-            sellTransactions.forEach((tx, index) => {
+            sellTransactions.forEach((tx, i) => {
                 const avgBuyRate = getAverageBuyRateForSell(tx.sigmaAmount, tx.timestamp);
                 const plAmount = (tx.rate - avgBuyRate) * tx.sigmaAmount;
                 const plPercentage = avgBuyRate > 0 ? ((tx.rate - avgBuyRate) / avgBuyRate * 100).toFixed(2) : 0;
-                
                 const dateStr = tx.date.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
                 const timeStr = tx.date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
                 
-                html += `
-                    <tr>
-                        <td>${index + 1}</td>
-                        <td><div style="font-weight:600">${dateStr}</div><div style="font-size:12px; color:#888">${timeStr}</div></td>
-                        <td style="font-weight:700; color:${plAmount >= 0 ? 'var(--profit)' : 'var(--loss)'}">${tx.sigmaAmount.toFixed(4)} SIG6</td>
-                        <td><div>$${avgBuyRate.toFixed(4)}</div><div class="inr-rate">₹${(avgBuyRate * usdtToInr).toFixed(2)}</div></td>
-                        <td><div>$${tx.rate.toFixed(4)}</div><div class="inr-rate">₹${(tx.rate * usdtToInr).toFixed(2)}</div></td>
-                        <td><div class="${plAmount >= 0 ? 'pnl-positive' : 'pnl-negative'}" style="padding:4px 8px; border-radius:6px; display:inline-block"><i class="fas fa-${plAmount >= 0 ? 'arrow-up' : 'arrow-down'}"></i> $${Math.abs(plAmount).toFixed(2)}<br><span style="font-size:11px">₹${Math.abs(plAmount * usdtToInr).toFixed(2)}</span></div></td>
-                        <td><div class="${plAmount >= 0 ? 'badge-profit' : 'badge-loss'}" style="display:inline-block">${plAmount >= 0 ? '+' : ''}${plPercentage}%</div></td>
-                        <td><span class="badge badge-closed">CLOSED</span></td>
-                    </tr>
-                `;
+                html += `<tr>
+                    <td>${i+1}</td>
+                    <td><div style="font-weight:600">${dateStr}</div><div style="font-size:12px; color:#888">${timeStr}</div></td>
+                    <td style="font-weight:700; color:${plAmount >= 0 ? 'var(--profit)' : 'var(--loss)'}">${tx.sigmaAmount.toFixed(4)} SIG6</td>
+                    <td><div>$${avgBuyRate.toFixed(4)}</div><div class="inr-rate">₹${(avgBuyRate * usdtToInr).toFixed(2)}</div></td>
+                    <td><div>$${tx.rate.toFixed(4)}</div><div class="inr-rate">₹${(tx.rate * usdtToInr).toFixed(2)}</div></td>
+                    <td><div class="${plAmount >= 0 ? 'pnl-positive' : 'pnl-negative'}" style="padding:4px 8px; border-radius:6px; display:inline-block"><i class="fas fa-${plAmount >= 0 ? 'arrow-up' : 'arrow-down'}"></i> $${Math.abs(plAmount).toFixed(2)}<br><span style="font-size:11px">₹${Math.abs(plAmount * usdtToInr).toFixed(2)}</span></div></td>
+                    <td><div class="${plAmount >= 0 ? 'badge-profit' : 'badge-loss'}" style="display:inline-block">${plAmount >= 0 ? '+' : ''}${plPercentage}%</div></td>
+                    <td><span class="badge badge-closed">CLOSED</span></td>
+                </tr>`;
             });
             tbody.innerHTML = html;
         }
         
         function showTab(tabName, event) {
             currentTab = tabName;
-            
             document.querySelectorAll('.action-btn').forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
-            
             document.getElementById('active-section').style.display = tabName === 'active' ? 'block' : 'none';
             document.getElementById('closed-section').style.display = tabName === 'closed' ? 'block' : 'none';
         }
         
         function exportData() {
-            if (!userAddress) {
-                alert("Please connect wallet first");
-                return;
-            }
-            
+            if (!userAddress) { alert("Please connect wallet first"); return; }
             let csvContent = "data:text/csv;charset=utf-8,";
-            
             if (currentTab === 'active') {
                 csvContent += "Serial No,Date,Time,Sigma Quantity,Buy Rate (USDT),Buy Rate (INR),Current Rate (USDT),Current Rate (INR),P&L %,Status\n";
-                buyTransactions.forEach((tx, index) => {
+                buyTransactions.forEach((tx, i) => {
                     const currentValue = tx.sigmaAmount * currentBuyRate;
                     const buyValue = tx.sigmaAmount * tx.rate;
                     const unrealizedPLPercent = ((currentValue - buyValue) / buyValue * 100).toFixed(2);
-                    const row = [index + 1, tx.date.toLocaleDateString(), tx.date.toLocaleTimeString(), tx.sigmaAmount.toFixed(4), tx.rate.toFixed(4), (tx.rate * usdtToInr).toFixed(2), currentBuyRate.toFixed(4), (currentBuyRate * usdtToInr).toFixed(2), unrealizedPLPercent + '%', 'ACTIVE'].join(',');
-                    csvContent += row + "\n";
+                    csvContent += `${i+1},${tx.date.toLocaleDateString()},${tx.date.toLocaleTimeString()},${tx.sigmaAmount.toFixed(4)},${tx.rate.toFixed(4)},${(tx.rate * usdtToInr).toFixed(2)},${currentBuyRate.toFixed(4)},${(currentBuyRate * usdtToInr).toFixed(2)},${unrealizedPLPercent}%,ACTIVE\n`;
                 });
             } else {
                 csvContent += "Serial No,Date,Time,Sigma Quantity,Buy Rate (USDT),Sell Rate (USDT),P&L Amount (USDT),P&L Amount (INR),P&L %,Status\n";
-                sellTransactions.forEach((tx, index) => {
+                sellTransactions.forEach((tx, i) => {
                     const avgBuyRate = getAverageBuyRateForSell(tx.sigmaAmount, tx.timestamp);
                     const plAmount = (tx.rate - avgBuyRate) * tx.sigmaAmount;
                     const plPercentage = ((tx.rate - avgBuyRate) / avgBuyRate * 100).toFixed(2);
-                    const row = [index + 1, tx.date.toLocaleDateString(), tx.date.toLocaleTimeString(), tx.sigmaAmount.toFixed(4), avgBuyRate.toFixed(4), tx.rate.toFixed(4), plAmount.toFixed(2), (plAmount * usdtToInr).toFixed(2), plPercentage + '%', 'CLOSED'].join(',');
-                    csvContent += row + "\n";
+                    csvContent += `${i+1},${tx.date.toLocaleDateString()},${tx.date.toLocaleTimeString()},${tx.sigmaAmount.toFixed(4)},${avgBuyRate.toFixed(4)},${tx.rate.toFixed(4)},${plAmount.toFixed(2)},${(plAmount * usdtToInr).toFixed(2)},${plPercentage}%,CLOSED\n`;
                 });
             }
-            
-            const encodedUri = encodeURI(csvContent);
             const link = document.createElement("a");
-            link.setAttribute("href", encodedUri);
+            link.setAttribute("href", encodeURI(csvContent));
             link.setAttribute("download", `sigma_${currentTab}_positions.csv`);
             document.body.appendChild(link);
             link.click();
@@ -1208,24 +955,17 @@
                 try {
                     provider = new ethers.BrowserProvider(window.ethereum);
                     const accounts = await provider.listAccounts();
-                    
                     if (accounts.length > 0) {
-                        userAddress = accounts[0].address;
+                        userAddress = accounts[0].address.toLowerCase();
                         sigmaContract = new ethers.Contract(SIGMA_CONTRACT_ADDRESS, sigmaABI, provider);
-                        
                         const connectBtn = document.getElementById('connectBtn');
-                        const shortAddress = userAddress.slice(0,6) + "..." + userAddress.slice(-4);
-                        document.getElementById('btn-text').textContent = shortAddress;
+                        document.getElementById('btn-text').textContent = userAddress.slice(0,6) + "..." + userAddress.slice(-4);
                         connectBtn.classList.add('connected');
-                        
                         await loadData();
-                        
                         window.ethereum.on('accountsChanged', handleAccountsChanged);
                         window.ethereum.on('chainChanged', () => window.location.reload());
                     }
-                } catch (error) {
-                    console.log("Auto-connect error:", error);
-                }
+                } catch (error) { console.log("Auto-connect error:", error); }
             }
         }
         
