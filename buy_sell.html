@@ -503,12 +503,6 @@
             transform: translateX(-5px);
         }
         
-        .inr-rate {
-            font-size: 11px;
-            color: #888;
-            margin-top: 2px;
-        }
-        
         @media (max-width: 768px) {
             .container { padding: 10px; }
             .connect-btn {
@@ -568,24 +562,24 @@
         
         <div class="header">
             <h1>TRADE HISTORY</h1>
-            <p>Complete Buy & Sell History with Real-time P&L Tracking (USDT & INR)</p>
+            <p>Complete Buy & Sell History with Real-time P&L Tracking</p>
         </div>
         
         <div class="stats-container">
             <div class="stat-card fade-in">
                 <div class="stat-title"><i class="fas fa-shopping-cart"></i> Total SIGMA Bought</div>
                 <div class="stat-value" id="total-bought">0 SIG6</div>
-                <div class="stat-change positive" id="total-bought-value">$0.00 / ₹0</div>
+                <div class="stat-change positive" id="total-bought-value">$0.00</div>
             </div>
             <div class="stat-card fade-in">
                 <div class="stat-title"><i class="fas fa-coins"></i> Total SIGMA Sold</div>
                 <div class="stat-value" id="total-sold">0 SIG6</div>
-                <div class="stat-change negative" id="total-sold-value">$0.00 / ₹0</div>
+                <div class="stat-change negative" id="total-sold-value">$0.00</div>
             </div>
             <div class="stat-card fade-in">
                 <div class="stat-title"><i class="fas fa-chart-line"></i> Current Holdings</div>
                 <div class="stat-value" id="current-holdings">0 SIG6</div>
-                <div class="stat-change" id="holdings-value">$0.00 / ₹0</div>
+                <div class="stat-change" id="holdings-value">$0.00</div>
             </div>
             <div class="stat-card fade-in">
                 <div class="stat-title"><i class="fas fa-money-bill-wave"></i> Net P&L</div>
@@ -606,12 +600,24 @@
         <div class="main-card fade-in" id="active-section">
             <div class="card-header">
                 <div class="card-icon"><i class="fas fa-chart-bar"></i></div>
-                <div><div class="card-title">ACTIVE POSITIONS</div><div class="card-subtitle">All your SIGMA purchases with current valuation (USDT & INR)</div></div>
+                <div><div class="card-title">ACTIVE POSITIONS</div><div class="card-subtitle">All your SIGMA purchases with current valuation (USDT)</div></div>
             </div>
             <div class="table-responsive">
                 <table id="active-table">
-                    <thead> <tr> <th>#</th> <th>Date & Time</th> <th>Sigma Quantity</th> <th>Buy Rate</th> <th>Current Rate</th> <th>P&L %</th> <th>Status</th> </tr> </thead>
-                    <tbody id="active-body"> <tr><td colspan="7" class="loading"><i class="fas fa-spinner fa-spin"></i><br>Loading active positions... Please connect wallet</td></tr> </tbody>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Date & Time</th>
+                            <th>Sigma Quantity</th>
+                            <th>Buy Rate</th>
+                            <th>Current Rate</th>
+                            <th>P&L %</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="active-body">
+                        <tr><td colspan="7" class="loading"><i class="fas fa-spinner fa-spin"></i><br>Loading active positions... Please connect wallet</td></tr>
+                    </tbody>
                 </table>
             </div>
         </div>
@@ -619,12 +625,25 @@
         <div class="main-card fade-in" id="closed-section" style="display: none;">
             <div class="card-header">
                 <div class="card-icon"><i class="fas fa-history"></i></div>
-                <div><div class="card-title">CLOSED POSITIONS</div><div class="card-subtitle">All your SIGMA sales with profit/loss calculation (USDT & INR)</div></div>
+                <div><div class="card-title">CLOSED POSITIONS</div><div class="card-subtitle">All your SIGMA sales with profit/loss calculation (USDT)</div></div>
             </div>
             <div class="table-responsive">
                 <table id="closed-table">
-                    <thead> <tr> <th>#</th> <th>Date & Time</th> <th>Sigma Quantity</th> <th>Buy Rate</th> <th>Sell Rate</th> <th>P&L Amount</th> <th>P&L %</th> <th>Status</th> </tr> </thead>
-                    <tbody id="closed-body"> <tr><td colspan="8" class="loading"><i class="fas fa-spinner fa-spin"></i><br>Loading closed positions...</td></tr> </tbody>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Date & Time</th>
+                            <th>Sigma Quantity</th>
+                            <th>Buy Rate</th>
+                            <th>Sell Rate</th>
+                            <th>P&L Amount</th>
+                            <th>P&L %</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="closed-body">
+                        <tr><td colspan="8" class="loading"><i class="fas fa-spinner fa-spin"></i><br>Loading closed positions...</td></tr>
+                    </tbody>
                 </table>
             </div>
         </div>
@@ -634,13 +653,11 @@
         // ===== CONTRACT CONFIGURATION =====
         const SIGMA_CONTRACT_ADDRESS = "0x846339d474AE98b219111eb969E27b6317aE5852";
         
-        let usdtToInr = 95.0;
         let provider, userAddress, sigmaContract;
         let currentTab = 'active';
         let buyTransactions = [];
         let sellTransactions = [];
         let currentBuyRate = 0;
-        let currentSellRate = 0;
         
         // ===== COMPLETE ABI - CORRECT FUNCTIONS =====
         const sigmaABI = [
@@ -842,12 +859,12 @@
             const plPercentage = totalBoughtValue > 0 ? (netPL / totalBoughtValue) * 100 : 0;
             
             document.getElementById('total-bought').textContent = totalBought.toFixed(2) + " SIG6";
-            document.getElementById('total-bought-value').innerHTML = "$" + totalBoughtValue.toFixed(2) + " / ₹" + (totalBoughtValue * usdtToInr).toFixed(2);
+            document.getElementById('total-bought-value').innerHTML = "$" + totalBoughtValue.toFixed(2);
             document.getElementById('total-sold').textContent = totalSold.toFixed(2) + " SIG6";
-            document.getElementById('total-sold-value').innerHTML = "$" + totalSoldValue.toFixed(2) + " / ₹" + (totalSoldValue * usdtToInr).toFixed(2);
+            document.getElementById('total-sold-value').innerHTML = "$" + totalSoldValue.toFixed(2);
             document.getElementById('current-holdings').textContent = currentHoldings.toFixed(2) + " SIG6";
-            document.getElementById('holdings-value').innerHTML = "$" + holdingsValue.toFixed(2) + " / ₹" + (holdingsValue * usdtToInr).toFixed(2);
-            document.getElementById('net-pnl').innerHTML = "$" + netPL.toFixed(2) + " / ₹" + (netPL * usdtToInr).toFixed(2);
+            document.getElementById('holdings-value').innerHTML = "$" + holdingsValue.toFixed(2);
+            document.getElementById('net-pnl').innerHTML = "$" + netPL.toFixed(2);
             document.getElementById('net-pnl').style.color = netPL >= 0 ? 'var(--profit)' : 'var(--loss)';
             document.getElementById('pnl-percentage').textContent = (netPL >= 0 ? "+" : "") + plPercentage.toFixed(2) + "%";
         }
@@ -860,7 +877,7 @@
         function updateActiveTable() {
             const tbody = document.getElementById('active-body');
             if (buyTransactions.length === 0) {
-                tbody.innerHTML = '叭<td colspan="7" class="empty-state"><i class="fas fa-chart-bar"></i><br>No active positions found</td></tr>';
+                tbody.innerHTML = '叭<td colspan="7" class="empty-state"><i class="fas fa-chart-bar"></i><br>No active positions found<\/td><\/tr>';
                 return;
             }
             
@@ -872,15 +889,15 @@
                 const dateStr = tx.date.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
                 const timeStr = tx.date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
                 
-                html += `<tr>
-                    <td>${i+1}</td>
-                    <td><div style="font-weight:600">${dateStr}</div><div style="font-size:12px; color:#888">${timeStr}</div></td>
-                    <td style="font-weight:700; color:var(--primary)">${tx.sigmaAmount.toFixed(4)} SIG6</td>
-                    <td><div>$${tx.rate.toFixed(4)}</div><div class="inr-rate">₹${(tx.rate * usdtToInr).toFixed(2)}</div></td>
-                    <td><div>$${currentBuyRate.toFixed(4)}</div><div class="inr-rate">₹${(currentBuyRate * usdtToInr).toFixed(2)}</div></td>
-                    <td><div class="${unrealizedPLPercent >= 0 ? 'badge-profit' : 'badge-loss'}" style="display:inline-block">${unrealizedPLPercent >= 0 ? '+' : ''}${unrealizedPLPercent}%</div></td>
-                    <td><span class="badge badge-active">ACTIVE</span></td>
-                </tr>`;
+                html += '<tr>' +
+                    '<td>' + (i+1) + '<\/td>' +
+                    '<td><div style="font-weight:600">' + dateStr + '<\/div><div style="font-size:12px; color:#888">' + timeStr + '<\/div><\/td>' +
+                    '<td style="font-weight:700; color:var(--primary)">' + tx.sigmaAmount.toFixed(4) + ' SIG6<\/td>' +
+                    '<td><div>$' + tx.rate.toFixed(4) + '<\/div><\/td>' +
+                    '<td><div>$' + currentBuyRate.toFixed(4) + '<\/div><\/td>' +
+                    '<td><div class="' + (unrealizedPLPercent >= 0 ? 'badge-profit' : 'badge-loss') + '" style="display:inline-block">' + (unrealizedPLPercent >= 0 ? '+' : '') + unrealizedPLPercent + '%<\/div><\/td>' +
+                    '<td><span class="badge badge-active">ACTIVE<\/span><\/td>' +
+                    '<\/tr>';
             });
             tbody.innerHTML = html;
         }
@@ -888,7 +905,7 @@
         function updateClosedTable() {
             const tbody = document.getElementById('closed-body');
             if (sellTransactions.length === 0) {
-                tbody.innerHTML = '叭<td colspan="8" class="empty-state"><i class="fas fa-history"></i><br>No closed positions found</td></tr>';
+                tbody.innerHTML = '叭<td colspan="8" class="empty-state"><i class="fas fa-history"></i><br>No closed positions found<\/td><\/tr>';
                 return;
             }
             
@@ -900,16 +917,16 @@
                 const dateStr = tx.date.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
                 const timeStr = tx.date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
                 
-                html += `<tr>
-                    <td>${i+1}</td>
-                    <td><div style="font-weight:600">${dateStr}</div><div style="font-size:12px; color:#888">${timeStr}</div></td>
-                    <td style="font-weight:700; color:${plAmount >= 0 ? 'var(--profit)' : 'var(--loss)'}">${tx.sigmaAmount.toFixed(4)} SIG6</td>
-                    <td><div>$${avgBuyRate.toFixed(4)}</div><div class="inr-rate">₹${(avgBuyRate * usdtToInr).toFixed(2)}</div></td>
-                    <td><div>$${tx.rate.toFixed(4)}</div><div class="inr-rate">₹${(tx.rate * usdtToInr).toFixed(2)}</div></td>
-                    <td><div class="${plAmount >= 0 ? 'pnl-positive' : 'pnl-negative'}" style="padding:4px 8px; border-radius:6px; display:inline-block"><i class="fas fa-${plAmount >= 0 ? 'arrow-up' : 'arrow-down'}"></i> $${Math.abs(plAmount).toFixed(2)}<br><span style="font-size:11px">₹${Math.abs(plAmount * usdtToInr).toFixed(2)}</span></div></td>
-                    <td><div class="${plAmount >= 0 ? 'badge-profit' : 'badge-loss'}" style="display:inline-block">${plAmount >= 0 ? '+' : ''}${plPercentage}%</div></td>
-                    <td><span class="badge badge-closed">CLOSED</span></td>
-                </tr>`;
+                html += '<tr>' +
+                    '<td>' + (i+1) + '<\/td>' +
+                    '<td><div style="font-weight:600">' + dateStr + '<\/div><div style="font-size:12px; color:#888">' + timeStr + '<\/div><\/td>' +
+                    '<td style="font-weight:700; color:' + (plAmount >= 0 ? 'var(--profit)' : 'var(--loss)') + '">' + tx.sigmaAmount.toFixed(4) + ' SIG6<\/td>' +
+                    '<td><div>$' + avgBuyRate.toFixed(4) + '<\/div><\/td>' +
+                    '<td><div>$' + tx.rate.toFixed(4) + '<\/div><\/td>' +
+                    '<td><div class="' + (plAmount >= 0 ? 'pnl-positive' : 'pnl-negative') + '" style="padding:4px 8px; border-radius:6px; display:inline-block"><i class="fas fa-' + (plAmount >= 0 ? 'arrow-up' : 'arrow-down') + '"><\/i> $' + Math.abs(plAmount).toFixed(2) + '<\/div><\/td>' +
+                    '<td><div class="' + (plAmount >= 0 ? 'badge-profit' : 'badge-loss') + '" style="display:inline-block">' + (plAmount >= 0 ? '+' : '') + plPercentage + '%<\/div><\/td>' +
+                    '<td><span class="badge badge-closed">CLOSED<\/span><\/td>' +
+                    '<\/tr>';
             });
             tbody.innerHTML = html;
         }
@@ -926,20 +943,20 @@
             if (!userAddress) { alert("Please connect wallet first"); return; }
             let csvContent = "data:text/csv;charset=utf-8,";
             if (currentTab === 'active') {
-                csvContent += "Serial No,Date,Time,Sigma Quantity,Buy Rate (USDT),Buy Rate (INR),Current Rate (USDT),Current Rate (INR),P&L %,Status\n";
+                csvContent += "Serial No,Date,Time,Sigma Quantity,Buy Rate (USDT),Current Rate (USDT),P&L %,Status\n";
                 buyTransactions.forEach((tx, i) => {
                     const currentValue = tx.sigmaAmount * currentBuyRate;
                     const buyValue = tx.sigmaAmount * tx.rate;
                     const unrealizedPLPercent = ((currentValue - buyValue) / buyValue * 100).toFixed(2);
-                    csvContent += `${i+1},${tx.date.toLocaleDateString()},${tx.date.toLocaleTimeString()},${tx.sigmaAmount.toFixed(4)},${tx.rate.toFixed(4)},${(tx.rate * usdtToInr).toFixed(2)},${currentBuyRate.toFixed(4)},${(currentBuyRate * usdtToInr).toFixed(2)},${unrealizedPLPercent}%,ACTIVE\n`;
+                    csvContent += `${i+1},${tx.date.toLocaleDateString()},${tx.date.toLocaleTimeString()},${tx.sigmaAmount.toFixed(4)},${tx.rate.toFixed(4)},${currentBuyRate.toFixed(4)},${unrealizedPLPercent}%,ACTIVE\n`;
                 });
             } else {
-                csvContent += "Serial No,Date,Time,Sigma Quantity,Buy Rate (USDT),Sell Rate (USDT),P&L Amount (USDT),P&L Amount (INR),P&L %,Status\n";
+                csvContent += "Serial No,Date,Time,Sigma Quantity,Buy Rate (USDT),Sell Rate (USDT),P&L Amount (USDT),P&L %,Status\n";
                 sellTransactions.forEach((tx, i) => {
                     const avgBuyRate = getAverageBuyRateForSell(tx.sigmaAmount, tx.timestamp);
                     const plAmount = (tx.rate - avgBuyRate) * tx.sigmaAmount;
                     const plPercentage = ((tx.rate - avgBuyRate) / avgBuyRate * 100).toFixed(2);
-                    csvContent += `${i+1},${tx.date.toLocaleDateString()},${tx.date.toLocaleTimeString()},${tx.sigmaAmount.toFixed(4)},${avgBuyRate.toFixed(4)},${tx.rate.toFixed(4)},${plAmount.toFixed(2)},${(plAmount * usdtToInr).toFixed(2)},${plPercentage}%,CLOSED\n`;
+                    csvContent += `${i+1},${tx.date.toLocaleDateString()},${tx.date.toLocaleTimeString()},${tx.sigmaAmount.toFixed(4)},${avgBuyRate.toFixed(4)},${tx.rate.toFixed(4)},${plAmount.toFixed(2)},${plPercentage}%,CLOSED\n`;
                 });
             }
             const link = document.createElement("a");
