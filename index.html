@@ -481,7 +481,7 @@
                     <span class="max-btn" onclick="maxTransfer()">MAX</span>
                 </div>
                 <input type="number" id="transferAmount" placeholder="0.00" style="font-size:28px; padding:10px 0; background:transparent; border:none; color:white; outline:none; width:100%;" step="any">
-                <button class="transfer-btn" id="transferButton" onclick="window.location.href='transfer.html'">
+                <button class="transfer-btn" id="transferButton" onclick="executeTransfer()">
                     <i class="fas fa-paper-plane"></i> TRANSFER
                 </button>
                 <div style="font-size:12px; margin-top:10px; color:#aaa" id="transferStatus"></div>
@@ -659,6 +659,9 @@
                 document.getElementById('sigmaBalance').textContent = sigmaBalanceNum.toFixed(2) + ' SIG6';
                 document.getElementById('sigmaBalanceInr').textContent = '(Approx ₹' + (sigmaBalanceNum * sellRate * INR_RATE).toFixed(2) + ')';
                 document.getElementById('polBalance').textContent = parseFloat(ethers.formatEther(polBal)).toFixed(4) + ' POL';
+                
+                // Update transfer panel balances
+                updateTransferBalance();
                 
                 if (sigmaBalanceNum > 0 && userAddress) {
                     document.getElementById('referralMiniBox').style.display = 'flex';
@@ -902,17 +905,142 @@
             calculate();
         }
 
-        function setTransferToken(token) { transferToken = token; document.querySelectorAll('.token-opt').forEach(el => el.classList.remove('active')); event.target.classList.add('active'); updateTransferBalance(); }
+        // ========== P2P TRANSFER FUNCTIONS ==========
+        function setTransferToken(token) { 
+            transferToken = token; 
+            document.querySelectorAll('.token-opt').forEach(el => el.classList.remove('active')); 
+            event.target.classList.add('active'); 
+            updateTransferBalance(); 
+        }
+        
         async function updateTransferBalance() {
             if (!isConnected) return;
             let bal = 0;
-            if (transferToken === 'SIG6') bal = parseFloat(ethers.formatEther(await sigmaContract.balanceOf(userAddress)));
-            else if (transferToken === 'USDT') bal = parseFloat(ethers.formatUnits(await usdtContract.balanceOf(userAddress), 6));
-            else bal = parseFloat(ethers.formatEther(await provider.getBalance(userAddress)));
+            if (transferToken === 'SIG6') {
+                bal = parseFloat(ethers.formatEther(await sigmaContract.balanceOf(userAddress)));
+            } else if (transferToken === 'USDT') {
+                bal = parseFloat(ethers.formatUnits(await usdtContract.balanceOf(userAddress), 6));
+            } else {
+                bal = parseFloat(ethers.formatEther(await provider.getBalance(userAddress)));
+            }
             document.getElementById('transferBalance').textContent = `Balance: ${bal.toFixed(6)} ${transferToken}`;
         }
-        function maxTransfer() { const m = document.getElementById('transferBalance').textContent.match(/Balance: ([\d.]+)/); if(m) document.getElementById('transferAmount').value = m[1]; }
-        function pasteAddress() { navigator.clipboard.readText().then(t => document.getElementById('recipientAddress').value = t); }
+        
+        function maxTransfer() { 
+            const balText = document.getElementById('transferBalance').textContent;
+            const match = balText.match(/Balance: ([\d.]+)/);
+            if (match) document.getElementById('transferAmount').value = match[1];
+        }
+        
+        function pasteAddress() { 
+            navigator.clipboard.readText().then(t => document.getElementById('recipientAddress').value = t); 
+        }
+        
+        async function executeTransfer() {
+            if (!isConnected) { 
+                alert("Please connect wallet first"); 
+                return; 
+            }
+            
+            const to = document.getElementById('recipientAddress').value.trim();
+            const amount = parseFloat(document.getElementById('transferAmount').value);
+            const statusDiv = document.getElementById('transferStatus');
+            
+            if (!to || !ethers.isAddress(to)) {
+                statusDiv.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Invalid recipient address';
+                statusDiv.style.color = 'var(--danger)';
+                setTimeout(() => { statusDiv.innerHTML = ''; }, 3000);
+                return;
+            }
+            
+            if (isNaN(amount) || amount <= 0) {
+                statusDiv.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Invalid amount';
+                statusDiv.style.color = 'var(--danger)';
+                setTimeout(() => { statusDiv.innerHTML = ''; }, 3000);
+                return;
+            }
+            
+            const btn = document.getElementById('transferButton');
+            btn.disabled = true;
+            statusDiv.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing transfer...';
+            statusDiv.style.color = 'var(--primary)';
+            
+            try {
+                if (transferToken === 'SIG6') {
+                    // Check balance
+                    const balance = await sigmaContract.balanceOf(userAddress);
+                    const balanceNum = parseFloat(ethers.formatEther(balance));
+                    if (balanceNum < amount) {
+                        throw new Error("Insufficient SIG6 balance");
+                    }
+                    const amountWei = ethers.parseEther(amount.toString());
+                    const tx = await sigmaContract.transfer(to, amountWei);
+                    await tx.wait();
+                    statusDiv.innerHTML = '<i class="fas fa-check-circle"></i> SIG6 Transfer successful!';
+                    statusDiv.style.color = 'var(--success)';
+                } 
+                else if (transferToken === 'USDT') {
+                    // Check USDT balance and allowance
+                    const balance = await usdtContract.balanceOf(userAddress);
+                    const balanceNum = parseFloat(ethers.formatUnits(balance, 6));
+                    if (balanceNum < amount) {
+                        throw new Error("Insufficient USDT balance");
+                    }
+                    const amountWei = ethers.parseUnits(amount.toString(), 6);
+                    
+                    // Check if need to approve
+                    const allowance = await usdtContract.allowance(userAddress, SIGMA_ADDRESS);
+                    const allowanceNum = parseFloat(ethers.formatUnits(allowance, 6));
+                    
+                    if (allowanceNum < amount) {
+                        statusDiv.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Approving USDT first...';
+                        const approveTx = await usdtContract.approve(SIGMA_ADDRESS, amountWei);
+                        await approveTx.wait();
+                        statusDiv.innerHTML = '<i class="fas fa-spinner fa-spin"></i> USDT approved, transferring...';
+                    }
+                    
+                    const tx = await usdtContract.transfer(to, amountWei);
+                    await tx.wait();
+                    statusDiv.innerHTML = '<i class="fas fa-check-circle"></i> USDT Transfer successful!';
+                    statusDiv.style.color = 'var(--success)';
+                } 
+                else { // POL Transfer
+                    const balance = await provider.getBalance(userAddress);
+                    const balanceNum = parseFloat(ethers.formatEther(balance));
+                    if (balanceNum < amount) {
+                        throw new Error("Insufficient POL balance");
+                    }
+                    const amountWei = ethers.parseEther(amount.toString());
+                    const tx = await signer.sendTransaction({
+                        to: to,
+                        value: amountWei
+                    });
+                    await tx.wait();
+                    statusDiv.innerHTML = '<i class="fas fa-check-circle"></i> POL Transfer successful!';
+                    statusDiv.style.color = 'var(--success)';
+                }
+                
+                // Clear input fields
+                document.getElementById('transferAmount').value = '';
+                document.getElementById('recipientAddress').value = '';
+                
+                // Update balances
+                setTimeout(async () => {
+                    await updateTransferBalance();
+                    await loadData();
+                }, 2000);
+                
+                setTimeout(() => { statusDiv.innerHTML = ''; }, 4000);
+                
+            } catch (error) {
+                console.error("Transfer error:", error);
+                statusDiv.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Transfer failed: ' + error.message.slice(0, 80);
+                statusDiv.style.color = 'var(--danger)';
+                setTimeout(() => { statusDiv.innerHTML = ''; }, 4000);
+            } finally {
+                btn.disabled = false;
+            }
+        }
         
         function copyContract() { navigator.clipboard.writeText(SIGMA_ADDRESS); alert("Contract address copied!"); }
         function copyReferralMini() { if(window.referralLink) { navigator.clipboard.writeText(window.referralLink); alert("Referral link copied! Share with friends to earn rewards!"); } }
