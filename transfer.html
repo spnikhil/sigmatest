@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
     <title>SIGMA SIX | My Transfers</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.umd.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -26,11 +26,7 @@
             --sigma: #00ffcc;
         }
         
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body {
             background-color: var(--bg);
@@ -41,7 +37,6 @@
             position: relative;
         }
         
-        /* Rainbow Border Top */
         .rainbow-border {
             position: fixed;
             top: 0;
@@ -54,7 +49,6 @@
             z-index: 1000;
         }
         
-        /* Crypto Particles Animation */
         .particles-container {
             position: fixed;
             width: 100%;
@@ -97,7 +91,6 @@
             100% { background-position: 0% 50%; }
         }
         
-        /* Glass Effect Background */
         .glass-bg {
             position: fixed;
             top: 0;
@@ -148,7 +141,6 @@
             margin: 0 auto;
         }
         
-        /* Connect Button */
         .connect-btn {
             position: fixed;
             top: 15px;
@@ -189,7 +181,6 @@
             border: 1px solid var(--primary);
         }
         
-        /* Stats Cards */
         .stats-container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -253,15 +244,9 @@
             font-weight: 600;
         }
         
-        .stat-change.positive {
-            color: var(--profit);
-        }
+        .stat-change.positive { color: var(--profit); }
+        .stat-change.negative { color: var(--loss); }
         
-        .stat-change.negative {
-            color: var(--loss);
-        }
-        
-        /* Main Card Styling */
         .main-card {
             background: rgba(22, 24, 33, 0.7);
             backdrop-filter: blur(10px);
@@ -291,6 +276,7 @@
             align-items: center;
             gap: 15px;
             margin-bottom: 25px;
+            flex-wrap: wrap;
         }
         
         .card-icon {
@@ -318,7 +304,6 @@
             margin-top: 5px;
         }
         
-        /* Filter Section */
         .filter-section {
             display: flex;
             gap: 15px;
@@ -411,7 +396,6 @@
             border: 1px solid rgba(0, 255, 136, 0.3);
         }
         
-        /* Table Styling */
         .table-responsive {
             overflow-x: auto;
             border-radius: 16px;
@@ -422,7 +406,7 @@
         table {
             width: 100%;
             border-collapse: collapse;
-            min-width: 1200px;
+            min-width: 1000px;
         }
         
         thead {
@@ -430,10 +414,10 @@
         }
         
         th {
-            padding: 18px 15px;
+            padding: 18px 12px;
             text-align: left;
             font-weight: 700;
-            font-size: 14px;
+            font-size: 13px;
             color: var(--primary);
             text-transform: uppercase;
             letter-spacing: 1px;
@@ -442,9 +426,9 @@
         }
         
         td {
-            padding: 16px 15px;
+            padding: 14px 12px;
             border-bottom: 1px solid rgba(45, 47, 62, 0.3);
-            font-size: 14px;
+            font-size: 13px;
             transition: all 0.2s;
         }
         
@@ -452,16 +436,15 @@
             background: rgba(255, 255, 255, 0.03);
         }
         
-        /* Wallet Address */
         .wallet-address {
             font-family: monospace;
-            font-size: 12px;
+            font-size: 11px;
             background: rgba(0, 255, 204, 0.1);
-            padding: 6px 10px;
-            border-radius: 8px;
+            padding: 4px 8px;
+            border-radius: 6px;
             display: inline-flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
             cursor: pointer;
             color: var(--primary);
             border: 1px solid rgba(0, 255, 204, 0.2);
@@ -474,11 +457,6 @@
             transform: translateY(-2px);
         }
         
-        .wallet-address i {
-            font-size: 12px;
-        }
-        
-        /* Loading and Empty States */
         .loading {
             text-align: center;
             padding: 60px 20px;
@@ -506,7 +484,6 @@
             opacity: 0.5;
         }
         
-        /* Navigation */
         .nav-container {
             display: flex;
             gap: 10px;
@@ -515,18 +492,18 @@
         }
         
         .nav-btn {
-            padding: 12px 25px;
+            padding: 10px 20px;
             border-radius: 12px;
             border: 1px solid var(--border);
             background: rgba(255, 255, 255, 0.03);
             color: #888;
             font-weight: 600;
-            font-size: 14px;
+            font-size: 13px;
             cursor: pointer;
             transition: all 0.3s;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
         
         .nav-btn:hover {
@@ -535,37 +512,20 @@
             color: var(--primary);
         }
         
-        .nav-btn.active {
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
-            color: #000;
-            border: none;
-            font-weight: 700;
-        }
-        
-        .nav-btn.danger {
-            color: var(--loss);
-            border-color: var(--loss);
-        }
-        
-        .nav-btn.danger:hover {
-            background: rgba(255, 77, 77, 0.1);
-            color: var(--loss);
-        }
-        
-        /* Back Button */
         .back-btn {
             display: inline-flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             color: var(--primary);
             text-decoration: none;
             font-weight: 600;
             margin-bottom: 20px;
-            padding: 10px 20px;
+            padding: 8px 16px;
             border-radius: 12px;
             background: rgba(0, 255, 204, 0.1);
             border: 1px solid rgba(0, 255, 204, 0.3);
             transition: all 0.3s;
+            font-size: 13px;
         }
         
         .back-btn:hover {
@@ -573,12 +533,8 @@
             transform: translateX(-5px);
         }
         
-        /* Responsive Design */
         @media (max-width: 768px) {
-            .container {
-                padding: 10px;
-            }
-            
+            .container { padding: 10px; }
             .connect-btn {
                 position: relative;
                 top: auto;
@@ -588,119 +544,47 @@
                 max-width: 100%;
                 justify-content: center;
             }
-            
-            .stats-container {
-                grid-template-columns: 1fr;
-                gap: 15px;
-            }
-            
-            .stat-card {
-                padding: 20px;
-            }
-            
-            .stat-value {
-                font-size: 28px;
-            }
-            
-            .main-card {
-                padding: 20px;
-            }
-            
-            th, td {
-                padding: 12px 10px;
-                font-size: 13px;
-            }
-            
-            .card-title {
-                font-size: 20px;
-            }
-            
-            .card-icon {
-                width: 40px;
-                height: 40px;
-                font-size: 18px;
-            }
-            
-            .filter-section {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            
-            .filter-group {
-                width: 100%;
-            }
-            
-            .filter-group input {
-                width: 100%;
-            }
+            .stats-container { grid-template-columns: 1fr; gap: 15px; }
+            .stat-card { padding: 20px; }
+            .stat-value { font-size: 28px; }
+            .main-card { padding: 20px; }
+            th, td { padding: 10px 8px; font-size: 12px; }
+            .card-title { font-size: 20px; }
+            .card-icon { width: 40px; height: 40px; font-size: 18px; }
+            .filter-section { flex-direction: column; align-items: stretch; }
+            .filter-group { width: 100%; }
+            .filter-group input { width: 100%; }
         }
         
         @media (max-width: 480px) {
-            .header h1 {
-                font-size: 28px;
-            }
-            
-            .header p {
-                font-size: 14px;
-            }
-            
-            th, td {
-                padding: 10px 8px;
-                font-size: 12px;
-            }
+            .header h1 { font-size: 28px; }
+            .header p { font-size: 14px; }
+            th, td { padding: 8px 6px; font-size: 11px; }
+            .wallet-address { font-size: 10px; padding: 3px 6px; }
         }
         
-        /* Scrollbar Styling */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.2); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb { background: var(--gradient); border-radius: 4px; animation: rainbow 8s ease infinite; }
         
-        ::-webkit-scrollbar-track {
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 4px;
-        }
-        
-        ::-webkit-scrollbar-thumb {
-            background: var(--gradient);
-            border-radius: 4px;
-            background-size: 400% 400%;
-            animation: rainbow 8s ease infinite;
-        }
-        
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--primary);
-        }
-        
-        /* Fade In Animation */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
         
-        .fade-in {
-            animation: fadeIn 0.5s ease-out;
-        }
+        .fade-in { animation: fadeIn 0.5s ease-out; }
     </style>
 </head>
 <body>
-    <!-- Rainbow Border -->
     <div class="rainbow-border"></div>
-    
-    <!-- Crypto Particles Animation -->
     <div class="particles-container" id="particles"></div>
-    
-    <!-- Glass Effect Background -->
     <div class="glass-bg"></div>
     
-    <!-- Connect Button -->
     <button class="connect-btn" id="connectBtn" onclick="connectWallet()">
         <i class="fas fa-wallet"></i> <span id="btn-text">Connect Wallet</span>
     </button>
     
-    <!-- Main Container -->
     <div class="container">
-        <!-- Navigation -->
         <div class="nav-container">
             <a href="index.html" class="back-btn">
                 <i class="fas fa-arrow-left"></i> Back to Dashboard
@@ -711,37 +595,32 @@
             <button class="nav-btn" onclick="exportData()">
                 <i class="fas fa-download"></i> Export CSV
             </button>
-            <button class="nav-btn danger" onclick="clearFilters()">
+            <button class="nav-btn" onclick="clearFilters()">
                 <i class="fas fa-times"></i> Clear Filters
             </button>
         </div>
         
-        <!-- Header -->
         <div class="header">
             <h1>MY TRANSFERS</h1>
             <p>Complete P2P Transfer History for SIGMA, USDT & POL (sent & received)</p>
         </div>
         
-        <!-- Stats Overview -->
         <div class="stats-container">
             <div class="stat-card fade-in">
                 <div class="stat-title"><i class="fas fa-paper-plane"></i> Total Sent</div>
                 <div class="stat-value" id="total-sent">0</div>
                 <div class="stat-change negative" id="total-sent-value">$0.00</div>
             </div>
-            
             <div class="stat-card fade-in">
                 <div class="stat-title"><i class="fas fa-inbox"></i> Total Received</div>
                 <div class="stat-value" id="total-received">0</div>
                 <div class="stat-change positive" id="total-received-value">$0.00</div>
             </div>
-            
             <div class="stat-card fade-in">
                 <div class="stat-title"><i class="fas fa-exchange-alt"></i> My Transactions</div>
                 <div class="stat-value" id="total-transactions">0</div>
                 <div class="stat-change" id="unique-counterparties">0 Counterparties</div>
             </div>
-            
             <div class="stat-card fade-in">
                 <div class="stat-title"><i class="fas fa-coins"></i> Net Flow</div>
                 <div class="stat-value" id="net-flow">$0.00</div>
@@ -749,28 +628,23 @@
             </div>
         </div>
         
-        <!-- Filter Section -->
         <div class="main-card fade-in">
             <div class="card-header">
-                <div class="card-icon">
-                    <i class="fas fa-filter"></i>
-                </div>
+                <div class="card-icon"><i class="fas fa-filter"></i></div>
                 <div>
-                    <div class="card-title">FILTER MY TRANSACTIONS</div>
+                    <div class="card-title">FILTER TRANSACTIONS</div>
                     <div class="card-subtitle">Filter by token, direction, date or wallet</div>
                 </div>
             </div>
-            
             <div class="filter-section">
                 <div class="filter-group">
                     <label><i class="fas fa-tag"></i></label>
                     <select id="tokenFilter" onchange="applyFilters()">
-                        <option value="SIGMA" selected>SIGMA</option>
+                        <option value="SIGMA">SIGMA</option>
                         <option value="USDT">USDT</option>
                         <option value="POL">POL/MATIC</option>
                     </select>
                 </div>
-                
                 <div class="filter-group">
                     <label><i class="fas fa-arrow-right"></i></label>
                     <select id="directionFilter" onchange="applyFilters()">
@@ -779,44 +653,36 @@
                         <option value="received">Received</option>
                     </select>
                 </div>
-                
                 <div class="filter-group">
                     <label><i class="far fa-calendar"></i></label>
                     <input type="date" id="startDate" placeholder="Start Date">
                 </div>
-                
                 <div class="filter-group">
                     <label><i class="far fa-calendar"></i></label>
                     <input type="date" id="endDate" placeholder="End Date">
                 </div>
-                
                 <div class="filter-group">
                     <label><i class="fas fa-search"></i></label>
                     <input type="text" id="searchWallet" placeholder="Search wallet..." onkeyup="applyFilters()">
                 </div>
-                
                 <button class="nav-btn" onclick="applyFilters()" style="margin-left: auto;">
                     <i class="fas fa-check"></i> Apply
                 </button>
             </div>
         </div>
         
-        <!-- Transfer History Table -->
         <div class="main-card fade-in">
             <div class="card-header">
-                <div class="card-icon">
-                    <i class="fas fa-history"></i>
-                </div>
+                <div class="card-icon"><i class="fas fa-history"></i></div>
                 <div>
-                    <div class="card-title">MY P2P TRANSFER HISTORY</div>
-                    <div class="card-subtitle">Only transfers where you are sender or receiver</div>
+                    <div class="card-title">P2P TRANSFER HISTORY</div>
+                    <div class="card-subtitle">All transfers where you are sender or receiver</div>
                 </div>
             </div>
-            
             <div class="table-responsive">
                 <table id="transfer-table">
                     <thead>
-                        <tr>
+                        32
                             <th>#</th>
                             <th>Date & Time</th>
                             <th>Direction</th>
@@ -825,91 +691,84 @@
                             <th>Receiver</th>
                             <th>Amount</th>
                             <th>Value (USDT)</th>
-                            <th>Send Rate</th>
-                            <th>Receive Rate</th>
                             <th>Tx Hash</th>
-                        </tr>
-                    </thead>
+                         </thead>
                     <tbody id="transfer-body">
-                        <tr>
-                            <td colspan="11" class="loading">
-                                <i class="fas fa-spinner fa-spin"></i><br>
-                                Loading your transfer history... Please connect wallet
-                            </td>
-                        </tr>
+                         <td colspan="9" class="loading">
+                            <i class="fas fa-spinner fa-spin"></i><br>
+                            Loading your transfer history...
+                         <\/td>
                     </tbody>
-                </table>
+                  Banay
             </div>
         </div>
     </div>
 
     <script>
-        // Contract Configuration
-        const SIGMA_CONTRACT_ADDRESS = "0x068Aaba73Fd754F21140E2F13DA177ce7251A299";
-        const USDT_ADDRESS = "0xc2132D05D31c914a87C6611C10748AEb04B58e8F"; // Polygon USDT
+        // ===== CONTRACT CONFIGURATION =====
+        const SIGMA_CONTRACT_ADDRESS = "0x846339d474AE98b219111eb969E27b6317aE5852";
+        const USDT_ADDRESS = "0xc2132D05D31c914a87C6611C10748AEb04B58e8F";
         
-        // USDT to INR conversion rate
-        let usdtToInr = 85.0;
-        
+        let usdtToInr = 95.0;
         let provider, userAddress, sigmaContract;
         let allTransfers = [];
         let filteredTransfers = [];
+        let currentBuyRate = 0;
         
-        // Token decimals
-        const DECIMALS = {
-            'SIGMA': 18,
-            'USDT': 6,
-            'POL': 18
-        };
+        // ===== UPDATED ABI =====
+        const sigmaABI = [
+            "function getCurrentBuyRate() view returns (uint256)",
+            "function balanceOf(address) view returns (uint256)",
+            "function buySigma(uint256 _usdtAmount, address _upline) external",
+            "function sellSigma(uint256 _sigmaAmount) external",
+            "function transfer(address to, uint256 amount) returns (bool)",
+            "function users(address) view returns (address upline, uint256 directCount, uint256 lastBuyTimestamp, uint256 totalReferralEarned, uint256 lastActionTime, bool hasBoughtBefore)",
+            "event Transfer(address indexed from, address indexed to, uint256 value)"
+        ];
         
-        // SigmaSix Contract ABI
-        const sigmaABI = [{"inputs":[{"internalType":"address","name":"_user","type":"address"},{"internalType":"address","name":"_upline","type":"address"}],"name":"adminSetUpline","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_usdt","type":"address"},{"internalType":"address","name":"_creator","type":"address"}],"stateMutability":"nonpayable","type":"constructor"},{"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"allowance","type":"uint256"},{"internalType":"uint256","name":"needed","type":"uint256"}],"name":"ERC20InsufficientAllowance","type":"error"},{"inputs":[{"internalType":"address","name":"sender","type":"address"},{"internalType":"uint256","name":"balance","type":"uint256"},{"internalType":"uint256","name":"needed","type":"uint256"}],"name":"ERC20InsufficientBalance","type":"error"},{"inputs":[{"internalType":"address","name":"approver","type":"address"}],"name":"ERC20InvalidApprover","type":"error"},{"inputs":[{"internalType":"address","name":"receiver","type":"address"}],"name":"ERC20InvalidReceiver","type":"error"},{"inputs":[{"internalType":"address","name":"sender","type":"address"}],"name":"ERC20InvalidSender","type":"error"},{"inputs":[{"internalType":"address","name":"spender","type":"address"}],"name":"ERC20InvalidSpender","type":"error"},{"inputs":[{"internalType":"address","name":"owner","type":"address"}],"name":"OwnableInvalidOwner","type":"error"},{"inputs":[{"internalType":"address","name":"account","type":"address"}],"name":"OwnableUnauthorizedAccount","type":"error"},{"inputs":[{"internalType":"address","name":"_to","type":"address"},{"internalType":"uint256","name":"_amount","type":"uint256"}],"name":"p2pTransfer","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"ReentrancyGuardReentrantCall","type":"error"},{"inputs":[{"internalType":"address","name":"token","type":"address"}],"name":"SafeERC20FailedOperation","type":"error"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"owner","type":"address"},{"indexed":true,"internalType":"address","name":"spender","type":"address"},{"indexed":false,"internalType":"uint256","name":"value","type":"uint256"}],"name":"Approval","type":"event"},{"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"value","type":"uint256"}],"name":"approve","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":false,"internalType":"uint256","name":"usdtAmount","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"sigmaAmount","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"rate","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"timestamp","type":"uint256"}],"name":"Bought","type":"event"},{"inputs":[{"internalType":"uint256","name":"_usdtAmount","type":"uint256"},{"internalType":"address","name":"_upline","type":"address"}],"name":"buy","outputs":[],"stateMutability":"nonpayable","type":"function"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"from","type":"address"},{"indexed":true,"internalType":"address","name":"to","type":"address"},{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"level","type":"uint256"},{"indexed":false,"internalType":"string","name":"reason","type":"string"},{"indexed":false,"internalType":"uint256","name":"timestamp","type":"uint256"}],"name":"IncomeLapsed","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"previousOwner","type":"address"},{"indexed":true,"internalType":"address","name":"newOwner","type":"address"}],"name":"OwnershipTransferred","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"from","type":"address"},{"indexed":true,"internalType":"address","name":"to","type":"address"},{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"level","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"timestamp","type":"uint256"}],"name":"ReferralPaid","type":"event"},{"inputs":[],"name":"renounceOwnership","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_sigmaAmount","type":"uint256"}],"name":"sell","outputs":[],"stateMutability":"nonpayable","type":"function"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":false,"internalType":"uint256","name":"sigmaAmount","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"usdtAmount","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"rate","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"timestamp","type":"uint256"}],"name":"Sold","type":"event"},{"inputs":[{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"value","type":"uint256"}],"name":"transfer","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"from","type":"address"},{"indexed":true,"internalType":"address","name":"to","type":"address"},{"indexed":false,"internalType":"uint256","name":"value","type":"uint256"}],"name":"Transfer","type":"event"},{"inputs":[{"internalType":"address","name":"from","type":"address"},{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"value","type":"uint256"}],"name":"transferFrom","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"owner","type":"address"},{"internalType":"address","name":"spender","type":"address"}],"name":"allowance","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"ath","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"atl","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"account","type":"address"}],"name":"balanceOf","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"BASE_RATE","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"creatorWallet","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"currentRate","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"dailyHistory","outputs":[{"internalType":"uint256","name":"open","type":"uint256"},{"internalType":"uint256","name":"high","type":"uint256"},{"internalType":"uint256","name":"low","type":"uint256"},{"internalType":"uint256","name":"close","type":"uint256"},{"internalType":"uint256","name":"timestamp","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"decimals","outputs":[{"internalType":"uint8","name":"","type":"uint8"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"getSellRate","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"INCREMENT","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_upline","type":"address"},{"internalType":"uint256","name":"_level","type":"uint256"}],"name":"isLevelUnlocked","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"lastHistoryDay","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"levelRewards","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"MAX_SIGMA_BUY","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"MIN_FOR_RENEWAL","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"MIN_HOLD_VALUE","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"name","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"owner","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"symbol","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"totalSupply","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"usdt","outputs":[{"internalType":"contract IERC20","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"users","outputs":[{"internalType":"address","name":"upline","type":"address"},{"internalType":"uint256","name":"referralExpiry","type":"uint256"},{"internalType":"uint256","name":"totalReferralEarned","type":"uint256"},{"internalType":"uint256","name":"lastBuyTimestamp","type":"uint256"},{"internalType":"uint256","name":"lastActionBlock","type":"uint256"},{"internalType":"uint256","name":"qualifiedDirectsCount","type":"uint256"},{"internalType":"bool","name":"hasBought","type":"bool"},{"internalType":"bool","name":"isInitialized","type":"bool"},{"internalType":"bool","name":"isCurrentlyQualified","type":"bool"}],"stateMutability":"view","type":"function"}];
-
-        // ERC20 ABI for USDT transfers
         const erc20ABI = [
             "event Transfer(address indexed from, address indexed to, uint256 value)"
         ];
 
-        // Create particles
         function createParticles() {
-            const particlesContainer = document.getElementById('particles');
+            const container = document.getElementById('particles');
             for(let i = 1; i <= 10; i++) {
                 const particle = document.createElement('div');
                 particle.className = 'particle';
                 particle.style.animationDelay = `${i * 2}s`;
-                particlesContainer.appendChild(particle);
+                container.appendChild(particle);
             }
         }
         
         async function connectWallet() {
             if (!window.ethereum) {
-                alert("Please install MetaMask to use this feature");
+                alert("Please install MetaMask");
                 return;
             }
-            
             try {
                 provider = new ethers.BrowserProvider(window.ethereum);
                 const accounts = await provider.send("eth_requestAccounts", []);
-                userAddress = accounts[0];
+                userAddress = accounts[0].toLowerCase();
                 
                 sigmaContract = new ethers.Contract(SIGMA_CONTRACT_ADDRESS, sigmaABI, provider);
                 
-                // Update connect button
+                try {
+                    const rateBN = await sigmaContract.getCurrentBuyRate();
+                    currentBuyRate = parseFloat(ethers.formatUnits(rateBN, 6));
+                } catch(e) {
+                    currentBuyRate = 0.43;
+                }
+                
                 const connectBtn = document.getElementById('connectBtn');
                 const shortAddress = userAddress.slice(0,6) + "..." + userAddress.slice(-4);
                 document.getElementById('btn-text').textContent = shortAddress;
                 connectBtn.classList.add('connected');
                 
-                // Save connection status
                 localStorage.setItem('sigma_wallet_connected', 'true');
-                
-                // Load data
                 await loadData();
                 
-                // Setup event listeners
                 window.ethereum.on('accountsChanged', handleAccountsChanged);
                 window.ethereum.on('chainChanged', () => window.location.reload());
-                
             } catch (error) {
                 console.error("Connection error:", error);
                 alert("Failed to connect wallet: " + error.message);
@@ -922,17 +781,14 @@
                 document.getElementById('btn-text').textContent = 'Connect Wallet';
                 document.getElementById('connectBtn').classList.remove('connected');
                 localStorage.removeItem('sigma_wallet_connected');
-                
                 document.getElementById('transfer-body').innerHTML = `
-                    <tr>
-                        <td colspan="11" class="empty-state">
-                            <i class="fas fa-wallet"></i><br>
-                            Please connect wallet to view data
-                        </td>
-                    </tr>
+                    <td colspan="9" class="empty-state">
+                        <i class="fas fa-wallet"></i><br>
+                        Please connect wallet to view data
+                    <\/td>
                 `;
             } else {
-                userAddress = accounts[0];
+                userAddress = accounts[0].toLowerCase();
                 const shortAddress = userAddress.slice(0,6) + "..." + userAddress.slice(-4);
                 document.getElementById('btn-text').textContent = shortAddress;
                 document.getElementById('connectBtn').classList.add('connected');
@@ -940,195 +796,207 @@
             }
         }
         
+        // Batch fetch events to avoid 10,000 limit
+        async function fetchEventsInBatches(contract, filter, fromBlock, toBlock, batchSize = 10000) {
+            let allEvents = [];
+            let currentFrom = fromBlock;
+            
+            while (currentFrom <= toBlock) {
+                let currentTo = Math.min(currentFrom + batchSize - 1, toBlock);
+                
+                try {
+                    const events = await contract.queryFilter(filter, currentFrom, currentTo);
+                    allEvents = allEvents.concat(events);
+                    
+                    if (currentTo >= toBlock) break;
+                    currentFrom = currentTo + 1;
+                    
+                    await new Promise(resolve => setTimeout(resolve, 100));
+                } catch (error) {
+                    if (error.message.includes("more than 10000")) {
+                        const midBlock = Math.floor((currentFrom + currentTo) / 2);
+                        const firstHalf = await fetchEventsInBatches(contract, filter, currentFrom, midBlock, batchSize);
+                        const secondHalf = await fetchEventsInBatches(contract, filter, midBlock + 1, currentTo, batchSize);
+                        allEvents = allEvents.concat(firstHalf).concat(secondHalf);
+                        break;
+                    }
+                    console.error("Batch fetch error:", error);
+                    currentFrom = currentTo + 1;
+                }
+            }
+            
+            return allEvents;
+        }
+        
         async function loadData() {
             if (!userAddress) {
                 document.getElementById('transfer-body').innerHTML = `
-                    <tr>
-                        <td colspan="11" class="empty-state">
-                            <i class="fas fa-wallet"></i><br>
-                            Please connect wallet to view data
-                        </td>
-                    </tr>
+                    <td colspan="9" class="empty-state">
+                        <i class="fas fa-wallet"></i><br>
+                        Please connect wallet to view data
+                    <\/td>
                 `;
                 return;
             }
             
             try {
                 document.getElementById('transfer-body').innerHTML = `
-                    <tr>
-                        <td colspan="11" class="loading">
-                            <i class="fas fa-spinner fa-spin"></i><br>
-                            Loading your transfer history...
-                        </td>
-                    </tr>
+                    <td colspan="9" class="loading">
+                        <i class="fas fa-spinner fa-spin"></i><br>
+                        Loading your transfer history...
+                    <\/td>
                 `;
                 
                 const currentBlock = await provider.getBlockNumber();
-                const fromBlock = Math.max(currentBlock - 1000000, 0); // Last ~1M blocks
+                const fromBlock = Math.max(currentBlock - 500000, 0);
                 
                 allTransfers = [];
                 
-                // 1. Fetch SIGMA Transfer events from SigmaSix contract (only where user is involved)
-                const sigmaFilterFrom = sigmaContract.filters.Transfer(userAddress, null);
-                const sigmaFilterTo = sigmaContract.filters.Transfer(null, userAddress);
+                // 1. Fetch SIGMA Transfer events
+                const transferFilter = sigmaContract.filters.Transfer();
+                const sigmaEvents = await fetchEventsInBatches(sigmaContract, transferFilter, fromBlock, currentBlock, 5000);
                 
-                const [sigmaEventsFrom, sigmaEventsTo] = await Promise.all([
-                    sigmaContract.queryFilter(sigmaFilterFrom, fromBlock, currentBlock),
-                    sigmaContract.queryFilter(sigmaFilterTo, fromBlock, currentBlock)
-                ]);
-                
-                const allSigmaEvents = [...sigmaEventsFrom, ...sigmaEventsTo];
-                
-                for (const event of allSigmaEvents) {
-                    if (event.args.from === "0x0000000000000000000000000000000000000000") continue; // Skip mints
-                    if (event.args.to === "0x0000000000000000000000000000000000000000") continue; // Skip burns
+                for (const event of sigmaEvents) {
+                    const from = event.args.from.toLowerCase();
+                    const to = event.args.to.toLowerCase();
                     
-                    const block = await provider.getBlock(event.blockNumber);
+                    if (from === "0x0000000000000000000000000000000000000000") continue;
+                    if (to === "0x0000000000000000000000000000000000000000") continue;
                     
-                    // Get SIGMA rate at that time (using current rate as approximation)
-                    const rate = await getRateAtBlock(event.blockNumber);
-                    
-                    allTransfers.push({
-                        hash: event.transactionHash,
-                        token: 'SIGMA',
-                        from: event.args.from,
-                        to: event.args.to,
-                        amount: ethers.formatUnits(event.args.value, 18),
-                        value: parseFloat(ethers.formatUnits(event.args.value, 18)) * rate,
-                        rate: rate,
-                        timestamp: block.timestamp,
-                        date: new Date(block.timestamp * 1000),
-                        blockNumber: event.blockNumber
-                    });
-                }
-                
-                // 2. Fetch USDT Transfer events (only where user is involved)
-                const usdtContract = new ethers.Contract(USDT_ADDRESS, erc20ABI, provider);
-                
-                const usdtFilterFrom = usdtContract.filters.Transfer(userAddress, null);
-                const usdtFilterTo = usdtContract.filters.Transfer(null, userAddress);
-                
-                const [usdtEventsFrom, usdtEventsTo] = await Promise.all([
-                    usdtContract.queryFilter(usdtFilterFrom, fromBlock, currentBlock),
-                    usdtContract.queryFilter(usdtFilterTo, fromBlock, currentBlock)
-                ]);
-                
-                const allUsdtEvents = [...usdtEventsFrom, ...usdtEventsTo];
-                
-                for (const event of allUsdtEvents) {
-                    if (event.args.from === "0x0000000000000000000000000000000000000000") continue;
-                    if (event.args.to === "0x0000000000000000000000000000000000000000") continue;
-                    
-                    const block = await provider.getBlock(event.blockNumber);
-                    
-                    allTransfers.push({
-                        hash: event.transactionHash,
-                        token: 'USDT',
-                        from: event.args.from,
-                        to: event.args.to,
-                        amount: ethers.formatUnits(event.args.value, 6),
-                        value: parseFloat(ethers.formatUnits(event.args.value, 6)),
-                        rate: 1.0, // USDT is 1:1 with USD
-                        timestamp: block.timestamp,
-                        date: new Date(block.timestamp * 1000),
-                        blockNumber: event.blockNumber
-                    });
-                }
-                
-                // 3. Fetch POL/MATIC native transfers by scanning transactions
-                // Get all transactions where user is involved (sent or received POL)
-                const history = await provider.send("eth_getLogs", [{
-                    fromBlock: ethers.toQuantity(fromBlock),
-                    toBlock: ethers.toQuantity(currentBlock),
-                    topics: [
-                        null,
-                        userAddress.toLowerCase().startsWith('0x') ? ethers.zeroPadValue(userAddress, 32) : null,
-                        null
-                    ]
-                }]);
-                
-                // For POL, we need to get transaction receipts to find value transfers
-                // This is a simplified approach - in production you'd use an API
-                
-                // For now, we'll try to get POL transfers from the blockchain
-                try {
-                    // Get all transactions where user is the sender or receiver
-                    // This is a basic implementation - for production, use a blockchain API service
-                    const blockNumbers = [];
-                    for (let i = fromBlock; i <= currentBlock; i += 1000) {
-                        blockNumbers.push(i);
+                    if (from === userAddress || to === userAddress) {
+                        const block = await provider.getBlock(event.blockNumber);
+                        const amount = parseFloat(ethers.formatUnits(event.args.value, 18));
+                        const value = amount * currentBuyRate;
+                        
+                        allTransfers.push({
+                            hash: event.transactionHash,
+                            token: 'SIGMA',
+                            from: from,
+                            to: to,
+                            amount: amount,
+                            value: value,
+                            timestamp: block.timestamp,
+                            date: new Date(block.timestamp * 1000)
+                        });
                     }
-                    
-                    // This is a placeholder - actual POL transfer detection would require 
-                    // scanning all transactions in each block which is too heavy
-                    // For production, use services like Covalent, Moralis, or Etherscan API
-                    
-                    console.log("POL transfer detection would require external API");
-                    
-                } catch (polError) {
-                    console.log("POL fetch error (non-critical):", polError);
                 }
                 
-                // Sort all transfers by timestamp (newest first)
-                allTransfers.sort((a, b) => b.timestamp - a.timestamp);
+                // 2. Fetch USDT Transfer events
+                const usdtContract = new ethers.Contract(USDT_ADDRESS, erc20ABI, provider);
+                const usdtFilter = usdtContract.filters.Transfer();
+                const usdtEvents = await fetchEventsInBatches(usdtContract, usdtFilter, fromBlock, currentBlock, 5000);
                 
+                for (const event of usdtEvents) {
+                    const from = event.args.from.toLowerCase();
+                    const to = event.args.to.toLowerCase();
+                    
+                    if (from === "0x0000000000000000000000000000000000000000") continue;
+                    if (to === "0x0000000000000000000000000000000000000000") continue;
+                    
+                    if (from === userAddress || to === userAddress) {
+                        const block = await provider.getBlock(event.blockNumber);
+                        const amount = parseFloat(ethers.formatUnits(event.args.value, 6));
+                        const value = amount;
+                        
+                        allTransfers.push({
+                            hash: event.transactionHash,
+                            token: 'USDT',
+                            from: from,
+                            to: to,
+                            amount: amount,
+                            value: value,
+                            timestamp: block.timestamp,
+                            date: new Date(block.timestamp * 1000)
+                        });
+                    }
+                }
+                
+                // 3. Fetch POL Transfer events (from Sigma contract as POL is native)
+                try {
+                    const polEvents = await fetchEventsInBatches(sigmaContract, transferFilter, fromBlock, currentBlock, 5000);
+                    
+                    for (const event of polEvents) {
+                        const from = event.args.from.toLowerCase();
+                        const to = event.args.to.toLowerCase();
+                        
+                        if (from === "0x0000000000000000000000000000000000000000") continue;
+                        if (to === "0x0000000000000000000000000000000000000000") continue;
+                        
+                        if (from === userAddress || to === userAddress) {
+                            const alreadyAdded = allTransfers.some(t => t.hash === event.transactionHash && t.token === 'POL');
+                            if (!alreadyAdded) {
+                                const block = await provider.getBlock(event.blockNumber);
+                                const amount = parseFloat(ethers.formatUnits(event.args.value, 18));
+                                const value = amount * 0.7;
+                                
+                                allTransfers.push({
+                                    hash: event.transactionHash,
+                                    token: 'POL',
+                                    from: from,
+                                    to: to,
+                                    amount: amount,
+                                    value: value,
+                                    timestamp: block.timestamp,
+                                    date: new Date(block.timestamp * 1000)
+                                });
+                            }
+                        }
+                    }
+                } catch(e) {
+                    console.log("POL fetch note:", e);
+                }
+                
+                // Remove duplicates by hash
+                const uniqueTransfers = [];
+                const seenHashes = new Set();
+                for (const tx of allTransfers) {
+                    if (!seenHashes.has(tx.hash)) {
+                        seenHashes.add(tx.hash);
+                        uniqueTransfers.push(tx);
+                    }
+                }
+                allTransfers = uniqueTransfers;
+                
+                allTransfers.sort((a, b) => b.timestamp - a.timestamp);
                 filteredTransfers = [...allTransfers];
                 
-                // Apply default SIGMA filter
                 applyFilters();
-                
                 updateStats();
                 displayTransfers();
                 
                 if (allTransfers.length === 0) {
                     document.getElementById('transfer-body').innerHTML = `
-                        <tr>
-                            <td colspan="11" class="empty-state">
-                                <i class="fas fa-exchange-alt"></i><br>
-                                No transfer history found for your wallet
-                            </td>
-                        </tr>
+                        <td colspan="9" class="empty-state">
+                            <i class="fas fa-exchange-alt"></i><br>
+                            No transfer history found for your wallet
+                        <\/td>
                     `;
                 }
                 
             } catch (error) {
                 console.error("Error loading data:", error);
                 document.getElementById('transfer-body').innerHTML = `
-                    <tr>
-                        <td colspan="11" class="empty-state">
-                            <i class="fas fa-exclamation-circle"></i><br>
-                            Error: ${error.message}
-                        </td>
-                    </tr>
+                    <td colspan="9" class="empty-state">
+                        <i class="fas fa-exclamation-circle"></i><br>
+                        Error: ${error.message.substring(0, 100)}
+                    <\/td>
                 `;
             }
         }
         
-        async function getRateAtBlock(blockNumber) {
-            try {
-                // Try to get rate from contract at that block
-                const rate = await sigmaContract.currentRate({ blockTag: blockNumber });
-                return parseFloat(ethers.formatUnits(rate, 6));
-            } catch {
-                return 1.0; // Default fallback
-            }
-        }
-        
         function updateStats() {
-            let totalSent = 0;
-            let totalReceived = 0;
-            let totalSentValue = 0;
-            let totalReceivedValue = 0;
+            let totalSent = 0, totalReceived = 0;
+            let totalSentValue = 0, totalReceivedValue = 0;
             let counterparties = new Set();
             
             allTransfers.forEach(tx => {
-                if (tx.from.toLowerCase() === userAddress.toLowerCase()) {
-                    totalSent += parseFloat(tx.amount);
+                if (tx.from === userAddress) {
+                    totalSent += tx.amount;
                     totalSentValue += tx.value;
                     counterparties.add(tx.to);
                 }
-                if (tx.to.toLowerCase() === userAddress.toLowerCase()) {
-                    totalReceived += parseFloat(tx.amount);
+                if (tx.to === userAddress) {
+                    totalReceived += tx.amount;
                     totalReceivedValue += tx.value;
                     counterparties.add(tx.from);
                 }
@@ -1137,27 +1005,24 @@
             const netFlow = totalReceivedValue - totalSentValue;
             
             document.getElementById('total-sent').textContent = totalSent.toFixed(4) + " Tokens";
-            document.getElementById('total-sent-value').textContent = "$" + totalSentValue.toFixed(2) + " / ₹" + (totalSentValue * usdtToInr).toFixed(2);
-            
+            document.getElementById('total-sent-value').innerHTML = "$" + totalSentValue.toFixed(2);
             document.getElementById('total-received').textContent = totalReceived.toFixed(4) + " Tokens";
-            document.getElementById('total-received-value').textContent = "$" + totalReceivedValue.toFixed(2) + " / ₹" + (totalReceivedValue * usdtToInr).toFixed(2);
-            
+            document.getElementById('total-received-value').innerHTML = "$" + totalReceivedValue.toFixed(2);
             document.getElementById('total-transactions').textContent = allTransfers.length;
             document.getElementById('unique-counterparties').textContent = counterparties.size + " Counterparties";
-            
-            document.getElementById('net-flow').textContent = "$" + Math.abs(netFlow).toFixed(2) + " / ₹" + Math.abs(netFlow * usdtToInr).toFixed(2);
+            document.getElementById('net-flow').innerHTML = "$" + Math.abs(netFlow).toFixed(2);
             document.getElementById('net-flow').style.color = netFlow >= 0 ? 'var(--profit)' : 'var(--loss)';
             
-            const netFlowStatus = document.getElementById('net-flow-status');
+            const status = document.getElementById('net-flow-status');
             if (netFlow > 0) {
-                netFlowStatus.textContent = "Net Received";
-                netFlowStatus.style.color = 'var(--profit)';
+                status.textContent = "Net Received";
+                status.style.color = 'var(--profit)';
             } else if (netFlow < 0) {
-                netFlowStatus.textContent = "Net Sent";
-                netFlowStatus.style.color = 'var(--loss)';
+                status.textContent = "Net Sent";
+                status.style.color = 'var(--loss)';
             } else {
-                netFlowStatus.textContent = "Balanced";
-                netFlowStatus.style.color = '#888';
+                status.textContent = "Balanced";
+                status.style.color = '#888';
             }
         }
         
@@ -1169,14 +1034,9 @@
             const searchWallet = document.getElementById('searchWallet').value.toLowerCase();
             
             filteredTransfers = allTransfers.filter(tx => {
-                // Token filter (now only SIGMA, USDT, POL - no "all" option)
                 if (tx.token !== tokenFilter) return false;
-                
-                // Direction filter
-                if (directionFilter === 'sent' && tx.from.toLowerCase() !== userAddress.toLowerCase()) return false;
-                if (directionFilter === 'received' && tx.to.toLowerCase() !== userAddress.toLowerCase()) return false;
-                
-                // Date filter
+                if (directionFilter === 'sent' && tx.from !== userAddress) return false;
+                if (directionFilter === 'received' && tx.to !== userAddress) return false;
                 if (startDate) {
                     const start = new Date(startDate).getTime() / 1000;
                     if (tx.timestamp < start) return false;
@@ -1185,14 +1045,9 @@
                     const end = new Date(endDate).getTime() / 1000 + 86400;
                     if (tx.timestamp > end) return false;
                 }
-                
-                // Wallet search
                 if (searchWallet) {
-                    const fromMatch = tx.from.toLowerCase().includes(searchWallet);
-                    const toMatch = tx.to.toLowerCase().includes(searchWallet);
-                    if (!fromMatch && !toMatch) return false;
+                    if (!tx.from.includes(searchWallet) && !tx.to.includes(searchWallet)) return false;
                 }
-                
                 return true;
             });
             
@@ -1205,7 +1060,6 @@
             document.getElementById('startDate').value = '';
             document.getElementById('endDate').value = '';
             document.getElementById('searchWallet').value = '';
-            
             applyFilters();
         }
         
@@ -1214,130 +1068,52 @@
             
             if (filteredTransfers.length === 0) {
                 tbody.innerHTML = `
-                    <tr>
-                        <td colspan="11" class="empty-state">
-                            <i class="fas fa-exchange-alt"></i><br>
-                            No matching transfers found
-                        </td>
-                    </tr>
+                    <td colspan="9" class="empty-state">
+                        <i class="fas fa-exchange-alt"></i><br>
+                        No matching transfers found
+                    <\/td>
                 `;
                 return;
             }
             
             let html = '';
-            
-            filteredTransfers.forEach((tx, index) => {
-                const direction = tx.from.toLowerCase() === userAddress.toLowerCase() ? 'SENT' : 'RECEIVED';
-                const counterparty = direction === 'SENT' ? tx.to : tx.from;
-                
-                const dateStr = tx.date.toLocaleDateString('en-GB', {
-                    day: '2-digit',
-                    month: 'short',
-                    year: 'numeric'
-                });
-                const timeStr = tx.date.toLocaleTimeString('en-US', {
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    second: '2-digit',
-                    hour12: true
-                });
-                
+            filteredTransfers.forEach((tx, i) => {
+                const direction = tx.from === userAddress ? 'SENT' : 'RECEIVED';
                 const tokenClass = tx.token === 'SIGMA' ? 'token-sigma' : (tx.token === 'USDT' ? 'token-usdt' : 'token-pol');
                 const directionClass = direction === 'SENT' ? 'direction-sent' : 'direction-received';
-                
                 const fromShort = tx.from.slice(0,8) + '...' + tx.from.slice(-6);
                 const toShort = tx.to.slice(0,8) + '...' + tx.to.slice(-6);
                 const hashShort = tx.hash.slice(0,10) + '...' + tx.hash.slice(-8);
+                const dateStr = tx.date.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+                const timeStr = tx.date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
                 
                 html += `
                     <tr>
-                        <td>${index + 1}</td>
-                        <td>
-                            <div style="font-weight:600">${dateStr}</div>
-                            <div style="font-size:12px; color:#888">${timeStr}</div>
-                        </td>
-                        <td>
-                            <span class="direction-badge ${directionClass}">
-                                <i class="fas fa-${direction === 'SENT' ? 'arrow-up' : 'arrow-down'}"></i> ${direction}
-                            </span>
-                        </td>
-                        <td>
-                            <span class="token-badge ${tokenClass}">
-                                <i class="fas fa-${tx.token === 'SIGMA' ? 'gem' : (tx.token === 'USDT' ? 'dollar-sign' : 'bolt')}"></i>
-                                ${tx.token}
-                            </span>
-                        </td>
-                        <td>
-                            <div class="wallet-address" onclick="copyToClipboard('${tx.from}')">
-                                <i class="fas fa-copy"></i> ${fromShort}
-                            </div>
-                        </td>
-                        <td>
-                            <div class="wallet-address" onclick="copyToClipboard('${tx.to}')">
-                                <i class="fas fa-copy"></i> ${toShort}
-                            </div>
-                        </td>
-                        <td style="font-weight:700; color:${direction === 'SENT' ? 'var(--loss)' : 'var(--profit)'}">
-                            ${direction === 'SENT' ? '-' : '+'}${parseFloat(tx.amount).toFixed(4)} ${tx.token}
-                        </td>
-                        <td>
-                            <div>$${tx.value.toFixed(2)}</div>
-                            <div style="font-size:11px; color:#888">₹${(tx.value * usdtToInr).toFixed(2)}</div>
-                        </td>
-                        <td>
-                            <div>$${(tx.rate).toFixed(4)}</div>
-                            <div style="font-size:11px; color:#888">₹${(tx.rate * usdtToInr).toFixed(2)}</div>
-                        </td>
-                        <td>
-                            <div>$${(tx.rate).toFixed(4)}</div>
-                            <div style="font-size:11px; color:#888">₹${(tx.rate * usdtToInr).toFixed(2)}</div>
-                        </td>
-                        <td>
-                            <div class="wallet-address" onclick="copyToClipboard('${tx.hash}')">
-                                <i class="fas fa-copy"></i> ${hashShort}
-                            </div>
-                        </td>
+                        <td>${i+1}</td>
+                        <td><div style="font-weight:600">${dateStr}</div><div style="font-size:11px; color:#888">${timeStr}</div></td>
+                        <td><span class="direction-badge ${directionClass}"><i class="fas fa-${direction === 'SENT' ? 'arrow-up' : 'arrow-down'}"></i> ${direction}</span></td>
+                        <td><span class="token-badge ${tokenClass}"><i class="fas fa-${tx.token === 'SIGMA' ? 'gem' : (tx.token === 'USDT' ? 'dollar-sign' : 'bolt')}"></i> ${tx.token}</span></td>
+                        <td><div class="wallet-address" onclick="copyToClipboard('${tx.from}')"><i class="fas fa-copy"></i> ${fromShort}</div></td>
+                        <td><div class="wallet-address" onclick="copyToClipboard('${tx.to}')"><i class="fas fa-copy"></i> ${toShort}</div></td>
+                        <td style="font-weight:700; color:${direction === 'SENT' ? 'var(--loss)' : 'var(--profit)'}">${direction === 'SENT' ? '-' : '+'}${tx.amount.toFixed(4)} ${tx.token}</td>
+                        <td><div>$${tx.value.toFixed(2)}</div><div style="font-size:10px; color:#888">₹${(tx.value * usdtToInr).toFixed(2)}</div></td>
+                        <td><div class="wallet-address" onclick="copyToClipboard('${tx.hash}')"><i class="fas fa-copy"></i> ${hashShort}</div></td>
                     </tr>
                 `;
             });
-            
             tbody.innerHTML = html;
         }
         
         function exportData() {
-            if (!userAddress) {
-                alert("Please connect wallet first");
-                return;
-            }
-            
+            if (!userAddress) { alert("Please connect wallet first"); return; }
             let csvContent = "data:text/csv;charset=utf-8,";
-            csvContent += "Serial No,Date,Time,Direction,Token,Sender,Receiver,Amount,Value (USDT),Value (INR),Send Rate,Receive Rate,Tx Hash\n";
-            
-            filteredTransfers.forEach((tx, index) => {
-                const direction = tx.from.toLowerCase() === userAddress.toLowerCase() ? 'SENT' : 'RECEIVED';
-                
-                const row = [
-                    index + 1,
-                    tx.date.toLocaleDateString(),
-                    tx.date.toLocaleTimeString(),
-                    direction,
-                    tx.token,
-                    tx.from,
-                    tx.to,
-                    parseFloat(tx.amount).toFixed(4),
-                    tx.value.toFixed(2),
-                    (tx.value * usdtToInr).toFixed(2),
-                    tx.rate.toFixed(4),
-                    tx.rate.toFixed(4),
-                    tx.hash
-                ].join(',');
-                
-                csvContent += row + "\n";
+            csvContent += "Serial No,Date,Time,Direction,Token,Sender,Receiver,Amount,Value (USDT),Value (INR),Tx Hash\n";
+            filteredTransfers.forEach((tx, i) => {
+                const direction = tx.from === userAddress ? 'SENT' : 'RECEIVED';
+                csvContent += `${i+1},${tx.date.toLocaleDateString()},${tx.date.toLocaleTimeString()},${direction},${tx.token},${tx.from},${tx.to},${tx.amount.toFixed(4)},${tx.value.toFixed(2)},${(tx.value * usdtToInr).toFixed(2)},${tx.hash}\n`;
             });
-            
-            const encodedUri = encodeURI(csvContent);
             const link = document.createElement("a");
-            link.setAttribute("href", encodedUri);
+            link.setAttribute("href", encodeURI(csvContent));
             link.setAttribute("download", `my_transfers.csv`);
             document.body.appendChild(link);
             link.click();
@@ -1345,53 +1121,35 @@
         }
         
         function copyToClipboard(text) {
-            navigator.clipboard.writeText(text).then(() => {
-                alert("Copied to clipboard!");
-            }).catch(err => {
-                console.error("Failed to copy:", err);
-            });
+            navigator.clipboard.writeText(text).then(() => alert("Copied!"));
         }
         
-        // Auto-connect function
         async function autoConnect() {
             if (window.ethereum) {
                 try {
                     provider = new ethers.BrowserProvider(window.ethereum);
                     const accounts = await provider.listAccounts();
-                    
                     if (accounts.length > 0) {
-                        userAddress = accounts[0].address;
-                        
+                        userAddress = accounts[0].address.toLowerCase();
                         sigmaContract = new ethers.Contract(SIGMA_CONTRACT_ADDRESS, sigmaABI, provider);
-                        
                         const connectBtn = document.getElementById('connectBtn');
-                        const shortAddress = userAddress.slice(0,6) + "..." + userAddress.slice(-4);
-                        document.getElementById('btn-text').textContent = shortAddress;
+                        document.getElementById('btn-text').textContent = userAddress.slice(0,6) + "..." + userAddress.slice(-4);
                         connectBtn.classList.add('connected');
-                        
                         await loadData();
-                        
                         window.ethereum.on('accountsChanged', handleAccountsChanged);
                         window.ethereum.on('chainChanged', () => window.location.reload());
                     }
-                } catch (error) {
-                    console.log("Auto-connect error:", error);
-                }
+                } catch (error) { console.log("Auto-connect error:", error); }
             }
         }
         
-        // Initialize
         window.onload = function() {
             createParticles();
-            
-            // Set default dates (last 30 days)
             const end = new Date();
             const start = new Date();
             start.setDate(start.getDate() - 30);
-            
             document.getElementById('startDate').valueAsDate = start;
             document.getElementById('endDate').valueAsDate = end;
-            
             autoConnect();
         };
     </script>
