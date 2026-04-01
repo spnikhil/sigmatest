@@ -19,6 +19,7 @@
             --warning: #ffaa00;
             --danger: #ff4d4d;
             --gradient: linear-gradient(90deg, #00ffcc, #9d4edd, #ff2a6d, #00ffcc);
+            --gold: #ffd700;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { background-color: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; min-height: 100vh; overflow-x: hidden; position: relative; }
@@ -35,7 +36,7 @@
         .floating-icon:nth-child(7) { top: 70%; left: 50%; animation-delay: 12s; color: rgba(255, 42, 109, 0.3); }
         @keyframes rainbow { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
         @keyframes float { 0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.3; } 25% { transform: translateY(-20px) rotate(90deg); opacity: 0.6; } 50% { transform: translateY(0) rotate(180deg); opacity: 0.3; } 75% { transform: translateY(20px) rotate(270deg); opacity: 0.6; } }
-        .container { max-width: 1200px; margin: 0 auto; padding: 15px; position: relative; z-index: 1; }
+        .container { max-width: 1400px; margin: 0 auto; padding: 15px; position: relative; z-index: 1; }
         .header { text-align: center; margin-bottom: 30px; padding-top: 20px; }
         .header h1 { background: var(--gradient); background-size: 400% 400%; -webkit-background-clip: text; background-clip: text; color: transparent; font-size: clamp(28px, 5vw, 42px); font-weight: 800; letter-spacing: 2px; margin-bottom: 10px; animation: rainbow 8s ease infinite; line-height: 1.2; }
         .header p { color: #aaa; font-size: clamp(14px, 3vw, 16px); letter-spacing: 1px; }
@@ -47,7 +48,7 @@
         .filters-section { background: rgba(22, 24, 33, 0.85); backdrop-filter: blur(10px); border-radius: 20px; padding: 15px; border: 1px solid rgba(157, 78, 221, 0.2); margin-bottom: 20px; }
         .filters-title { color: var(--secondary); font-size: clamp(16px, 4vw, 20px); margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
         .filter-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-end; }
-        .filter-group { flex: 1; min-width: 200px; }
+        .filter-group { flex: 1; min-width: 180px; }
         .filter-label { color: #aaa; font-size: clamp(12px, 3vw, 14px); margin-bottom: 5px; display: block; }
         .date-input, .type-select, .search-input { width: 100%; padding: 10px 15px; background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(157, 78, 221, 0.3); border-radius: 10px; color: white; font-size: 14px; }
         .date-input:focus, .type-select:focus, .search-input:focus { outline: none; border-color: var(--primary); }
@@ -65,8 +66,9 @@
         .stat-value { font-size: clamp(20px, 4vw, 28px); font-weight: 700; color: var(--primary); word-break: break-word; }
         .stat-value.positive { color: var(--success); }
         .stat-value.negative { color: var(--danger); }
-        .table-container { overflow-x: hidden; border-radius: 12px; border: 1px solid var(--border); background: rgba(0, 0, 0, 0.2); }
-        .desktop-table { display: table; width: 100%; border-collapse: collapse; }
+        .stat-value.gold { color: var(--gold); }
+        .table-container { overflow-x: auto; border-radius: 12px; border: 1px solid var(--border); background: rgba(0, 0, 0, 0.2); -webkit-overflow-scrolling: touch; }
+        .desktop-table { width: 100%; border-collapse: collapse; min-width: 800px; }
         .mobile-cards { display: none; }
         .mobile-card { background: rgba(255, 255, 255, 0.02); border-radius: 16px; padding: 15px; margin-bottom: 12px; border: 1px solid rgba(0, 255, 204, 0.1); position: relative; overflow: hidden; }
         .mobile-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: var(--gradient); background-size: 400% 400%; animation: rainbow 8s ease infinite; }
@@ -75,21 +77,19 @@
         .mobile-card-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
         .mobile-card-row:last-child { border-bottom: none; }
         .mobile-card-label { font-size: 12px; color: #888; display: flex; align-items: center; gap: 5px; }
-        .mobile-card-value { font-size: 13px; font-weight: 600; text-align: right; }
-        .mobile-wallet-address { font-family: monospace; background: rgba(0, 255, 204, 0.1); padding: 4px 8px; border-radius: 6px; font-size: 11px; display: inline-block; cursor: pointer; transition: all 0.2s; }
-        .mobile-wallet-address:hover { background: rgba(0, 255, 204, 0.2); transform: scale(1.05); }
-        .mobile-amount { font-weight: 700; display: flex; align-items: center; gap: 5px; }
-        .mobile-amount.positive { color: var(--success); }
-        .mobile-amount.negative { color: var(--danger); }
+        .mobile-card-value { font-size: 13px; font-weight: 600; text-align: right; word-break: break-word; }
+        .wallet-address { font-family: monospace; font-size: 12px; background: rgba(0, 255, 204, 0.1); padding: 6px 10px; border-radius: 8px; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; color: var(--primary); border: 1px solid rgba(0, 255, 204, 0.2); transition: all 0.2s; }
+        .wallet-address:hover { background: rgba(0, 255, 204, 0.2); border-color: var(--primary); transform: translateY(-2px); }
         th { background: rgba(157, 78, 221, 0.1); color: var(--secondary); padding: 12px 10px; text-align: left; font-weight: 700; font-size: clamp(11px, 2.5vw, 14px); text-transform: uppercase; letter-spacing: 1px; white-space: nowrap; }
-        td { padding: 12px 10px; border-bottom: 1px solid rgba(45, 47, 62, 0.5); font-size: clamp(12px, 3vw, 14px); vertical-align: top; }
-        tr:hover { background: rgba(255, 255, 255, 0.03); }
-        .status-badge { padding: 4px 8px; border-radius: 16px; font-size: clamp(10px, 2.5vw, 12px); font-weight: 600; display: inline-block; }
-        .status-active { background: rgba(0, 255, 136, 0.1); color: var(--success); border:1px solid rgba(0,255,136,0.2); }
-        .status-lapsed { background: rgba(255, 77, 77, 0.1); color: var(--danger); border:1px solid rgba(255,77,77,0.2); }
-        .status-ico { background: rgba(255, 170, 0, 0.1); color: #ffaa00; border:1px solid rgba(255,170,0,0.2); }
+        td { padding: 12px 10px; border-bottom: 1px solid rgba(45, 47, 62, 0.5); font-size: clamp(12px, 3vw, 14px); vertical-align: middle; }
+        tr:hover td { background: rgba(255, 255, 255, 0.03); }
         .amount-positive { color: var(--success); font-weight: 700; }
         .amount-negative { color: var(--danger); font-weight: 700; }
+        .amount-gold { color: var(--gold); font-weight: 700; }
+        .percent-badge { background: rgba(0,255,204,0.1); color: var(--primary); padding: 2px 8px; border-radius: 20px; font-size: 11px; font-weight: 600; display: inline-block; }
+        .level-badge { background: rgba(157,78,221,0.15); color: var(--secondary); padding: 4px 12px; border-radius: 30px; font-size: 11px; font-weight: 600; display: inline-block; }
+        .reason-badge { background: rgba(255,77,77,0.15); color: var(--danger); padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; display: inline-block; max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .ico-badge { background: rgba(255,215,0,0.15); color: var(--gold); padding: 4px 12px; border-radius: 30px; font-size: 11px; font-weight: 600; display: inline-block; }
         .loading { text-align: center; padding: 30px 20px; color: var(--primary); }
         .no-data { text-align: center; padding: 30px 20px; color: #888; }
         .back-btn { display: inline-flex; align-items: center; gap: 8px; color: var(--primary); text-decoration: none; font-weight: 600; margin-bottom: 15px; padding: 8px 16px; border-radius: 10px; background: rgba(0, 255, 204, 0.1); border: 1px solid rgba(0, 255, 204, 0.3); transition: all 0.3s; font-size: clamp(12px, 3vw, 14px); }
@@ -98,18 +98,15 @@
         .refresh-btn:hover { background: linear-gradient(90deg, #7b2cbf, var(--secondary)); transform: translateY(-2px); }
         .header-actions { display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px; }
         @media (min-width: 480px) { .header-actions { flex-direction: row; justify-content: space-between; align-items: center; } }
-        .wallet-address { font-family: monospace; font-size: 11px; background: rgba(0, 255, 204, 0.1); padding: 6px 10px; border-radius: 8px; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; color: var(--primary); border: 1px solid rgba(0, 255, 204, 0.2); transition: all 0.2s; }
-        .wallet-address:hover { background: rgba(0, 255, 204, 0.2); border-color: var(--primary); transform: translateY(-2px); }
         .filter-buttons { display: flex; gap: 10px; flex-wrap: wrap; }
-        .reason-badge { display: inline-block; padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: 600; background: rgba(255, 255, 255, 0.05); }
-        .level-badge { background: rgba(157,78,221,0.15); color: var(--secondary); padding:2px 8px; border-radius:30px; font-size:11px; margin-left:5px; }
-        .percent-badge { background: rgba(0,255,204,0.1); color: var(--primary); padding:2px 6px; border-radius:20px; font-size:10px; margin-left:4px; }
         @media (max-width: 768px) {
             .container { padding: 10px; }
             .connect-btn { position: relative; top: auto; right: auto; margin: 0 auto 15px auto; width: 100%; max-width: 100%; justify-content: center; }
             .desktop-table { display: none; }
             .mobile-cards { display: block; }
             .stats-row { grid-template-columns: 1fr; }
+            .filter-row { flex-direction: column; }
+            .filter-group { width: 100%; }
         }
     </style>
 </head>
@@ -119,7 +116,6 @@
     <div class="floating-icons"> <div class="floating-icon">₿</div> <div class="floating-icon">Ξ</div> <div class="floating-icon">S</div> <div class="floating-icon">Σ</div> <div class="floating-icon">$</div> <div class="floating-icon">◈</div> <div class="floating-icon">✦</div> </div>
     <div class="chain-warning" id="chainWarning"><i class="fas fa-exclamation-triangle"></i> Please switch to Polygon network</div>
     
-    <!-- Connect Button -->
     <button class="connect-btn" id="connectBtn" onclick="handleConnectClick()"><i class="fas fa-wallet"></i> <span id="btn-text">Connect Wallet</span></button>
     
     <div class="container">
@@ -130,7 +126,7 @@
         
         <div class="header">
             <h1>SIGMA SIX | INCOME REPORT</h1>
-            <p>ICO Bonus (10% on first purchase only) • Team Referral • Lapsed Income</p>
+            <p>ICO Bonus (10%) • Team Referral • Lapsed Income</p>
         </div>
         
         <div class="filters-section">
@@ -141,7 +137,7 @@
                 <div class="filter-group"><label class="filter-label"><i class="fas fa-tag"></i> Income Type</label>
                     <select id="incomeType" class="type-select">
                         <option value="all">All Types</option>
-                        <option value="ICO">ICO Bonus</option>
+                        <option value="ICO">ICO Bonus (10%)</option>
                         <option value="REFERRAL">Team Referral</option>
                         <option value="lapsed">Lapsed Income</option>
                     </select>
@@ -158,15 +154,16 @@
         <div class="main-card">
             <h2 class="card-title"><i class="fas fa-chart-line"></i> Income Overview</h2>
             <div class="stats-row">
-                <div class="stat-box"><div class="stat-label"><i class="fas fa-coins"></i> Total SIG6 Income</div><div id="total-sig6" class="stat-value positive">0.0000 SIG6</div></div>
-                <div class="stat-box"><div class="stat-label"><i class="fas fa-exclamation-triangle"></i> Lapsed Income</div><div id="lapsed-income" class="stat-value negative">0.0000 SIG6</div></div>
+                <div class="stat-box"><div class="stat-label"><i class="fas fa-star"></i> ICO Bonus (10%)</div><div id="total-ico" class="stat-value gold">0.0000 SIG6</div></div>
+                <div class="stat-box"><div class="stat-label"><i class="fas fa-users"></i> Referral Income</div><div id="total-referral" class="stat-value positive">0.0000 SIG6</div></div>
+                <div class="stat-box"><div class="stat-label"><i class="fas fa-exclamation-triangle"></i> Lapsed Income</div><div id="total-lapsed" class="stat-value negative">0.0000 SIG6</div></div>
                 <div class="stat-box"><div class="stat-label"><i class="fas fa-history"></i> Total Transactions</div><div id="total-transactions" class="stat-value">0</div></div>
             </div>
         </div>
         
-        <!-- ICO Bonus Table - Shows ONLY the first purchase with 10% bonus -->
+        <!-- ICO Bonus Table -->
         <div class="main-card">
-            <h2 class="card-title"><i class="fas fa-star"></i> ICO Bonus</h2>
+            <h2 class="card-title"><i class="fas fa-star"></i> ICO Bonus (10% on First Purchase)</h2>
             <div class="table-container">
                 <table class="desktop-table" id="ico-table">
                     <thead>
@@ -187,17 +184,17 @@
         
         <!-- Team Referral Table -->
         <div class="main-card">
-            <h2 class="card-title"><i class="fas fa-users"></i> Team Referral</h2>
+            <h2 class="card-title"><i class="fas fa-users"></i> Team Referral Income</h2>
             <div class="table-container">
                 <table class="desktop-table" id="referral-table">
                     <thead>
-                        <tr>
+                        32
                             <th>#</th>
                             <th>From Wallet</th>
                             <th>Level</th>
                             <th>Percentage</th>
                             <th>Amount (SIG6)</th>
-                            <th>Date</th>
+                            <th>Date & Time</th>
                         </tr>
                     </thead>
                     <tbody id="referral-body-desktop"></tbody>
@@ -212,13 +209,13 @@
             <div class="table-container">
                 <table class="desktop-table" id="lapsed-table">
                     <thead>
-                        <tr>
+                        32
                             <th>#</th>
                             <th>From Wallet</th>
                             <th>Level</th>
-                            <th>Amount (SIG6)</th>
+                            <th>Amount Lost (SIG6)</th>
                             <th>Reason</th>
-                            <th>Date</th>
+                            <th>Date & Time</th>
                         </tr>
                     </thead>
                     <tbody id="lapsed-body-desktop"></tbody>
@@ -231,30 +228,29 @@
     <script>
         // ===== UPDATED CONTRACT CONFIGURATION =====
         const SIGMA_CONTRACT_ADDRESS = "0x846339d474AE98b219111eb969E27b6317aE5852";
-        let provider, userAddress, sigmaContract, signer;
+        let provider, userAddress, sigmaContract;
         let allReferralEvents = [];
         let allLapsedEvents = [];
-        let allBoughtEvents = [];
+        let allICOBonusEvents = [];
+        let allTokensBoughtEvents = [];
         
-        // Correct referral percentages from contract (level 1 = 10%, level 2 = 4%, etc.)
+        // Referral percentages based on level
         const levelPercent = [0, 10, 4, 3, 2, 1, 0.5, 0.5, 0.5, 0.5, 0.5];
         
-        // ===== UPDATED ABI (from your new contract) =====
+        // ===== UPDATED ABI =====
         const sigmaABI = [
-            "function currentRate() view returns (uint256)",
-            "function getSellRate() view returns (uint256)",
+            "function getCurrentBuyRate() view returns (uint256)",
             "function balanceOf(address) view returns (uint256)",
-            "function creator() view returns (address)",
-            "function usdt() view returns (address)",
-            "function totalSupply() view returns (uint256)",
+            "function buySigma(uint256 _usdtAmount, address _upline) external",
+            "function sellSigma(uint256 _sigmaAmount) external",
+            "function transfer(address to, uint256 amount) returns (bool)",
             "function users(address) view returns (address upline, uint256 directCount, uint256 lastBuyTimestamp, uint256 totalReferralEarned, uint256 lastActionTime, bool hasBoughtBefore)",
-            "event Bought(address indexed user, uint256 usdtAmount, uint256 sigmaAmount, uint256 rate, uint256 timestamp)",
-            "event Sold(address indexed user, uint256 sigmaAmount, uint256 usdtAmount, uint256 rate, uint256 timestamp)",
-            "event ReferralPaid(address indexed from, address indexed to, uint256 amount, uint256 level, uint256 timestamp)",
-            "event IncomeLapsed(address indexed from, address indexed to, uint256 amount, uint256 level, string reason, uint256 timestamp)"
+            "event ICOBonusPaid(address indexed user, uint256 amount)",
+            "event TokensBought(address indexed user, uint256 amount, uint256 rate, uint256 usdtSpent)",
+            "event ReferralPaid(address indexed from, address indexed to, uint256 amount, uint256 level)",
+            "event IncomeLapsed(address indexed user, string reason, uint256 amount)"
         ];
 
-        // Helper Functions
         async function checkChain() { 
             if(!provider) return false; 
             try{ 
@@ -287,8 +283,7 @@
                 provider = new ethers.BrowserProvider(ethProvider);
                 let accounts = await provider.send("eth_requestAccounts",[]);
                 if(!accounts || accounts.length===0) throw new Error("No accounts");
-                userAddress = accounts[0];
-                signer = await provider.getSigner();
+                userAddress = accounts[0].toLowerCase();
                 sigmaContract = new ethers.Contract(SIGMA_CONTRACT_ADDRESS, sigmaABI, provider);
                 await checkChain();
                 const connectBtn = document.getElementById('connectBtn');
@@ -299,8 +294,7 @@
                 
                 ethProvider.on('accountsChanged', async (accs) => { 
                     if(accs.length > 0){ 
-                        userAddress = accs[0]; 
-                        signer = await provider.getSigner(); 
+                        userAddress = accs[0].toLowerCase(); 
                         document.getElementById('btn-text').innerText = "🦊 "+userAddress.slice(0,6)+"..."; 
                         loadIncomeData(); 
                     } else { 
@@ -318,89 +312,135 @@
             if(!(await checkChain())) return;
             
             // Loading states
-            document.getElementById('ico-body-desktop').innerHTML = `<tr><td colspan="6" class="loading"><i class="fas fa-spinner fa-spin"></i> Loading ICO data...</td></tr>`;
-            document.getElementById('referral-body-desktop').innerHTML = `<tr><td colspan="6" class="loading"><i class="fas fa-spinner fa-spin"></i> Loading referral data...</td></tr>`;
-            document.getElementById('lapsed-body-desktop').innerHTML = `<tr><td colspan="6" class="loading"><i class="fas fa-spinner fa-spin"></i> Loading lapsed data...</td></tr>`;
-            
-            document.getElementById('ico-body-mobile').innerHTML = `<div class="loading"><i class="fas fa-spinner fa-spin"></i> Loading...</div>`;
-            document.getElementById('referral-body-mobile').innerHTML = `<div class="loading"><i class="fas fa-spinner fa-spin"></i> Loading...</div>`;
-            document.getElementById('lapsed-body-mobile').innerHTML = `<div class="loading"><i class="fas fa-spinner fa-spin"></i> Loading...</div>`;
+            document.getElementById('ico-body-desktop').innerHTML = '<tr><td colspan="6" class="loading"><i class="fas fa-spinner fa-spin"></i> Loading ICO data...</td></tr>';
+            document.getElementById('referral-body-desktop').innerHTML = '<tr><td colspan="6" class="loading"><i class="fas fa-spinner fa-spin"></i> Loading referral data...</td></tr>';
+            document.getElementById('lapsed-body-desktop').innerHTML = '<tr><td colspan="6" class="loading"><i class="fas fa-spinner fa-spin"></i> Loading lapsed data...</td></tr>';
+            document.getElementById('ico-body-mobile').innerHTML = '<div class="loading"><i class="fas fa-spinner fa-spin"></i> Loading...</div>';
+            document.getElementById('referral-body-mobile').innerHTML = '<div class="loading"><i class="fas fa-spinner fa-spin"></i> Loading...</div>';
+            document.getElementById('lapsed-body-mobile').innerHTML = '<div class="loading"><i class="fas fa-spinner fa-spin"></i> Loading...</div>';
             
             try{
                 const currentBlock = await provider.getBlockNumber();
-                const fromBlock = Math.max(0, currentBlock - 3000000); 
+                const fromBlock = Math.max(0, currentBlock - 5000000); 
                 
-                // Fetch ReferralPaid events (where 'to' is the connected user)
+                // Fetch ICO Bonus events
+                const icoFilter = sigmaContract.filters.ICOBonusPaid(userAddress);
+                const icoEvents = await sigmaContract.queryFilter(icoFilter, fromBlock, currentBlock);
+                
+                // Fetch TokensBought events for USDT amounts
+                const boughtFilter = sigmaContract.filters.TokensBought(userAddress);
+                const boughtEvents = await sigmaContract.queryFilter(boughtFilter, fromBlock, currentBlock);
+                
+                // Fetch ReferralPaid events
                 const referralFilter = sigmaContract.filters.ReferralPaid(null, userAddress);
                 const refEvents = await sigmaContract.queryFilter(referralFilter, fromBlock, currentBlock);
                 
-                // Fetch Bought events (where user is the connected user)
-                const boughtFilter = sigmaContract.filters.Bought(userAddress);
-                const boughtEvents = await sigmaContract.queryFilter(boughtFilter, fromBlock, currentBlock);
-                
-                // Fetch Lapsed events (where 'to' is the connected user)
-                const lapsedFilter = sigmaContract.filters.IncomeLapsed(null, userAddress);
+                // Fetch Lapsed events
+                const lapsedFilter = sigmaContract.filters.IncomeLapsed(userAddress);
                 const lapEvents = await sigmaContract.queryFilter(lapsedFilter, fromBlock, currentBlock);
                 
+                allICOBonusEvents = icoEvents;
+                allTokensBoughtEvents = boughtEvents;
                 allReferralEvents = refEvents;
-                allBoughtEvents = boughtEvents;
                 allLapsedEvents = lapEvents;
                 
-                // Display data - ICO shows ONLY first purchase
-                displayICOData(allBoughtEvents);
+                await processEventsWithTimestamps(allICOBonusEvents, allReferralEvents, allLapsedEvents, allTokensBoughtEvents);
+                
+                displayICOData(allICOBonusEvents, allTokensBoughtEvents);
                 displayReferralData(allReferralEvents);
                 displayLapsedData(allLapsedEvents);
-                updateStats(allReferralEvents, allBoughtEvents, allLapsedEvents);
+                updateStats(allReferralEvents, allICOBonusEvents, allLapsedEvents);
             } catch(error){
                 console.error(error);
-                document.getElementById('ico-body-desktop').innerHTML = `<tr><td colspan="6" class="no-data">Error: ${error.message}</td></tr>`;
+                document.getElementById('ico-body-desktop').innerHTML = '<tr><td colspan="6" class="no-data">Error: ' + error.message + '</td></tr>';
+            }
+        }
+        
+        async function processEventsWithTimestamps(icoEvents, refEvents, lapEvents, boughtEvents){
+            for(let ev of icoEvents){
+                try{
+                    const block = await provider.getBlock(ev.blockNumber);
+                    ev.timestamp = block.timestamp;
+                    ev.dateObj = new Date(block.timestamp * 1000);
+                } catch(e){ ev.timestamp = 0; ev.dateObj = new Date(); }
+            }
+            for(let ev of refEvents){
+                try{
+                    const block = await provider.getBlock(ev.blockNumber);
+                    ev.timestamp = block.timestamp;
+                    ev.dateObj = new Date(block.timestamp * 1000);
+                } catch(e){ ev.timestamp = 0; ev.dateObj = new Date(); }
+            }
+            for(let ev of lapEvents){
+                try{
+                    const block = await provider.getBlock(ev.blockNumber);
+                    ev.timestamp = block.timestamp;
+                    ev.dateObj = new Date(block.timestamp * 1000);
+                } catch(e){ ev.timestamp = 0; ev.dateObj = new Date(); }
+            }
+            for(let ev of boughtEvents){
+                try{
+                    const block = await provider.getBlock(ev.blockNumber);
+                    ev.timestamp = block.timestamp;
+                    ev.dateObj = new Date(block.timestamp * 1000);
+                } catch(e){ ev.timestamp = 0; ev.dateObj = new Date(); }
             }
         }
 
-        function displayICOData(events){
+        function displayICOData(icoEvents, boughtEvents){
             const desktop = document.getElementById('ico-body-desktop');
             const mobile = document.getElementById('ico-body-mobile');
             
-            if(!events.length){ 
-                desktop.innerHTML = `<tr><td colspan="6" class="no-data">No purchases found</td></tr>`;
-                mobile.innerHTML = `<div class="no-data">No purchases found</div>`;
+            if(!icoEvents.length){ 
+                desktop.innerHTML = '<tr><td colspan="6" class="no-data">No ICO bonus received yet</td></tr>';
+                mobile.innerHTML = '<div class="no-data">No ICO bonus received yet</div>';
                 return;
             }
             
-            // Sort by timestamp (oldest first to find first purchase)
-            events.sort((a,b) => Number(a.args.timestamp) - Number(b.args.timestamp));
+            // Sort by timestamp
+            icoEvents.sort((a,b) => b.timestamp - a.timestamp);
             
-            // Take ONLY the first purchase
-            const firstPurchase = events[0];
+            let html = '', mobileHtml = '';
             
-            let args = firstPurchase.args;
-            let usdtAmount = parseFloat(ethers.formatUnits(args.usdtAmount, 6));
-            let sigmaAmount = parseFloat(ethers.formatUnits(args.sigmaAmount, 18));
-            let ts = Number(args.timestamp);
-            let dateStr = new Date(ts * 1000).toLocaleDateString('en-IN');
-            let timeStr = new Date(ts * 1000).toLocaleTimeString('en-IN');
-            
-            // Calculate base amount and bonus (10% on first purchase)
-            let baseAmount = sigmaAmount * 100 / 110;
-            let bonusAmount = sigmaAmount - baseAmount;
-            
-            let html = `<tr>
-                <td>1</td>
-                <td>${dateStr}<br><small>${timeStr}</small></td>
-                <td>$${usdtAmount.toFixed(2)} USDT</td>
-                <td>${baseAmount.toFixed(4)} SIG6</td>
-                <td class="amount-positive">+${bonusAmount.toFixed(4)} SIG6</td>
-                <td class="amount-positive">${sigmaAmount.toFixed(4)} SIG6</td>
-            </tr>`;
-            
-            let mobileHtml = `<div class="mobile-card">
-                <div class="mobile-card-header"><span class="mobile-card-title">First Purchase (with 10% Bonus)</span></div>
-                <div class="mobile-card-row"><span class="mobile-card-label">Date</span><span class="mobile-card-value">${dateStr} ${timeStr}</span></div>
-                <div class="mobile-card-row"><span class="mobile-card-label">USDT</span><span class="mobile-card-value">$${usdtAmount.toFixed(2)}</span></div>
-                <div class="mobile-card-row"><span class="mobile-card-label">Base SIG6</span><span class="mobile-card-value">${baseAmount.toFixed(4)}</span></div>
-                <div class="mobile-card-row"><span class="mobile-card-label">Bonus (10%)</span><span class="mobile-card-value mobile-amount positive">+${bonusAmount.toFixed(4)}</span></div>
-                <div class="mobile-card-row"><span class="mobile-card-label">Total</span><span class="mobile-card-value mobile-amount positive">${sigmaAmount.toFixed(4)} SIG6</span></div>
-            </div>`;
+            icoEvents.forEach((ev, i) => {
+                let args = ev.args;
+                let bonusAmount = parseFloat(ethers.formatUnits(args.amount, 18));
+                let dateStr = ev.dateObj.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+                let timeStr = ev.dateObj.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+                
+                // Find corresponding bought event
+                let usdtAmount = 0;
+                let totalSigma = bonusAmount * 11; // Bonus is 10%, so total = bonus * 11
+                let baseAmount = totalSigma - bonusAmount;
+                
+                // Try to find matching bought event around same time
+                for(let bought of boughtEvents){
+                    if(Math.abs(bought.timestamp - ev.timestamp) < 60){
+                        usdtAmount = parseFloat(ethers.formatUnits(bought.args.usdtSpent, 6));
+                        totalSigma = parseFloat(ethers.formatUnits(bought.args.amount, 18));
+                        baseAmount = totalSigma - bonusAmount;
+                        break;
+                    }
+                }
+                
+                html += '<tr>' +
+                    '<td>' + (i+1) + '<\/td>' +
+                    '<td>' + dateStr + '<br><span style="font-size:11px; color:#888;">' + timeStr + '<\/span><\/td>' +
+                    '<td>$' + usdtAmount.toFixed(2) + ' USDT<\/td>' +
+                    '<td>' + baseAmount.toFixed(4) + ' SIG6<\/td>' +
+                    '<td class="amount-gold">+' + bonusAmount.toFixed(4) + ' SIG6<\/td>' +
+                    '<td class="amount-positive">' + totalSigma.toFixed(4) + ' SIG6<\/td>' +
+                    '<\/tr>';
+                
+                mobileHtml += '<div class="mobile-card">' +
+                    '<div class="mobile-card-header"><span class="mobile-card-title">ICO Bonus</span><span class="ico-badge">10% Bonus</span></div>' +
+                    '<div class="mobile-card-row"><span class="mobile-card-label"><i class="fas fa-calendar"></i> Date</span><span class="mobile-card-value">' + dateStr + ' ' + timeStr + '</span></div>' +
+                    '<div class="mobile-card-row"><span class="mobile-card-label"><i class="fas fa-dollar-sign"></i> USDT Spent</span><span class="mobile-card-value">$' + usdtAmount.toFixed(2) + '</span></div>' +
+                    '<div class="mobile-card-row"><span class="mobile-card-label"><i class="fas fa-coins"></i> Base SIG6</span><span class="mobile-card-value">' + baseAmount.toFixed(4) + '</span></div>' +
+                    '<div class="mobile-card-row"><span class="mobile-card-label"><i class="fas fa-gift"></i> Bonus (10%)</span><span class="mobile-card-value amount-gold">+' + bonusAmount.toFixed(4) + '</span></div>' +
+                    '<div class="mobile-card-row"><span class="mobile-card-label"><i class="fas fa-chart-line"></i> Total</span><span class="mobile-card-value amount-positive">' + totalSigma.toFixed(4) + ' SIG6</span></div>' +
+                    '</div>';
+            });
             
             desktop.innerHTML = html;
             mobile.innerHTML = mobileHtml;
@@ -411,39 +451,39 @@
             const mobile = document.getElementById('referral-body-mobile');
             
             if(!events.length){ 
-                desktop.innerHTML = `专栏<td colspan="6" class="no-data">No referral income received yet</td></tr>`;
-                mobile.innerHTML = `<div class="no-data">No referral income received yet</div>`;
+                desktop.innerHTML = '叭<td colspan="6" class="no-data">No referral income received yet<\/td><\/tr>';
+                mobile.innerHTML = '<div class="no-data">No referral income received yet</div>';
                 return;
             }
             
-            events.sort((a,b) => Number(b.args.timestamp) - Number(a.args.timestamp));
+            events.sort((a,b) => b.timestamp - a.timestamp);
             let html = '', mobileHtml = '';
             
             events.forEach((ev, i) => {
                 let args = ev.args;
-                let from = args.from;
+                let from = args.from.toLowerCase();
                 let level = Number(args.level);
                 let amount = parseFloat(ethers.formatUnits(args.amount, 18));
                 let percent = (level >= 1 && level <= 10) ? levelPercent[level] : 0;
-                let ts = Number(args.timestamp);
-                let dateStr = new Date(ts * 1000).toLocaleDateString('en-IN');
+                let dateStr = ev.dateObj.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+                let timeStr = ev.dateObj.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
                 let fromShort = from.slice(0,6) + '...' + from.slice(-4);
                 
-                html += `叭
-                    <td>${i+1}</td>
-                    <td><div class="wallet-address" onclick="copyToClipboard('${from}')"><i class="fas fa-copy"></i> ${fromShort}</div></td>
-                    <td>Level ${level}</td>
-                    <td><span class="percent-badge">${percent}%</span></td>
-                    <td class="amount-positive">${amount.toFixed(4)} SIG6</td>
-                    <td>${dateStr}</td>
-                </tr>`;
+                html += '<tr>' +
+                    '<td>' + (i+1) + '<\/td>' +
+                    '<td><div class="wallet-address" onclick="copyToClipboard(\'' + from + '\')"><i class="fas fa-copy"></i> ' + fromShort + '<\/div><\/td>' +
+                    '<td><span class="level-badge">Level ' + level + '<\/span><\/td>' +
+                    '<td><span class="percent-badge">' + percent + '%<\/span><\/td>' +
+                    '<td class="amount-positive">' + amount.toFixed(6) + ' SIG6<\/td>' +
+                    '<td>' + dateStr + '<br><span style="font-size:11px; color:#888;">' + timeStr + '<\/span><\/td>' +
+                    '<\/tr>';
                 
-                mobileHtml += `<div class="mobile-card">
-                    <div class="mobile-card-header"><span class="mobile-card-title">Level ${level}</span><span class="percent-badge">${percent}%</span></div>
-                    <div class="mobile-card-row"><span class="mobile-card-label">From</span><span class="mobile-card-value"><span class="mobile-wallet-address" onclick="copyToClipboard('${from}')"><i class="fas fa-copy"></i> ${fromShort}</span></span></div>
-                    <div class="mobile-card-row"><span class="mobile-card-label">Amount</span><span class="mobile-card-value mobile-amount positive">${amount.toFixed(4)} SIG6</span></div>
-                    <div class="mobile-card-row"><span class="mobile-card-label">Date</span><span class="mobile-card-value">${dateStr}</span></div>
-                </div>`;
+                mobileHtml += '<div class="mobile-card">' +
+                    '<div class="mobile-card-header"><span class="mobile-card-title">Level ' + level + ' <span class="percent-badge">' + percent + '%</span></span></div>' +
+                    '<div class="mobile-card-row"><span class="mobile-card-label"><i class="fas fa-user"></i> From</span><span class="mobile-card-value"><span class="wallet-address" style="font-size:11px;" onclick="copyToClipboard(\'' + from + '\')"><i class="fas fa-copy"></i> ' + fromShort + '</span></span></div>' +
+                    '<div class="mobile-card-row"><span class="mobile-card-label"><i class="fas fa-coins"></i> Amount</span><span class="mobile-card-value amount-positive">' + amount.toFixed(6) + ' SIG6</span></div>' +
+                    '<div class="mobile-card-row"><span class="mobile-card-label"><i class="fas fa-calendar"></i> Date</span><span class="mobile-card-value">' + dateStr + ' ' + timeStr + '</span></div>' +
+                    '</div>';
             });
             
             desktop.innerHTML = html;
@@ -455,41 +495,39 @@
             const mobile = document.getElementById('lapsed-body-mobile');
             
             if(!events.length){
-                desktop.innerHTML = `叭<td colspan="6" class="no-data">No lapsed income</td></tr>`;
-                mobile.innerHTML = `<div class="no-data">No lapsed income</div>`;
+                desktop.innerHTML = '叭<td colspan="6" class="no-data">No lapsed income<\/td><\/tr>';
+                mobile.innerHTML = '<div class="no-data">No lapsed income</div>';
                 return;
             }
             
-            events.sort((a,b) => Number(b.args.timestamp) - Number(a.args.timestamp));
+            events.sort((a,b) => b.timestamp - a.timestamp);
             let html = '', mobileHtml = '';
             
             events.forEach((ev, i) => {
                 let args = ev.args;
-                let from = args.from;
-                let level = Number(args.level);
-                let amount = parseFloat(ethers.formatUnits(args.amount, 18));
                 let reason = args.reason || "Unknown";
-                let ts = Number(args.timestamp);
-                let date = new Date(ts * 1000).toLocaleDateString('en-IN');
-                let fromShort = from.slice(0,6) + '...' + from.slice(-4);
-                let reasonShort = reason.length > 25 ? reason.slice(0,25) + '...' : reason;
+                let amount = parseFloat(ethers.formatUnits(args.amount, 18));
+                let dateStr = ev.dateObj.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+                let timeStr = ev.dateObj.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+                let from = ev.args.user ? ev.args.user.toLowerCase() : "Unknown";
+                let fromShort = from !== "Unknown" ? from.slice(0,6) + '...' + from.slice(-4) : "Unknown";
                 
-                html += `叭
-                    <td>${i+1}</td>
-                    <td><div class="wallet-address" onclick="copyToClipboard('${from}')"><i class="fas fa-copy"></i> ${fromShort}</div></td>
-                    <td>Level ${level}</td>
-                    <td class="amount-negative">${amount.toFixed(4)} SIG6</td>
-                    <td><span class="reason-badge" title="${reason}">${reasonShort}</span></td>
-                    <td>${date}</td>
-                </tr>`;
+                html += '<tr>' +
+                    '<td>' + (i+1) + '<\/td>' +
+                    '<td><div class="wallet-address" style="background:rgba(255,77,77,0.1); border-color:rgba(255,77,77,0.3);" onclick="copyToClipboard(\'' + from + '\')"><i class="fas fa-copy"></i> ' + fromShort + '<\/div><\/td>' +
+                    '<td>--<\/td>' +
+                    '<td class="amount-negative">' + amount.toFixed(6) + ' SIG6<\/td>' +
+                    '<td><span class="reason-badge" title="' + reason + '">' + (reason.length > 30 ? reason.slice(0,30)+'...' : reason) + '<\/span><\/td>' +
+                    '<td>' + dateStr + '<br><span style="font-size:11px; color:#888;">' + timeStr + '<\/span><\/td>' +
+                    '<\/tr>';
                 
-                mobileHtml += `<div class="mobile-card">
-                    <div class="mobile-card-header"><span class="mobile-card-title">Level ${level}</span></div>
-                    <div class="mobile-card-row"><span class="mobile-card-label">From</span><span class="mobile-card-value"><span class="mobile-wallet-address" onclick="copyToClipboard('${from}')"><i class="fas fa-copy"></i> ${fromShort}</span></span></div>
-                    <div class="mobile-card-row"><span class="mobile-card-label">Amount</span><span class="mobile-card-value mobile-amount negative">${amount.toFixed(4)} SIG6</span></div>
-                    <div class="mobile-card-row"><span class="mobile-card-label">Reason</span><span class="mobile-card-value">${reasonShort}</span></div>
-                    <div class="mobile-card-row"><span class="mobile-card-label">Date</span><span class="mobile-card-value">${date}</span></div>
-                </div>`;
+                mobileHtml += '<div class="mobile-card">' +
+                    '<div class="mobile-card-header"><span class="mobile-card-title"><i class="fas fa-exclamation-triangle"></i> Lapsed Income</span></div>' +
+                    '<div class="mobile-card-row"><span class="mobile-card-label"><i class="fas fa-user"></i> From Wallet</span><span class="mobile-card-value"><span class="wallet-address" style="font-size:11px; background:rgba(255,77,77,0.1);" onclick="copyToClipboard(\'' + from + '\')"><i class="fas fa-copy"></i> ' + fromShort + '</span></span></div>' +
+                    '<div class="mobile-card-row"><span class="mobile-card-label"><i class="fas fa-coins"></i> Amount Lost</span><span class="mobile-card-value amount-negative">' + amount.toFixed(6) + ' SIG6</span></div>' +
+                    '<div class="mobile-card-row"><span class="mobile-card-label"><i class="fas fa-ban"></i> Reason</span><span class="mobile-card-value">' + reason + '</span></div>' +
+                    '<div class="mobile-card-row"><span class="mobile-card-label"><i class="fas fa-calendar"></i> Date</span><span class="mobile-card-value">' + dateStr + ' ' + timeStr + '</span></div>' +
+                    '</div>';
             });
             
             desktop.innerHTML = html;
@@ -505,22 +543,18 @@
                 totalReferral += parseFloat(ethers.formatUnits(e.args.amount, 18)); 
             });
             
-            // Only count first purchase for ICO total
-            if (icoEvents.length > 0) {
-                // Sort to get first purchase
-                icoEvents.sort((a,b) => Number(a.args.timestamp) - Number(b.args.timestamp));
-                totalICO += parseFloat(ethers.formatUnits(icoEvents[0].args.sigmaAmount, 18));
-            }
+            icoEvents.forEach(e => { 
+                totalICO += parseFloat(ethers.formatUnits(e.args.amount, 18)); 
+            });
             
             lapEvents.forEach(e => { 
                 totalLapsed += parseFloat(ethers.formatUnits(e.args.amount, 18)); 
             });
             
-            let totalIncome = totalReferral + totalICO;
-            
-            document.getElementById('total-sig6').innerText = totalIncome.toFixed(4) + " SIG6";
-            document.getElementById('lapsed-income').innerText = totalLapsed.toFixed(4) + " SIG6";
-            document.getElementById('total-transactions').innerText = refEvents.length + (icoEvents.length > 0 ? 1 : 0) + lapEvents.length;
+            document.getElementById('total-ico').innerText = totalICO.toFixed(6) + " SIG6";
+            document.getElementById('total-referral').innerText = totalReferral.toFixed(6) + " SIG6";
+            document.getElementById('total-lapsed').innerText = totalLapsed.toFixed(6) + " SIG6";
+            document.getElementById('total-transactions').innerText = refEvents.length + icoEvents.length + lapEvents.length;
         }
 
         function applyFilters(){
@@ -530,46 +564,44 @@
             const search = document.getElementById('searchWallet').value.toLowerCase().trim();
             
             let filteredRef = [...allReferralEvents];
-            let filteredIco = [...allBoughtEvents];
+            let filteredIco = [...allICOBonusEvents];
             let filteredLap = [...allLapsedEvents];
+            let filteredBought = [...allTokensBoughtEvents];
             
-            const toTimestamp = (d) => d ? Math.floor(new Date(d).getTime()/1000) : null;
-            const st = toTimestamp(start);
-            const et = end ? Math.floor(new Date(end).getTime()/1000) + 86400 : null;
+            const startTime = start ? Math.floor(new Date(start).getTime() / 1000) : null;
+            const endTime = end ? Math.floor(new Date(end).getTime() / 1000) + 86400 : null;
             
-            if(st){ 
-                filteredRef = filteredRef.filter(e => Number(e.args.timestamp) >= st); 
-                filteredIco = filteredIco.filter(e => Number(e.args.timestamp) >= st); 
-                filteredLap = filteredLap.filter(e => Number(e.args.timestamp) >= st); 
-            }
-            if(et){ 
-                filteredRef = filteredRef.filter(e => Number(e.args.timestamp) <= et); 
-                filteredIco = filteredIco.filter(e => Number(e.args.timestamp) <= et); 
-                filteredLap = filteredLap.filter(e => Number(e.args.timestamp) <= et); 
+            if(startTime || endTime){
+                filteredRef = filteredRef.filter(e => {
+                    if(startTime && e.timestamp < startTime) return false;
+                    if(endTime && e.timestamp > endTime) return false;
+                    return true;
+                });
+                filteredIco = filteredIco.filter(e => {
+                    if(startTime && e.timestamp < startTime) return false;
+                    if(endTime && e.timestamp > endTime) return false;
+                    return true;
+                });
+                filteredLap = filteredLap.filter(e => {
+                    if(startTime && e.timestamp < startTime) return false;
+                    if(endTime && e.timestamp > endTime) return false;
+                    return true;
+                });
             }
             
             if(type !== 'all'){
-                if(type === 'lapsed') { 
-                    filteredRef = []; 
-                    filteredIco = []; 
-                }
-                else if(type === 'REFERRAL') { 
-                    filteredIco = []; 
-                    filteredLap = []; 
-                }
-                else if(type === 'ICO') { 
-                    filteredRef = []; 
-                    filteredLap = []; 
-                }
+                if(type === 'REFERRAL') { filteredIco = []; filteredLap = []; }
+                else if(type === 'ICO') { filteredRef = []; filteredLap = []; }
+                else if(type === 'lapsed') { filteredRef = []; filteredIco = []; }
             }
             
             if(search){
                 filteredRef = filteredRef.filter(e => e.args.from.toLowerCase().includes(search));
-                filteredLap = filteredLap.filter(e => e.args.from.toLowerCase().includes(search));
+                filteredLap = filteredLap.filter(e => e.args.user && e.args.user.toLowerCase().includes(search));
             }
             
             displayReferralData(filteredRef);
-            displayICOData(filteredIco);
+            displayICOData(filteredIco, filteredBought);
             displayLapsedData(filteredLap);
             updateStats(filteredRef, filteredIco, filteredLap);
         }
@@ -580,16 +612,15 @@
             document.getElementById('incomeType').value = 'all'; 
             document.getElementById('searchWallet').value = '';
             displayReferralData(allReferralEvents);
-            displayICOData(allBoughtEvents);
+            displayICOData(allICOBonusEvents, allTokensBoughtEvents);
             displayLapsedData(allLapsedEvents);
-            updateStats(allReferralEvents, allBoughtEvents, allLapsedEvents);
+            updateStats(allReferralEvents, allICOBonusEvents, allLapsedEvents);
         }
 
         function copyToClipboard(t){ 
             navigator.clipboard.writeText(t).then(() => alert("Address copied!")); 
         }
 
-        // Initialize on page load
         window.onload = function(){
             const end = new Date(); 
             const start = new Date(); 
@@ -597,12 +628,11 @@
             document.getElementById('startDate').valueAsDate = start; 
             document.getElementById('endDate').valueAsDate = end;
             
-            // Auto-connect if previously connected
             if(localStorage.getItem('sigma_wallet_connected') === 'true' && window.ethereum){
                 provider = new ethers.BrowserProvider(window.ethereum);
                 provider.send("eth_accounts",[]).then(accs => { 
                     if(accs.length){ 
-                        userAddress = accs[0]; 
+                        userAddress = accs[0].toLowerCase(); 
                         document.getElementById('btn-text').innerText = '🦊 ' + userAddress.slice(0,6) + '...'; 
                         document.getElementById('connectBtn').classList.add('connected'); 
                         sigmaContract = new ethers.Contract(SIGMA_CONTRACT_ADDRESS, sigmaABI, provider); 
