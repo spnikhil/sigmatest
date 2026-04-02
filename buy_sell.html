@@ -604,20 +604,8 @@
             </div>
             <div class="table-responsive">
                 <table id="active-table">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Date & Time</th>
-                            <th>Sigma Quantity</th>
-                            <th>Buy Rate</th>
-                            <th>Current Rate</th>
-                            <th>P&L %</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody id="active-body">
-                        <tr><td colspan="7" class="loading"><i class="fas fa-spinner fa-spin"></i><br>Loading active positions... Please connect wallet</td></tr>
-                    </tbody>
+                    <thead><tr><th>#</th><th>Date & Time</th><th>Sigma Quantity</th><th>Buy Rate</th><th>Current Rate</th><th>P&L %</th><th>Status</th></tr></thead>
+                    <tbody id="active-body"><tr><td colspan="7" class="loading"><i class="fas fa-spinner fa-spin"></i><br>Loading active positions... Please connect wallet</td></tr></tbody>
                 </table>
             </div>
         </div>
@@ -629,29 +617,16 @@
             </div>
             <div class="table-responsive">
                 <table id="closed-table">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Date & Time</th>
-                            <th>Sigma Quantity</th>
-                            <th>Buy Rate</th>
-                            <th>Sell Rate</th>
-                            <th>P&L Amount</th>
-                            <th>P&L %</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody id="closed-body">
-                        <tr><td colspan="8" class="loading"><i class="fas fa-spinner fa-spin"></i><br>Loading closed positions...</td></tr>
-                    </tbody>
+                    <thead><tr><th>#</th><th>Date & Time</th><th>Sigma Quantity</th><th>Buy Rate</th><th>Sell Rate</th><th>P&L Amount</th><th>P&L %</th><th>Status</th></tr></thead>
+                    <tbody id="closed-body"><tr><td colspan="8" class="loading"><i class="fas fa-spinner fa-spin"></i><br>Loading closed positions...</td></tr></tbody>
                 </table>
             </div>
         </div>
     </div>
 
     <script>
-        // ===== CONTRACT CONFIGURATION =====
-        const SIGMA_CONTRACT_ADDRESS = "0x846339d474AE98b219111eb969E27b6317aE5852";
+        // ===== UPDATED CONTRACT ADDRESS =====
+        const SIGMA_CONTRACT_ADDRESS = "0xaF215838d156F7d348A6d56cA962cbC680A2153F";
         
         let provider, userAddress, sigmaContract;
         let currentTab = 'active';
@@ -659,16 +634,14 @@
         let sellTransactions = [];
         let currentBuyRate = 0;
         
-        // ===== COMPLETE ABI - CORRECT FUNCTIONS =====
+        // ===== UPDATED ABI with correct event names (Buy and Sell) =====
         const sigmaABI = [
             "function getCurrentBuyRate() view returns (uint256)",
             "function sellSigma(uint256 _sigmaAmount) external",
             "function buySigma(uint256 _usdtAmount, address _upline) external",
             "function balanceOf(address) view returns (uint256)",
-            "function transfer(address to, uint256 amount) returns (bool)",
-            "function users(address) view returns (address upline, uint256 directCount, uint256 lastBuyTimestamp, uint256 totalReferralEarned, uint256 lastActionTime, bool hasBoughtBefore)",
-            "event TokensBought(address indexed user, uint256 amount, uint256 rate, uint256 usdtSpent)",
-            "event TokensSold(address indexed user, uint256 amount, uint256 rate, uint256 usdtReceived)"
+            "event Buy(address indexed user, uint256 amount, uint256 rate, uint256 usdtSpent)",
+            "event Sell(address indexed user, uint256 amount, uint256 rate, uint256 usdtReceived)"
         ];
 
         function createParticles() {
@@ -746,9 +719,10 @@
                 const currentBlock = await provider.getBlockNumber();
                 const fromBlock = Math.max(currentBlock - 5000000, 0);
                 
-                // Fetch TokensBought events
-                const buyFilter = sigmaContract.filters.TokensBought(userAddress);
-                const sellFilter = sigmaContract.filters.TokensSold(userAddress);
+                // Fetch Buy events (event name is "Buy")
+                const buyFilter = sigmaContract.filters.Buy(userAddress);
+                // Fetch Sell events (event name is "Sell")
+                const sellFilter = sigmaContract.filters.Sell(userAddress);
                 
                 const [buyEvents, sellEvents] = await Promise.all([
                     sigmaContract.queryFilter(buyFilter, fromBlock, currentBlock),
