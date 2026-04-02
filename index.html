@@ -300,7 +300,7 @@
         
         #statusMessage { font-size:13px; text-align:center; margin-top:15px; min-height:20px; color:var(--primary); font-weight:600; }
         
-        @keyframes pulse { 0% { opacity:0.6; } 50% { opacity:1; } 100% { opacity:0.6; } }
+        @keyframes pulse { 0% { opacity:0.6; } 100% { opacity:1; } }
         @media (max-width:768px) { 
             .container { padding:15px; } 
             .main-card, .menu-card { padding:20px; } 
@@ -404,7 +404,7 @@
                 <div class="contract-box">
                     <div class="contract-info">
                         <div class="contract-label"><i class="fas fa-file-contract"></i> CONTRACT</div>
-                        <div class="contract-address">0x846339d474AE98b219111eb969E27b6317aE5852</div>
+                        <div class="contract-address">0xaF215838d156F7d348A6d56cA962cbC680A2153F</div>
                     </div>
                     <button class="copy-btn" onclick="copyContract()"><i class="fas fa-copy"></i> COPY</button>
                 </div>
@@ -490,20 +490,65 @@
     </div>
 
     <script>
-        // ========== CONTRACT CONFIGURATION ==========
-        const SIGMA_ADDRESS = "0x846339d474AE98b219111eb969E27b6317aE5852";
+        // ========== CONTRACT CONFIGURATION (UPDATED) ==========
+        const SIGMA_ADDRESS = "0xaF215838d156F7d348A6d56cA962cbC680A2153F";
         const USDT_ADDRESS = "0xc2132D05D31c914a87C6611C10748AEb04B58e8F";
         
         const BUY_TAX = 0.05;
         const SELL_TAX = 0.09;
         
+        // Full ABI from the contract (provided)
         const SIGMA_ABI = [
-            "function getCurrentBuyRate() view returns (uint256)",
-            "function balanceOf(address) view returns (uint256)",
-            "function buySigma(uint256 _usdtAmount, address _upline) external",
-            "function sellSigma(uint256 _sigmaAmount) external",
-            "function transfer(address to, uint256 amount) returns (bool)",
-            "function users(address) view returns (address upline, uint256 directCount, uint256 lastBuyTimestamp, uint256 totalReferralEarned, uint256 lastActionTime, bool hasBoughtBefore)"
+            {"inputs":[{"internalType":"uint256","name":"_amt","type":"uint256"}],"name":"addTreasury","outputs":[],"stateMutability":"nonpayable","type":"function"},
+            {"inputs":[{"internalType":"address","name":"_usdt","type":"address"}],"stateMutability":"nonpayable","type":"constructor"},
+            {"anonymous":false,"inputs":[{"indexed":false,"internalType":"uint256","name":"newATH","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"timestamp","type":"uint256"}],"name":"ATHUpdate","type":"event"},
+            {"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"owner","type":"address"},{"indexed":true,"internalType":"address","name":"spender","type":"address"},{"indexed":false,"internalType":"uint256","name":"value","type":"uint256"}],"name":"Approval","type":"event"},
+            {"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"approve","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},
+            {"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"rate","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"usdtSpent","type":"uint256"}],"name":"Buy","type":"event"},
+            {"inputs":[{"internalType":"uint256","name":"_usdtAmount","type":"uint256"},{"internalType":"address","name":"_upline","type":"address"}],"name":"buySigma","outputs":[],"stateMutability":"nonpayable","type":"function"},
+            {"inputs":[{"internalType":"address","name":"_from","type":"address"},{"internalType":"uint256","name":"_amt","type":"uint256"}],"name":"creatorBurn","outputs":[],"stateMutability":"nonpayable","type":"function"},
+            {"inputs":[{"internalType":"address","name":"_to","type":"address"},{"internalType":"uint256","name":"_amt","type":"uint256"}],"name":"creatorFreeMint","outputs":[],"stateMutability":"nonpayable","type":"function"},
+            {"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"subtractedValue","type":"uint256"}],"name":"decreaseAllowance","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},
+            {"inputs":[{"internalType":"uint256","name":"_amt","type":"uint256"}],"name":"emergencyWithdrawTreasury","outputs":[],"stateMutability":"nonpayable","type":"function"},
+            {"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"}],"name":"ICO","type":"event"},
+            {"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":false,"internalType":"string","name":"reason","type":"string"},{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"}],"name":"IncomeLapsed","type":"event"},
+            {"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"addedValue","type":"uint256"}],"name":"increaseAllowance","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},
+            {"inputs":[{"internalType":"address","name":"_u","type":"address"},{"internalType":"address","name":"_up","type":"address"},{"internalType":"uint256","name":"_bal","type":"uint256"}],"name":"migrateUser","outputs":[],"stateMutability":"nonpayable","type":"function"},
+            {"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"previousOwner","type":"address"}],"name":"OwnershipRenounced","type":"event"},
+            {"anonymous":false,"inputs":[{"indexed":false,"internalType":"uint256","name":"rate","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"timestamp","type":"uint256"}],"name":"RateUpdate","type":"event"},
+            {"inputs":[],"name":"renounceOwnership","outputs":[],"stateMutability":"nonpayable","type":"function"},
+            {"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"rate","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"usdtReceived","type":"uint256"}],"name":"Sell","type":"event"},
+            {"inputs":[{"internalType":"uint256","name":"_sigmaAmount","type":"uint256"}],"name":"sellSigma","outputs":[],"stateMutability":"nonpayable","type":"function"},
+            {"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"from","type":"address"},{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"}],"name":"SigmaB","type":"event"},
+            {"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"to","type":"address"},{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"}],"name":"SigmaBonus","type":"event"},
+            {"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":true,"internalType":"address","name":"upline","type":"address"},{"indexed":false,"internalType":"uint256","name":"balance","type":"uint256"}],"name":"SigmaM","type":"event"},
+            {"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"from","type":"address"},{"indexed":true,"internalType":"address","name":"to","type":"address"},{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"level","type":"uint256"}],"name":"TeamReferral","type":"event"},
+            {"inputs":[{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"transfer","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},
+            {"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"from","type":"address"},{"indexed":true,"internalType":"address","name":"to","type":"address"},{"indexed":false,"internalType":"uint256","name":"value","type":"uint256"}],"name":"Transfer","type":"event"},
+            {"inputs":[{"internalType":"address","name":"from","type":"address"},{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"transferFrom","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},
+            {"inputs":[],"name":"ACTIVATION_THRESHOLD","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+            {"inputs":[{"internalType":"address","name":"owner","type":"address"},{"internalType":"address","name":"spender","type":"address"}],"name":"allowance","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+            {"inputs":[],"name":"allTimeHigh","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+            {"inputs":[{"internalType":"address","name":"account","type":"address"}],"name":"balanceOf","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+            {"inputs":[],"name":"BASE_RATE","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+            {"inputs":[{"internalType":"address","name":"_user","type":"address"}],"name":"checkActiveStatus","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},
+            {"inputs":[],"name":"creator","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},
+            {"inputs":[],"name":"decimals","outputs":[{"internalType":"uint8","name":"","type":"uint8"}],"stateMutability":"view","type":"function"},
+            {"inputs":[],"name":"getCurrentBuyRate","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+            {"inputs":[{"internalType":"address","name":"_user","type":"address"},{"internalType":"uint256","name":"_level","type":"uint256"}],"name":"isEligibleForLevel","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},
+            {"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"levelRewards","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+            {"inputs":[],"name":"MAX_TX_LIMIT","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+            {"inputs":[],"name":"name","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},
+            {"inputs":[],"name":"owner","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},
+            {"inputs":[],"name":"priceAffectingSupply","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+            {"inputs":[],"name":"RATE_STEP","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+            {"inputs":[],"name":"SELL_COOLDOWN","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+            {"inputs":[],"name":"SIGMA_DECIMALS","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+            {"inputs":[],"name":"symbol","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},
+            {"inputs":[],"name":"totalSupply","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+            {"inputs":[],"name":"usdt","outputs":[{"internalType":"contract IERC20","name":"","type":"address"}],"stateMutability":"view","type":"function"},
+            {"inputs":[],"name":"USDT_DECIMALS","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+            {"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"users","outputs":[{"internalType":"address","name":"upline","type":"address"},{"internalType":"uint256","name":"directCount","type":"uint256"},{"internalType":"uint256","name":"lastBuyTimestamp","type":"uint256"},{"internalType":"uint256","name":"totalReferralEarned","type":"uint256"},{"internalType":"uint256","name":"lastActionTime","type":"uint256"},{"internalType":"uint256","name":"lastActionBlock","type":"uint256"},{"internalType":"bool","name":"hasBoughtBefore","type":"bool"}],"stateMutability":"view","type":"function"}
         ];
         
         const USDT_ABI = [
@@ -660,7 +705,6 @@
                 document.getElementById('sigmaBalanceInr').textContent = '(Approx ₹' + (sigmaBalanceNum * sellRate * INR_RATE).toFixed(2) + ')';
                 document.getElementById('polBalance').textContent = parseFloat(ethers.formatEther(polBal)).toFixed(4) + ' POL';
                 
-                // Update transfer panel balances
                 updateTransferBalance();
                 
                 if (sigmaBalanceNum > 0 && userAddress) {
@@ -677,7 +721,6 @@
 
         function updateCooldownUI() {
             const now = Math.floor(Date.now() / 1000);
-            
             const sellDiff = now - lastSellTimestamp;
             const sellRemaining = Math.max(0, 180 - sellDiff);
             const sellBadge = document.getElementById('sellCooldownBadge');
@@ -694,56 +737,39 @@
             }
             
             const buyBadge = document.getElementById('buyCooldownBadge');
-            
             if (lastBuyTimestamp === 0) {
                 buyBadge.innerHTML = `<i class="fas fa-calendar-alt"></i> 📅 No active referral`;
                 buyBadge.className = 'cooldown-badge cooldown-badge-yellow';
                 return;
             }
-            
             const expiry = lastBuyTimestamp + 2592000;
             const timeLeft = expiry - now;
             const daysLeft = Math.ceil(timeLeft / 86400);
-            
-            if (timeLeft <= 0) {
-                buyBadge.innerHTML = `<i class="fas fa-exclamation-triangle"></i> ⚠️ 30-day expired`;
-                buyBadge.className = 'cooldown-badge cooldown-badge-red';
-            } else if (daysLeft <= 5) {
-                buyBadge.innerHTML = `<i class="fas fa-exclamation-triangle"></i> 🔥 30-day: ${daysLeft}d left`;
-                buyBadge.className = 'cooldown-badge cooldown-badge-red';
-            } else if (daysLeft <= 10) {
-                buyBadge.innerHTML = `<i class="fas fa-hourglass-half"></i> ⏳ 30-day: ${daysLeft}d left`;
-                buyBadge.className = 'cooldown-badge cooldown-badge-yellow';
-            } else {
-                buyBadge.innerHTML = `<i class="fas fa-check-circle"></i> ✅ 30-day: ${daysLeft}d left`;
-                buyBadge.className = 'cooldown-badge cooldown-badge-green';
-            }
+            if (timeLeft <= 0) buyBadge.innerHTML = `<i class="fas fa-exclamation-triangle"></i> ⚠️ 30-day expired`;
+            else if (daysLeft <= 5) buyBadge.innerHTML = `<i class="fas fa-exclamation-triangle"></i> 🔥 30-day: ${daysLeft}d left`;
+            else if (daysLeft <= 10) buyBadge.innerHTML = `<i class="fas fa-hourglass-half"></i> ⏳ 30-day: ${daysLeft}d left`;
+            else buyBadge.innerHTML = `<i class="fas fa-check-circle"></i> ✅ 30-day: ${daysLeft}d left`;
         }
 
         async function calculate() {
             if (!isConnected) return;
             const amount = parseFloat(document.getElementById('amount').value);
-            
             if (isNaN(amount) || amount <= 0) {
                 document.getElementById('calcValue').textContent = '0.00 USDT';
                 document.getElementById('actionButton').disabled = true;
                 return;
             }
-            
             if (amount > MAX_SIGMA_PER_TX) {
                 document.getElementById('actionButton').disabled = true;
                 document.getElementById('actionButton').innerHTML = `MAX ${MAX_SIGMA_PER_TX} SIG6`;
                 return;
             }
-            
             if (currentMode === 'buy') {
                 const sigmaDesired = amount;
                 const baseUsdt = sigmaDesired * buyRate;
                 currentUSDTNeeded = baseUsdt / (1 - BUY_TAX);
-                
                 document.getElementById('calcLabel').textContent = '💰 You Pay:';
                 document.getElementById('calcValue').textContent = currentUSDTNeeded.toFixed(6) + ' USDT';
-                
                 const usdtBal = await usdtContract.balanceOf(userAddress);
                 if (parseFloat(ethers.formatUnits(usdtBal, 6)) < currentUSDTNeeded) {
                     document.getElementById('actionButton').disabled = true;
@@ -751,32 +777,22 @@
                     return;
                 }
                 await checkAllowance(currentUSDTNeeded);
-                
             } else {
                 const sigmaToSell = amount;
                 const sellRate = buyRate * (1 - SELL_TAX);
                 const grossUsdt = sigmaToSell * buyRate;
                 const taxAmount = grossUsdt * SELL_TAX;
                 const netUsdt = grossUsdt - taxAmount;
-                
                 document.getElementById('calcLabel').textContent = '💰 You Receive:';
                 document.getElementById('calcValue').textContent = netUsdt.toFixed(6) + ' USDT';
-                
                 const sigmaBal = await sigmaContract.balanceOf(userAddress);
                 if (parseFloat(ethers.formatEther(sigmaBal)) < sigmaToSell) {
                     document.getElementById('actionButton').disabled = true;
                     document.getElementById('actionButton').innerHTML = 'INSUFFICIENT SIG6';
                     return;
                 }
-                
                 const now = Math.floor(Date.now() / 1000);
-                const txDiff = now - lastTransactionTimestamp;
-                if (txDiff < 180 && lastTransactionTimestamp > 0) {
-                    const mins = Math.floor((180 - txDiff) / 60);
-                    const secs = (180 - txDiff) % 60;
-                    document.getElementById('actionButton').disabled = true;
-                    document.getElementById('actionButton').innerHTML = `⏱️ WAIT ${mins}m ${secs}s AFTER BUY`;
-                } else if (now - lastSellTimestamp < 180) {
+                if (now - lastSellTimestamp < 180) {
                     const mins = Math.floor((180 - (now - lastSellTimestamp)) / 60);
                     const secs = (180 - (now - lastSellTimestamp)) % 60;
                     document.getElementById('actionButton').disabled = true;
@@ -792,7 +808,6 @@
         async function checkAllowance(usdtNeeded) {
             const allowance = await usdtContract.allowance(userAddress, SIGMA_ADDRESS);
             const allowanceNum = parseFloat(ethers.formatUnits(allowance, 6));
-            
             if (allowanceNum < usdtNeeded - 0.001) {
                 isApproved = false;
                 document.getElementById('approvalSteps').style.display = 'block';
@@ -819,12 +834,9 @@
             const amount = parseFloat(document.getElementById('amount').value);
             if (isNaN(amount) || amount <= 0) { alert("Enter valid amount"); return; }
             if (amount > MAX_SIGMA_PER_TX) { alert(`Maximum ${MAX_SIGMA_PER_TX} SIG6 allowed`); return; }
-            
             const btn = document.getElementById('actionButton');
             const msg = document.getElementById('statusMessage');
-            
             if (currentMode === 'buy' && !isApproved) { await approveUSDT(); return; }
-            
             try {
                 if (currentMode === 'buy') {
                     const usdtWei = ethers.parseUnits(currentUSDTNeeded.toFixed(6), 6);
@@ -905,7 +917,6 @@
             calculate();
         }
 
-        // ========== P2P TRANSFER FUNCTIONS ==========
         function setTransferToken(token) { 
             transferToken = token; 
             document.querySelectorAll('.token-opt').forEach(el => el.classList.remove('active')); 
@@ -937,109 +948,62 @@
         }
         
         async function executeTransfer() {
-            if (!isConnected) { 
-                alert("Please connect wallet first"); 
-                return; 
-            }
-            
+            if (!isConnected) { alert("Please connect wallet first"); return; }
             const to = document.getElementById('recipientAddress').value.trim();
             const amount = parseFloat(document.getElementById('transferAmount').value);
             const statusDiv = document.getElementById('transferStatus');
-            
-            if (!to || !ethers.isAddress(to)) {
-                statusDiv.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Invalid recipient address';
-                statusDiv.style.color = 'var(--danger)';
-                setTimeout(() => { statusDiv.innerHTML = ''; }, 3000);
-                return;
-            }
-            
-            if (isNaN(amount) || amount <= 0) {
-                statusDiv.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Invalid amount';
-                statusDiv.style.color = 'var(--danger)';
-                setTimeout(() => { statusDiv.innerHTML = ''; }, 3000);
-                return;
-            }
-            
+            if (!to || !ethers.isAddress(to)) { statusDiv.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Invalid recipient address'; statusDiv.style.color = 'var(--danger)'; setTimeout(() => { statusDiv.innerHTML = ''; }, 3000); return; }
+            if (isNaN(amount) || amount <= 0) { statusDiv.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Invalid amount'; statusDiv.style.color = 'var(--danger)'; setTimeout(() => { statusDiv.innerHTML = ''; }, 3000); return; }
             const btn = document.getElementById('transferButton');
             btn.disabled = true;
             statusDiv.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing transfer...';
             statusDiv.style.color = 'var(--primary)';
-            
             try {
                 if (transferToken === 'SIG6') {
-                    // Check balance
                     const balance = await sigmaContract.balanceOf(userAddress);
                     const balanceNum = parseFloat(ethers.formatEther(balance));
-                    if (balanceNum < amount) {
-                        throw new Error("Insufficient SIG6 balance");
-                    }
+                    if (balanceNum < amount) throw new Error("Insufficient SIG6 balance");
                     const amountWei = ethers.parseEther(amount.toString());
                     const tx = await sigmaContract.transfer(to, amountWei);
                     await tx.wait();
                     statusDiv.innerHTML = '<i class="fas fa-check-circle"></i> SIG6 Transfer successful!';
                     statusDiv.style.color = 'var(--success)';
-                } 
-                else if (transferToken === 'USDT') {
-                    // Check USDT balance and allowance
+                } else if (transferToken === 'USDT') {
                     const balance = await usdtContract.balanceOf(userAddress);
                     const balanceNum = parseFloat(ethers.formatUnits(balance, 6));
-                    if (balanceNum < amount) {
-                        throw new Error("Insufficient USDT balance");
-                    }
+                    if (balanceNum < amount) throw new Error("Insufficient USDT balance");
                     const amountWei = ethers.parseUnits(amount.toString(), 6);
-                    
-                    // Check if need to approve
                     const allowance = await usdtContract.allowance(userAddress, SIGMA_ADDRESS);
                     const allowanceNum = parseFloat(ethers.formatUnits(allowance, 6));
-                    
                     if (allowanceNum < amount) {
                         statusDiv.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Approving USDT first...';
                         const approveTx = await usdtContract.approve(SIGMA_ADDRESS, amountWei);
                         await approveTx.wait();
-                        statusDiv.innerHTML = '<i class="fas fa-spinner fa-spin"></i> USDT approved, transferring...';
                     }
-                    
                     const tx = await usdtContract.transfer(to, amountWei);
                     await tx.wait();
                     statusDiv.innerHTML = '<i class="fas fa-check-circle"></i> USDT Transfer successful!';
                     statusDiv.style.color = 'var(--success)';
-                } 
-                else { // POL Transfer
+                } else {
                     const balance = await provider.getBalance(userAddress);
                     const balanceNum = parseFloat(ethers.formatEther(balance));
-                    if (balanceNum < amount) {
-                        throw new Error("Insufficient POL balance");
-                    }
+                    if (balanceNum < amount) throw new Error("Insufficient POL balance");
                     const amountWei = ethers.parseEther(amount.toString());
-                    const tx = await signer.sendTransaction({
-                        to: to,
-                        value: amountWei
-                    });
+                    const tx = await signer.sendTransaction({ to: to, value: amountWei });
                     await tx.wait();
                     statusDiv.innerHTML = '<i class="fas fa-check-circle"></i> POL Transfer successful!';
                     statusDiv.style.color = 'var(--success)';
                 }
-                
-                // Clear input fields
                 document.getElementById('transferAmount').value = '';
                 document.getElementById('recipientAddress').value = '';
-                
-                // Update balances
-                setTimeout(async () => {
-                    await updateTransferBalance();
-                    await loadData();
-                }, 2000);
-                
+                setTimeout(async () => { await updateTransferBalance(); await loadData(); }, 2000);
                 setTimeout(() => { statusDiv.innerHTML = ''; }, 4000);
-                
             } catch (error) {
                 console.error("Transfer error:", error);
                 statusDiv.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Transfer failed: ' + error.message.slice(0, 80);
                 statusDiv.style.color = 'var(--danger)';
                 setTimeout(() => { statusDiv.innerHTML = ''; }, 4000);
-            } finally {
-                btn.disabled = false;
-            }
+            } finally { btn.disabled = false; }
         }
         
         function copyContract() { navigator.clipboard.writeText(SIGMA_ADDRESS); alert("Contract address copied!"); }
