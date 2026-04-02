@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>SIGMA SIX | Price History</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.umd.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #00ffcc;
+            --secondary: #9d4edd;
+            --bg: #0a0b10;
+            --card: #161821;
+            --text: #ffffff;
+            --border: #2d2f3e;
+            --success: #00ff88;
+            --warning: #ffaa00;
+            --danger: #ff4d4d;
+            --gradient: linear-gradient(90deg, #00ffcc, #9d4edd, #ff2a6d, #00ffcc);
+            --ath: gold;
+            --atl: #ffaa00;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        .rainbow-border {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--gradient);
+            background-size: 400% 400%;
+            animation: rainbow 8s ease infinite;
+            z-index: 1000;
+        }
+        
+        @keyframes rainbow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .bg-glow {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 1200px;
+            height: 1200px;
+            background: radial-gradient(circle, rgba(157,78,221,0.15) 0%, rgba(0,255,204,0.1) 25%, transparent 70%);
+            z-index: -2;
+        }
+        
+        .particles-container {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+        
+        .particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: var(--primary);
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: float 20s infinite linear;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.3; }
+            90% { opacity: 0.3; }
+            100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .connect-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            color: #000;
+            border: none;
+            border-radius: 15px;
+            padding: 12px 25px;
+            font-weight: 800;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 20px rgba(0,255,204,0.3);
+            z-index: 1001;
+            transition: all 0.3s ease;
+        }
+        
+        .connect-btn.connected {
+            background: rgba(0,255,204,0.1);
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+        
+        .connect-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,255,204,0.5);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-top: 30px;
+        }
+        
+        .header h1 {
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-size: 48px;
+            font-weight: 800;
+            margin-bottom: 10px;
+            animation: rainbow 8s ease infinite;
+        }
+        
+        .header p {
+            color: #aaa;
+            font-size: 16px;
+        }
+        
+        .nav-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            padding: 10px 20px;
+            border-radius: 12px;
+            background: rgba(0,255,204,0.1);
+            border: 1px solid rgba(0,255,204,0.3);
+            transition: all 0.3s;
+        }
+        
+        .back-btn:hover {
+            background: rgba(0,255,204,0.2);
+            transform: translateX(-5px);
+        }
+        
+        .nav-btn {
+            padding: 10px 20px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            background: rgba(255,255,255,0.03);
+            color: #888;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .nav-btn:hover {
+            background: rgba(0,255,204,0.1);
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+        
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: rgba(22,24,33,0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 25px;
+            border: 1px solid rgba(0,255,204,0.1);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+            box-shadow: 0 15px 30px rgba(0,255,204,0.1);
+        }
+        
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--gradient);
+            background-size: 400% 400%;
+            animation: rainbow 8s ease infinite;
+        }
+        
+        .stat-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #aaa;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+        
+        .stat-title i { color: var(--primary); }
+        
+        .stat-value {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+        
+        .stat-date {
+            font-size: 12px;
+            color: #888;
+            margin-top: 5px;
+        }
+        
+        .ath-value { color: var(--ath); }
+        .atl-value { color: var(--atl); }
+        
+        /* Main Card */
+        .main-card {
+            background: rgba(22,24,33,0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 25px;
+            border: 1px solid rgba(0,255,204,0.15);
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .main-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--gradient);
+            background-size: 400% 400%;
+            animation: rainbow 8s ease infinite;
+        }
+        
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+        
+        .card-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            color: #000;
+        }
+        
+        .card-title {
+            color: var(--primary);
+            font-size: 24px;
+            font-weight: 700;
+            flex: 1;
+        }
+        
+        .card-subtitle {
+            color: #aaa;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        
+        /* Filter Section */
+        .filter-section {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255,255,255,0.03);
+            padding: 8px 15px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+        
+        .filter-group label {
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        .filter-group input {
+            background: transparent;
+            border: none;
+            color: var(--text);
+            padding: 5px;
+            font-size: 14px;
+            outline: none;
+        }
+        
+        .filter-group input[type="date"] {
+            cursor: pointer;
+        }
+        
+        .filter-group input::placeholder {
+            color: #666;
+        }
+        
+        /* Table */
+        .table-responsive {
+            overflow-x: auto;
+            border-radius: 16px;
+            border: 1px solid rgba(45,47,62,0.5);
+            max-height: 500px;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 800px;
+        }
+        
+        thead {
+            background: linear-gradient(90deg, rgba(0,255,204,0.1), rgba(157,78,221,0.1));
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        
+        th {
+            padding: 18px 15px;
+            text-align: left;
+            font-weight: 700;
+            font-size: 14px;
+            color: var(--primary);
+            text-transform: uppercase;
+            border-bottom: 2px solid rgba(0,255,204,0.2);
+            white-space: nowrap;
+        }
+        
+        td {
+            padding: 14px 15px;
+            border-bottom: 1px solid rgba(45,47,62,0.3);
+            font-size: 14px;
+        }
+        
+        tr:hover td {
+            background: rgba(255,255,255,0.03);
+        }
+        
+        .price-up {
+            color: var(--success);
+        }
+        
+        .price-down {
+            color: var(--danger);
+        }
+        
+        .loading, .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--primary);
+        }
+        
+        .loading i, .empty-state i {
+            font-size: 48px;
+            margin-bottom: 20px;
+            display: block;
+        }
+        
+        .empty-state { color: #888; }
+        
+        .results-count {
+            background: rgba(0,255,204,0.1);
+            color: var(--primary);
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: inline-block;
+            border: 1px solid rgba(0,255,204,0.3);
+        }
+        
+        .ath-badge, .atl-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+        
+        .ath-badge {
+            background: rgba(255,215,0,0.15);
+            color: gold;
+            border: 1px solid rgba(255,215,0,0.3);
+        }
+        
+        .atl-badge {
+            background: rgba(255,170,0,0.15);
+            color: var(--atl);
+            border: 1px solid rgba(255,170,0,0.3);
+        }
+        
+        .footer {
+            margin-top: 30px;
+            padding-top: 20px;
+            text-align: center;
+            border-top: 1px solid var(--border);
+            font-size: 11px;
+            color: #888;
+        }
+        
+        @media (max-width: 992px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .container { padding: 15px; }
+            .header h1 { font-size: 32px; }
+            .connect-btn {
+                position: relative;
+                top: auto;
+                right: auto;
+                margin: 0 auto 20px auto;
+                width: 100%;
+                justify-content: center;
+            }
+            .stats-grid { grid-template-columns: 1fr; gap: 15px; }
+            .stat-card { padding: 20px; }
+            .stat-value { font-size: 28px; }
+            .card-title { font-size: 20px; }
+            .card-icon { width: 40px; height: 40px; font-size: 18px; }
+            .filter-section { flex-direction: column; align-items: stretch; }
+            .filter-group { width: 100%; justify-content: space-between; }
+            .filter-group input { flex: 1; }
+            .nav-container { flex-direction: column; }
+            .back-btn, .nav-btn { width: 100%; justify-content: center; }
+            th, td { padding: 10px 12px; font-size: 12px; }
+        }
+        
+        @media (max-width: 480px) {
+            .header h1 { font-size: 24px; }
+            .stat-value { font-size: 22px; }
+            .stat-title { font-size: 12px; }
+        }
+        
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb { background: var(--gradient); border-radius: 4px; animation: rainbow 8s ease infinite; }
+        
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .fade-in { animation: fadeInUp 0.5s ease-out; }
+    </style>
+</head>
+<body>
+    <div class="rainbow-border"></div>
+    <div class="particles-container" id="particles"></div>
+    <div class="bg-glow"></div>
+    
+    <button class="connect-btn" id="connectBtn" onclick="connectWallet()">
+        <i class="fas fa-wallet"></i> <span id="btn-text">Connect Wallet</span>
+    </button>
+    
+    <div class="container">
+        <div class="nav-container">
+            <a href="index.html" class="back-btn">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </a>
+            <button class="nav-btn" onclick="loadPriceHistory()">
+                <i class="fas fa-sync-alt"></i> Refresh Data
+            </button>
+            <button class="nav-btn" onclick="exportData()">
+                <i class="fas fa-download"></i> Export CSV
+            </button>
+            <button class="nav-btn" onclick="clearFilters()">
+                <i class="fas fa-times"></i> Clear Filters
+            </button>
+        </div>
+        
+        <div class="header">
+            <h1>PRICE HISTORY</h1>
+            <p>Daily SIGMA Price Tracking • All-Time High & Low</p>
+        </div>
+        
+        <div class="stats-grid">
+            <div class="stat-card fade-in">
+                <div class="stat-title"><i class="fas fa-chart-line"></i> Current Price</div>
+                <div class="stat-value" id="current-price">--</div>
+                <div class="stat-date" id="current-price-inr">--</div>
+            </div>
+            <div class="stat-card fade-in">
+                <div class="stat-title"><i class="fas fa-crown"></i> All Time High</div>
+                <div class="stat-value ath-value" id="ath-price">--</div>
+                <div class="stat-date" id="ath-date">--</div>
+            </div>
+            <div class="stat-card fade-in">
+                <div class="stat-title"><i class="fas fa-chart-line"></i> All Time Low</div>
+                <div class="stat-value atl-value" id="atl-price">0.0105 USDT</div>
+                <div class="stat-date" id="atl-date">19 May 2025</div>
+            </div>
+            <div class="stat-card fade-in">
+                <div class="stat-title"><i class="fas fa-percent"></i> Price Change (30d)</div>
+                <div class="stat-value" id="price-change">--</div>
+                <div class="stat-date" id="price-change-dir">--</div>
+            </div>
+        </div>
+        
+        <div class="main-card fade-in">
+            <div class="card-header">
+                <div class="card-icon"><i class="fas fa-calendar-alt"></i></div>
+                <div>
+                    <div class="card-title">PRICE HISTORY RECORDS</div>
+                    <div class="card-subtitle">Daily closing prices from blockchain events</div>
+                </div>
+            </div>
+            
+            <div class="filter-section">
+                <div class="filter-group">
+                    <label><i class="fas fa-calendar"></i> From</label>
+                    <input type="date" id="startDate">
+                </div>
+                <div class="filter-group">
+                    <label><i class="fas fa-calendar"></i> To</label>
+                    <input type="date" id="endDate">
+                </div>
+                <div class="filter-group">
+                    <label><i class="fas fa-search"></i> Search Date</label>
+                    <input type="text" id="searchDate" placeholder="e.g., 15 Jan 2025">
+                </div>
+                <button class="nav-btn" onclick="applyFilters()">
+                    <i class="fas fa-check"></i> Apply
+                </button>
+            </div>
+            
+            <div class="results-count" id="results-count" style="display: none;">
+                <i class="fas fa-chart-line"></i> <span id="results-text">0 records</span>
+            </div>
+            
+            <div class="table-responsive">
+                <table id="price-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Date</th>
+                            <th>Buy Rate (USDT)</th>
+                            <th>Sell Rate (USDT)</th>
+                            <th>INR Value (₹)</th>
+                            <th>ATH / ATL</th>
+                         </thead>
+                    <tbody id="price-body">
+                        <tr><td colspan="6" class="loading">
+                            <i class="fas fa-spinner fa-spin"></i><br>
+                            Loading price history...
+                          <\/td><\/tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p><i class="fas fa-chart-line"></i> Price history based on daily Buy/Sell events from blockchain</p>
+        </div>
+    </div>
+
+    <script>
+        // ===== CONTRACT CONFIGURATION =====
+        const SIGMA_ADDRESS = "0xaF215838d156F7d348A6d56cA962cbC680A2153F";
+        
+        const SIGMA_ABI = [
+            "function getCurrentBuyRate() view returns (uint256)",
+            "function allTimeHigh() view returns (uint256)",
+            "event Buy(address indexed user, uint256 amount, uint256 rate, uint256 usdtSpent)",
+            "event Sell(address indexed user, uint256 amount, uint256 rate, uint256 usdtReceived)",
+            "event ATHUpdate(uint256 newATH, uint256 timestamp)"
+        ];
+        
+        let provider;
+        let priceHistory = [];
+        let filteredHistory = [];
+        let currentBuyRate = 0;
+        let athValue = 0;
+        let athTimestamp = 0;
+        
+        const SELL_TAX = 0.09;
+        const INR_RATE = 95;
+        const ATL_PRICE = 0.0105;
+        const ATL_DATE = "19 May 2025";
+        
+        function createParticles() {
+            const container = document.getElementById('particles');
+            for (let i = 0; i < 30; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDuration = 15 + Math.random() * 20 + 's';
+                particle.style.animationDelay = Math.random() * 20 + 's';
+                container.appendChild(particle);
+            }
+        }
+        
+        async function connectWallet() {
+            if (!window.ethereum) {
+                alert("Please install MetaMask!");
+                return;
+            }
+            try {
+                provider = new ethers.BrowserProvider(window.ethereum);
+                const accounts = await provider.send("eth_accounts", []);
+                if (accounts.length > 0) {
+                    const userAddress = accounts[0];
+                    document.getElementById('btn-text').textContent = userAddress.slice(0,6) + '...' + userAddress.slice(-4);
+                    document.getElementById('connectBtn').classList.add('connected');
+                }
+                await loadPriceHistory();
+                window.ethereum.on('accountsChanged', () => window.location.reload());
+            } catch (error) {
+                console.error("Connection error:", error);
+            }
+        }
+        
+        async function loadPriceHistory() {
+            if (!window.ethereum) {
+                document.getElementById('price-body').innerHTML = `
+                    <td colspan="6" class="empty-state">
+                        <i class="fas fa-wallet"></i><br>
+                        Please install MetaMask
+                    <\/td>
+                `;
+                return;
+            }
+            
+            try {
+                provider = new ethers.BrowserProvider(window.ethereum);
+                const sigmaContract = new ethers.Contract(SIGMA_ADDRESS, SIGMA_ABI, provider);
+                
+                document.getElementById('price-body').innerHTML = `
+                    <td colspan="6" class="loading">
+                        <i class="fas fa-spinner fa-spin"></i><br>
+                        Fetching price data from blockchain...
+                    <\/td>
+                `;
+                
+                // Get current price
+                const rateBN = await sigmaContract.getCurrentBuyRate();
+                currentBuyRate = parseFloat(ethers.formatUnits(rateBN, 6));
+                document.getElementById('current-price').textContent = currentBuyRate.toFixed(6) + ' USDT';
+                document.getElementById('current-price-inr').innerHTML = '≈ ₹' + (currentBuyRate * INR_RATE).toFixed(2);
+                
+                // Get ATH from contract
+                try {
+                    const athBN = await sigmaContract.allTimeHigh();
+                    athValue = parseFloat(ethers.formatUnits(athBN, 6));
+                    document.getElementById('ath-price').textContent = athValue.toFixed(6) + ' USDT';
+                    
+                    const athEvents = await sigmaContract.queryFilter(sigmaContract.filters.ATHUpdate(), 0, 'latest');
+                    if (athEvents.length > 0) {
+                        const lastATH = athEvents[athEvents.length - 1];
+                        athTimestamp = Number(lastATH.args.timestamp);
+                        const athDate = new Date(athTimestamp * 1000);
+                        document.getElementById('ath-date').textContent = athDate.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+                    } else {
+                        document.getElementById('ath-date').textContent = '--';
+                    }
+                } catch(e) {
+                    console.log("ATH fetch error:", e);
+                    document.getElementById('ath-price').textContent = '--';
+                }
+                
+                // Set ATL
+                document.getElementById('atl-price').textContent = ATL_PRICE.toFixed(4) + ' USDT';
+                document.getElementById('atl-date').textContent = ATL_DATE;
+                
+                // Fetch Buy events
+                const buyFilter = sigmaContract.filters.Buy();
+                const sellFilter = sigmaContract.filters.Sell();
+                
+                const currentBlock = await provider.getBlockNumber();
+                const fromBlock = Math.max(currentBlock - 1000000, 0);
+                
+                const [buyEvents, sellEvents] = await Promise.all([
+                    sigmaContract.queryFilter(buyFilter, fromBlock, 'latest'),
+                    sigmaContract.queryFilter(sellFilter, fromBlock, 'latest')
+                ]);
+                
+                console.log(`📊 Found ${buyEvents.length} Buy events, ${sellEvents.length} Sell events`);
+                
+                // Group by date
+                const dailyPrices = new Map();
+                
+                for (const event of buyEvents) {
+                    const block = await provider.getBlock(event.blockNumber);
+                    const date = new Date(block.timestamp * 1000);
+                    const dateKey = date.toISOString().split('T')[0];
+                    const rate = parseFloat(ethers.formatUnits(event.args.rate, 6));
+                    
+                    if (!dailyPrices.has(dateKey) || dailyPrices.get(dateKey).buyRate < rate) {
+                        dailyPrices.set(dateKey, {
+                            date: date,
+                            dateKey: dateKey,
+                            buyRate: rate,
+                            sellRate: rate * (1 - SELL_TAX)
+                        });
+                    }
+                }
+                
+                for (const event of sellEvents) {
+                    const block = await provider.getBlock(event.blockNumber);
+                    const date = new Date(block.timestamp * 1000);
+                    const dateKey = date.toISOString().split('T')[0];
+                    const rate = parseFloat(ethers.formatUnits(event.args.rate, 6));
+                    const buyRateEquivalent = rate / (1 - SELL_TAX);
+                    
+                    if (!dailyPrices.has(dateKey) || dailyPrices.get(dateKey).buyRate < buyRateEquivalent) {
+                        dailyPrices.set(dateKey, {
+                            date: date,
+                            dateKey: dateKey,
+                            buyRate: buyRateEquivalent,
+                            sellRate: rate
+                        });
+                    }
+                }
+                
+                // Convert to array and sort by date
+                priceHistory = Array.from(dailyPrices.values());
+                priceHistory.sort((a, b) => new Date(a.dateKey) - new Date(b.dateKey));
+                
+                console.log(`✅ Loaded ${priceHistory.length} daily price records`);
+                
+                filteredHistory = [...priceHistory];
+                updateStats();
+                displayPriceTable();
+                
+                if (priceHistory.length === 0) {
+                    document.getElementById('price-body').innerHTML = `
+                        <td colspan="6" class="empty-state">
+                            <i class="fas fa-chart-line"></i><br>
+                            No price history found yet
+                        <\/td>
+                    `;
+                }
+                
+            } catch (error) {
+                console.error("Error loading price history:", error);
+                document.getElementById('price-body').innerHTML = `
+                    <td colspan="6" class="empty-state">
+                        <i class="fas fa-exclamation-triangle"></i><br>
+                        Error: ${error.message.substring(0, 100)}
+                    <\/td>
+                `;
+            }
+        }
+        
+        function updateStats() {
+            if (filteredHistory.length === 0) return;
+            
+            const firstPrice = filteredHistory[0]?.buyRate || 0;
+            const lastPrice = filteredHistory[filteredHistory.length - 1]?.buyRate || currentBuyRate;
+            const change = ((lastPrice - firstPrice) / firstPrice) * 100;
+            
+            document.getElementById('price-change').textContent = Math.abs(change).toFixed(2) + '%';
+            const changeDir = document.getElementById('price-change-dir');
+            if (change >= 0) {
+                changeDir.innerHTML = '<i class="fas fa-arrow-up"></i> Increase';
+                changeDir.style.color = 'var(--success)';
+                document.getElementById('price-change').style.color = 'var(--success)';
+            } else {
+                changeDir.innerHTML = '<i class="fas fa-arrow-down"></i> Decrease';
+                changeDir.style.color = 'var(--danger)';
+                document.getElementById('price-change').style.color = 'var(--danger)';
+            }
+        }
+        
+        function formatDateForSearch(date) {
+            return date.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }).toLowerCase();
+        }
+        
+        function displayPriceTable() {
+            const tbody = document.getElementById('price-body');
+            const resultsDiv = document.getElementById('results-count');
+            
+            if (filteredHistory.length === 0) {
+                tbody.innerHTML = `
+                    <td colspan="6" class="empty-state">
+                        <i class="fas fa-chart-line"></i><br>
+                        No records found for selected filters
+                    <\/td>
+                `;
+                resultsDiv.style.display = 'none';
+                return;
+            }
+            
+            resultsDiv.style.display = 'block';
+            document.getElementById('results-text').innerHTML = `${filteredHistory.length} records`;
+            
+            let html = '';
+            filteredHistory.forEach((record, i) => {
+                const dateStr = record.date.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+                const inrValue = record.buyRate * INR_RATE;
+                
+                let badgeHtml = '';
+                if (athValue > 0 && Math.abs(record.buyRate - athValue) / athValue < 0.001) {
+                    badgeHtml = '<span class="ath-badge"><i class="fas fa-crown"></i> ATH</span>';
+                } else if (Math.abs(record.buyRate - ATL_PRICE) / ATL_PRICE < 0.001) {
+                    badgeHtml = '<span class="atl-badge"><i class="fas fa-chart-line"></i> ATL</span>';
+                }
+                
+                html += `
+                    <tr>
+                        <td>${i+1}</td>
+                        <td><strong>${dateStr}</strong></td>
+                        <td style="color: var(--primary); font-weight: 700;">${record.buyRate.toFixed(6)} USDT</td>
+                        <td>${record.sellRate.toFixed(6)} USDT</td>
+                        <td>₹${inrValue.toFixed(2)}</td>
+                        <td>${badgeHtml}</td>
+                    </tr>
+                `;
+            });
+            
+            tbody.innerHTML = html;
+        }
+        
+        function applyFilters() {
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+            const searchQuery = document.getElementById('searchDate').value.trim().toLowerCase();
+            
+            filteredHistory = priceHistory.filter(record => {
+                const dateKey = record.dateKey;
+                const formattedDate = formatDateForSearch(record.date);
+                
+                if (startDate && dateKey < startDate) return false;
+                if (endDate && dateKey > endDate) return false;
+                if (searchQuery && !formattedDate.includes(searchQuery)) return false;
+                
+                return true;
+            });
+            
+            displayPriceTable();
+        }
+        
+        function clearFilters() {
+            document.getElementById('startDate').value = '';
+            document.getElementById('endDate').value = '';
+            document.getElementById('searchDate').value = '';
+            filteredHistory = [...priceHistory];
+            displayPriceTable();
+            updateStats();
+        }
+        
+        function exportData() {
+            if (filteredHistory.length === 0) {
+                alert("No data to export");
+                return;
+            }
+            
+            let csvContent = "data:text/csv;charset=utf-8,";
+            csvContent += "Serial No,Date,Buy Rate (USDT),Sell Rate (USDT),INR Value (₹)\n";
+            
+            filteredHistory.forEach((record, i) => {
+                const dateStr = record.date.toLocaleDateString('en-GB');
+                const inrValue = record.buyRate * INR_RATE;
+                csvContent += `${i+1},${dateStr},${record.buyRate.toFixed(6)},${record.sellRate.toFixed(6)},${inrValue.toFixed(2)}\n`;
+            });
+            
+            const link = document.createElement("a");
+            link.setAttribute("href", encodeURI(csvContent));
+            link.setAttribute("download", `sigma_price_history_${new Date().toISOString().split('T')[0]}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+        
+        // Add event listener for search input (real-time)
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('searchDate');
+            if (searchInput) {
+                searchInput.addEventListener('keyup', function() {
+                    applyFilters();
+                });
+            }
+        });
+        
+        async function autoConnect() {
+            if (window.ethereum) {
+                try {
+                    const providerTemp = new ethers.BrowserProvider(window.ethereum);
+                    const accounts = await providerTemp.listAccounts();
+                    if (accounts.length > 0) {
+                        const userAddress = accounts[0].address;
+                        document.getElementById('btn-text').textContent = userAddress.slice(0,6) + '...' + userAddress.slice(-4);
+                        document.getElementById('connectBtn').classList.add('connected');
+                    }
+                } catch(e) {}
+            }
+            await loadPriceHistory();
+        }
+        
+        // Initialize
+        createParticles();
+        
+        // Set default date range (last 30 days)
+        const end = new Date();
+        const start = new Date();
+        start.setDate(start.getDate() - 30);
+        document.getElementById('startDate').valueAsDate = start;
+        document.getElementById('endDate').valueAsDate = end;
+        
+        autoConnect();
+    </script>
+</body>
+</html>
