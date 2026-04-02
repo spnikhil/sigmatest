@@ -682,7 +682,7 @@
             <div class="table-responsive">
                 <table id="transfer-table">
                     <thead>
-                        32
+                        <tr>
                             <th>#</th>
                             <th>Date & Time</th>
                             <th>Direction</th>
@@ -699,14 +699,14 @@
                             Loading your transfer history...
                          <\/td>
                     </tbody>
-                  Banay
+                  </table>
             </div>
         </div>
     </div>
 
     <script>
-        // ===== CONTRACT CONFIGURATION =====
-        const SIGMA_CONTRACT_ADDRESS = "0x846339d474AE98b219111eb969E27b6317aE5852";
+        // ===== UPDATED CONTRACT CONFIGURATION =====
+        const SIGMA_CONTRACT_ADDRESS = "0xaF215838d156F7d348A6d56cA962cbC680A2153F";
         const USDT_ADDRESS = "0xc2132D05D31c914a87C6611C10748AEb04B58e8F";
         
         let usdtToInr = 95.0;
@@ -722,7 +722,7 @@
             "function buySigma(uint256 _usdtAmount, address _upline) external",
             "function sellSigma(uint256 _sigmaAmount) external",
             "function transfer(address to, uint256 amount) returns (bool)",
-            "function users(address) view returns (address upline, uint256 directCount, uint256 lastBuyTimestamp, uint256 totalReferralEarned, uint256 lastActionTime, bool hasBoughtBefore)",
+            "function users(address) view returns (address upline, uint256 directCount, uint256 lastBuyTimestamp, uint256 totalReferralEarned, uint256 lastActionTime, uint256 lastActionBlock, bool hasBoughtBefore)",
             "event Transfer(address indexed from, address indexed to, uint256 value)"
         ];
         
@@ -796,7 +796,6 @@
             }
         }
         
-        // Batch fetch events to avoid 10,000 limit
         async function fetchEventsInBatches(contract, filter, fromBlock, toBlock, batchSize = 10000) {
             let allEvents = [];
             let currentFrom = fromBlock;
@@ -911,7 +910,7 @@
                     }
                 }
                 
-                // 3. Fetch POL Transfer events (from Sigma contract as POL is native)
+                // 3. Fetch POL Transfer events (from Sigma contract)
                 try {
                     const polEvents = await fetchEventsInBatches(sigmaContract, transferFilter, fromBlock, currentBlock, 5000);
                     
@@ -922,24 +921,21 @@
                         if (from === "0x0000000000000000000000000000000000000000") continue;
                         if (to === "0x0000000000000000000000000000000000000000") continue;
                         
-                        if (from === userAddress || to === userAddress) {
-                            const alreadyAdded = allTransfers.some(t => t.hash === event.transactionHash && t.token === 'POL');
-                            if (!alreadyAdded) {
-                                const block = await provider.getBlock(event.blockNumber);
-                                const amount = parseFloat(ethers.formatUnits(event.args.value, 18));
-                                const value = amount * 0.7;
-                                
-                                allTransfers.push({
-                                    hash: event.transactionHash,
-                                    token: 'POL',
-                                    from: from,
-                                    to: to,
-                                    amount: amount,
-                                    value: value,
-                                    timestamp: block.timestamp,
-                                    date: new Date(block.timestamp * 1000)
-                                });
-                            }
+                        if ((from === userAddress || to === userAddress) && !allTransfers.some(t => t.hash === event.transactionHash && t.token === 'POL')) {
+                            const block = await provider.getBlock(event.blockNumber);
+                            const amount = parseFloat(ethers.formatUnits(event.args.value, 18));
+                            const value = amount * 0.7;
+                            
+                            allTransfers.push({
+                                hash: event.transactionHash,
+                                token: 'POL',
+                                from: from,
+                                to: to,
+                                amount: amount,
+                                value: value,
+                                timestamp: block.timestamp,
+                                date: new Date(block.timestamp * 1000)
+                            });
                         }
                     }
                 } catch(e) {
