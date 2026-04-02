@@ -533,7 +533,6 @@
         ::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); border-radius: 4px; }
         ::-webkit-scrollbar-thumb { background: var(--gradient); border-radius: 4px; animation: rainbow 8s ease infinite; }
 
-        /* ===== MOBILE RESPONSIVE STYLES ===== */
         @media screen and (max-width: 1200px) {
             .stats-grid {
                 grid-template-columns: repeat(2, 1fr);
@@ -667,7 +666,6 @@
             }
         }
 
-        /* Table horizontal scroll hint */
         .table-responsive::after {
             content: '← Swipe to scroll →';
             display: none;
@@ -706,7 +704,6 @@
             <p>Your Team Network • Live Balances</p>
         </div>
         
-        <!-- Stats Grid -->
         <div class="stats-grid">
             <div class="stat-card">
                 <div class="stat-title"><i class="fas fa-users"></i> Total Team</div>
@@ -733,7 +730,6 @@
             </div>
         </div>
         
-        <!-- Level 1 Detailed Stats -->
         <div class="level1-stats" id="level1-stats" style="display: none;">
             <div class="level1-stat-item">
                 <div class="level1-stat-label">TOTAL LEVEL 1</div>
@@ -798,7 +794,7 @@
             <div class="table-responsive">
                 <table id="team-table">
                     <thead>
-                        32
+                        <tr>
                             <th>#</th>
                             <th>Wallet Address</th>
                             <th>Level</th>
@@ -809,18 +805,19 @@
                             <th>Directs</th>
                             <th>Status</th>
                             <th>Actions</th>
-                         </thead>
+                         </tr>
+                    </thead>
                     <tbody id="team-body">
-                         <td colspan="10" class="loading"><i class="fas fa-spinner fa-spin"></i><br>Connect wallet to view your team</td>
+                        <tr><td colspan="10" class="loading"><i class="fas fa-spinner fa-spin"></i><br>Connect wallet to view your team</td></tr>
                     </tbody>
-                  </table>
+                </table>
             </div>
         </div>
     </div>
 
     <script>
-        // ===== CONTRACT ADDRESS =====
-        const SIGMA_ADDR = "0x846339d474AE98b219111eb969E27b6317aE5852";
+        // ===== UPDATED CONTRACT CONFIGURATION =====
+        const SIGMA_ADDR = "0xaF215838d156F7d348A6d56cA962cbC680A2153F";
         const CREATOR_WALLET = "0xDf572e4D93582a9b2EEA65BDb0C588FB5fD4EC4b".toLowerCase();
         
         // ===== COMPLETE ABI FROM YOUR CONTRACT =====
@@ -833,9 +830,9 @@
             "function creator() view returns (address)",
             "function usdt() view returns (address)",
             "function totalSupply() view returns (uint256)",
-            "function users(address) view returns (address upline, uint256 directCount, uint256 lastBuyTimestamp, uint256 totalReferralEarned, uint256 lastActionTime, bool hasBoughtBefore)",
+            "function users(address) view returns (address upline, uint256 directCount, uint256 lastBuyTimestamp, uint256 totalReferralEarned, uint256 lastActionTime, uint256 lastActionBlock, bool hasBoughtBefore)",
             "event Transfer(address indexed from, address indexed to, uint256 value)",
-            "event TokensBought(address indexed user, uint256 amount, uint256 rate, uint256 usdtSpent)"
+            "event Buy(address indexed user, uint256 amount, uint256 rate, uint256 usdtSpent)"
         ];
 
         let provider, signer, userAddress, sigmaContract;
@@ -900,7 +897,7 @@
                 const transferFilter = sigmaContract.filters.Transfer();
                 const transferEvents = await sigmaContract.queryFilter(transferFilter, 0, 'latest');
                 
-                const boughtFilter = sigmaContract.filters.TokensBought();
+                const boughtFilter = sigmaContract.filters.Buy();
                 const boughtEvents = await sigmaContract.queryFilter(boughtFilter, 0, 'latest');
                 
                 const addressSet = new Set();
@@ -1030,16 +1027,14 @@
             
             try {
                 document.getElementById('team-body').innerHTML = `
-                     <td colspan="10" class="loading">
+                    <tr><td colspan="10" class="loading">
                         <i class="fas fa-spinner fa-spin"></i><br>
                         Loading your team structure...
-                      <\/td>`;
+                      <\/td><\/tr>`;
 
                 try {
-                    // FIXED: Use getCurrentBuyRate() to fetch buy rate
                     const rateBN = await sigmaContract.getCurrentBuyRate();
                     buyRate = parseFloat(ethers.formatUnits(rateBN, 6));
-                    // Sell rate = buy rate after 9% tax deduction (as per contract sellSigma)
                     sellRate = buyRate * (1 - SELL_TAX);
                     
                     document.getElementById('buy-rate').textContent = buyRate.toFixed(4) + ' USDT';
@@ -1047,7 +1042,7 @@
                     console.log(`Rates loaded - Buy: ${buyRate}, Sell: ${sellRate}`);
                 } catch (e) {
                     console.error("Rate fetch error:", e);
-                    buyRate = 0.4315; // fallback
+                    buyRate = 0.4315;
                     sellRate = buyRate * 0.91;
                 }
 
@@ -1071,10 +1066,10 @@
             } catch (error) {
                 console.error("Error loading team:", error);
                 document.getElementById('team-body').innerHTML = `
-                     <td colspan="10" class="empty-state">
+                    <tr><td colspan="10" class="empty-state">
                         <i class="fas fa-exclamation-triangle"></i><br>
                         Error: ${error.message}
-                      <\/td>`;
+                      <\/td><\/tr>`;
             } finally {
                 isLoading = false;
             }
